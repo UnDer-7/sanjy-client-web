@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConfigurationProperties(prefix = "sanjy-client",  ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "sanjy-client-web",  ignoreUnknownFields = false)
 public record SanjyClientConfigProp(
     @NotNull @Valid ExternalApisProp externalApis,
     @NotNull @Valid ApplicationProp application,
