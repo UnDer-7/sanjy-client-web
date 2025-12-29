@@ -1,7 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.config;
 
 import br.com.gorillaroxo.sanjy.client.web.client.config.handler.FeignErrorHandler;
-import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientConfigProp;
+import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class FeignConfig {
 
-    private final SanjyClientConfigProp sanjyClientConfigProp;
+    private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
     private final Set<FeignErrorHandler> errorHandlers;
 
     @Bean
@@ -26,7 +26,7 @@ public class FeignConfig {
 
     @Bean
     public Retryer retryer() {
-        final var httpRetryProp = sanjyClientConfigProp.httpRetry();
+        final var httpRetryProp = sanjyClientWebConfigProp.httpRetry();
 
         return new FeignRetryer(httpRetryProp);
     }

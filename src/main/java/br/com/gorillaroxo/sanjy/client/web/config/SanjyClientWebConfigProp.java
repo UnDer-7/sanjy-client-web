@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "sanjy-client-web",  ignoreUnknownFields = false)
-public record SanjyClientConfigProp(
+public record SanjyClientWebConfigProp(
     @NotNull @Valid ExternalApisProp externalApis,
     @NotNull @Valid ApplicationProp application,
     @NotNull @Valid LoggingProp logging,

@@ -1,7 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.config.handler;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientConfigProp;
+import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.exception.BusinessException;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanNotFoundException;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class DietPlanNotFoundFeignErrorHandler implements FeignErrorHandler {
 
-    private final SanjyClientConfigProp sanjyClientConfigProp;
+    private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
     private final JsonUtil jsonUtil;
 
     @Override
@@ -39,7 +39,7 @@ public class DietPlanNotFoundFeignErrorHandler implements FeignErrorHandler {
         final boolean isUrlInvalid = Optional.ofNullable(response)
             .map(Response::request)
             .map(Request::url)
-            .filter(uri -> uri.contains(sanjyClientConfigProp.externalApis().sanjyServer().url()))
+            .filter(uri -> uri.contains(sanjyClientWebConfigProp.externalApis().sanjyServer().url()))
             .isEmpty();
 
         if (isUrlInvalid) {

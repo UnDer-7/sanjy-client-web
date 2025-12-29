@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.client.config;
 
-import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientConfigProp;
+import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import feign.RetryableException;
 import feign.Retryer;
@@ -13,7 +13,7 @@ import net.logstash.logback.argument.StructuredArguments;
 public class FeignRetryer implements Retryer {
 
     private int attempt = 1;
-    private final SanjyClientConfigProp.HttpRetryProp httpRetryConfigProp;
+    private final SanjyClientWebConfigProp.HttpRetryProp httpRetryConfigProp;
 
     @Override
     public void continueOrPropagate(final RetryableException e) {

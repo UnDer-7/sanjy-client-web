@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GlobalExceptionHandlerConfig {
 
-    private final SanjyClientConfigProp sanjyClientConfigProp;
+    private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
 
     @ExceptionHandler(BusinessException.class)
     public ModelAndView businessException(final BusinessException exception) {
@@ -69,7 +69,8 @@ public class GlobalExceptionHandlerConfig {
             StructuredArguments.kv(LogField.EXCEPTION_CAUSE_MSG.label(), exception.getCause().getMessage()),
             exception);
 
-        return handleBusinessException(new FileMaxUploadSizeException("max file size is: %sMB".formatted(sanjyClientConfigProp.upload().maxFileSizeInMb()), exception));
+        return handleBusinessException(new FileMaxUploadSizeException("max file size is: %sMB".formatted(
+            sanjyClientWebConfigProp.upload().maxFileSizeInMb()), exception));
     }
 
     private static ModelAndView handleBusinessException(final BusinessException exception) {

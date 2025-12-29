@@ -2,7 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientConfigProp;
+import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.TemplateConstants;
 import br.com.gorillaroxo.sanjy.client.web.service.DietPlanActiveService;
 import br.com.gorillaroxo.sanjy.client.web.service.ProcessDietPlanFileService;
@@ -36,7 +36,7 @@ public class DietPlanController {
 
     private final DietPlanFeignClient dietPlanFeignClient;
     private final ProcessDietPlanFileService processDietPlanFileService;
-    private final SanjyClientConfigProp sanjyClientConfigProp;
+    private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
     private final DietPlanActiveService dietPlanActiveService;
 
     private static final Set<String> AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES = Set.of(
@@ -52,7 +52,7 @@ public class DietPlanController {
         }
 
         // Add max file size for client-side validation
-        model.addAttribute("maxFileSizeInMb", sanjyClientConfigProp.upload().maxFileSizeInMb());
+        model.addAttribute("maxFileSizeInMb", sanjyClientWebConfigProp.upload().maxFileSizeInMb());
 
         // Add allowed content types for client-side validation
         model.addAttribute("allowedContentTypes", AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES);
