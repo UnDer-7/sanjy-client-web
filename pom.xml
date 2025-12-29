@@ -13,8 +13,8 @@
     <groupId>br.com.gorillaroxo</groupId>
     <artifactId>sanjy-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>sanjy-client</name>
+    <packaging>jar</packaging>
+    <name>sanjy-client-web</name>
     <description>sanjy-client</description>
 
     <url/>
@@ -39,17 +39,11 @@
 
         <springdoc.version>2.6.0</springdoc.version>
         <mapstruct.version>1.6.2</mapstruct.version>
-        <projectlombok.version>1.18.34</projectlombok.version>
+        <lombok.version>1.18.42</lombok.version>
 
         <spring-ai.version>1.0.2</spring-ai.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
-
-    <modules>
-        <module>web</module>
-        <module>shared</module>
-        <module>telegram</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -69,23 +63,52 @@
                 <scope>import</scope>
             </dependency>
             <!-- ####################### -->
-
-            <!-- Modules -->
-            <dependency>
-                <groupId>br.com.gorillaroxo</groupId>
-                <artifactId>web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.gorillaroxo</groupId>
-                <artifactId>shared</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <!-- ####################### -->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- WEB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- Template Engine -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- PDF Processing -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.29</version>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- Artificial intelligence -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- ####################### -->
+
         <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -154,53 +177,52 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                            <path>
-                                <groupId>org.mapstruct</groupId>
-                                <artifactId>mapstruct-processor</artifactId>
-                                <version>${mapstruct.version}</version>
-                            </path>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok-mapstruct-binding</artifactId>
-                                <version>0.2.0</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.graalvm.buildtools</groupId>
-                    <artifactId>native-maven-plugin</artifactId>
-                    <configuration>
-                        <imageName>${project.name}.graalvm</imageName>
-                        <jvmArgs>
-                            <arg>-XX:MaxRAMPercentage=99.0</arg>
-                        </jvmArgs>
-                        <buildArgs>
-                            <buildArg>--static</buildArg>
-                            <buildArg>--libc=musl</buildArg>
-                        </buildArgs>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>${project.name}.graalvm</imageName>
+                    <jvmArgs>
+                        <arg>-XX:MaxRAMPercentage=99.0</arg>
+                    </jvmArgs>
+                    <buildArgs>
+                        <buildArg>--static</buildArg>
+                        <buildArg>--libc=musl</buildArg>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
