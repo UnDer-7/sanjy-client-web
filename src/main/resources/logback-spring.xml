@@ -3,9 +3,9 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-    <springProperty scope="local" name="level" source="sanjy-client.logging.level"/>
-    <springProperty scope="local" name="file_path" source="sanjy-client.logging.file-path"/>
-    <springProperty scope="context" name="appender" source="sanjy-client.logging.appender"/>
+    <springProperty scope="local" name="level" source="sanjy-client-web.logging.level"/>
+    <springProperty scope="local" name="file_path" source="sanjy-client-web.logging.file-path"/>
+    <springProperty scope="context" name="appender" source="sanjy-client-web.logging.appender"/>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
     <property name="UNSTRUCTURED_LOG_PATTERN_COLORED"

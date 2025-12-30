@@ -19,7 +19,7 @@ import java.util.List;
 
 @FeignClient(
     value = "br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient",
-    url = "${sanjy-client.external-apis.sanjy-server.url}",
+    url = "${sanjy-client-web.external-apis.sanjy-server.url}",
     path = "/v1/meal-record"
 )
 public interface MealRecordFeignClient {
