@@ -1,0 +1,55 @@
+server:
+  port: ${SANJY_CLIENT_WEB_SERVER_PORT}
+  tomcat:
+    max-swallow-size: -1
+  shutdown: graceful
+
+sanjy-client-web:
+  logging:
+    level: ${SANJY_CLIENT_WEB_LOGGING_LEVEL}
+    file-path: ${SANJY_CLIENT_WEB_LOGGING_FILE_PATH:}
+    appender: ${SANJY_CLIENT_WEB_LOGGING_APPENDER}
+  external-apis:
+    sanjy-server:
+      url: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_URL}
+  application:
+    channel: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_CHANNEL}
+  upload:
+    max-file-size-in-mb: ${SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_FILE_SIZE_IN_MB}
+  http-retry:
+    max-attempt: ${SANJY_CLIENT_WEB_HTTP_RETRY_MAX_ATTEMPT}
+    interval: ${SANJY_CLIENT_WEB_HTTP_RETRY_INTERVAL}
+    backoff-multiplier: ${SANJY_CLIENT_WEB_HTTP_RETRY_BACKOFF_MULTIPLIER}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: ${SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_FILE_SIZE_IN_MB}MB
+      max-request-size: ${SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_REQUEST_SIZE_IN_MB}MB
+
+  application:
+    name: "@project.name@"
+
+  ai:
+    chat:
+      client:
+        enabled: true
+    openai:
+      api-key: ${SANJY_CLIENT_WEB_OPENAI_API_KEY}
+      organization-id: ${SANJY_CLIENT_WEB_OPENAI_ORGANIZATION_ID}
+      project-id: ${SANJY_CLIENT_WEB_OPENAI_PROJECT_ID}
+  main:
+    banner-mode: off
+  threads:
+    virtual:
+      enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              # ChatClient Logging
+              advisor: ${SANJY_CLIENT_WEB_LOGGING_LEVEL}
