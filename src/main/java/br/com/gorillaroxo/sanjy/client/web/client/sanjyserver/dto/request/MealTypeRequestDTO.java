@@ -1,5 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request;
 
+import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import java.time.LocalTime;
@@ -11,7 +12,7 @@ public record MealTypeRequestDTO(
     @JsonPropertyDescription("Meal type name. Example: Breakfast")
     String name,
 
-    @JsonPropertyDescription("Scheduled time for this meal. Example: 06:20:00")
+    @JsonPropertyDescription("Scheduled time for this meal. Example: " + RequestConstants.Examples.TIME)
     LocalTime scheduledTime,
 
     @JsonPropertyDescription("Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")

@@ -32,6 +32,9 @@ public interface MealRecordFeignClient {
     @PostMapping
     MealRecordResponseDTO newMealRecord(@RequestBody MealRecordRequestDTO requestDTO);
 
+
+    // ToDo: Falta documentar os abaixo
+
     /**
      * Retrieves all meals consumed today, ordered by consumption time. Includes both standard meals (following the diet plan) and free meals (off-plan).
      * Use this to check daily food intake and diet adherence.
