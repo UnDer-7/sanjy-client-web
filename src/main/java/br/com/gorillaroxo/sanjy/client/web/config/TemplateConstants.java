@@ -18,5 +18,7 @@ public final class TemplateConstants {
 
         public static final String MEAL_NEW = "meal/new";
         public static final String MEAL_TODAY = "meal/today";
+
+        public static final String SETTINGS = "settings";
     }
 }

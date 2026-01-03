@@ -7,19 +7,14 @@
     <title>Today's Meals - SanJy</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/meal.css}">
+    <link rel="stylesheet" th:replace="~{fragments/header :: header-styles}">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Today's Meals</h1>
-            <nav>
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/diet-plan/active}">Active Plan</a>
-                <a th:href="@{/meal/new}">Record Meal</a>
-            </nav>
-        </header>
+        <div th:replace="~{fragments/header :: app-header}"></div>
 
         <main>
+            <h1 style="margin-bottom: var(--spacing-lg);">Today's Meals</h1>
             <div class="summary-cards">
                 <div class="summary-card planned">
                     <span class="summary-label">Planned Meals</span>
@@ -138,7 +133,7 @@
                         <!-- Previous button -->
                         <a th:if="${pagedMeals.currentPage > 0}"
                            th:href="@{/meal/today(pageNumber=${pagedMeals.currentPage - 1}, pageSize=${pagedMeals.pageSize},
-                                     consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal})}"
+                                     consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal}, userTimezone=${userTimezone})}"
                            class="page-link">&lt;</a>
                         <span th:if="${pagedMeals.currentPage == 0}" class="page-link disabled">&lt;</span>
 
@@ -149,7 +144,7 @@
                                th:text="${i}">0</a>
                             <a th:if="${i != pagedMeals.currentPage}"
                                th:href="@{/meal/today(pageNumber=${i}, pageSize=${pagedMeals.pageSize},
-                                         consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal})}"
+                                         consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal}, userTimezone=${userTimezone})}"
                                class="page-link"
                                th:text="${i}">0</a>
                         </th:block>
@@ -157,7 +152,7 @@
                         <!-- Next button -->
                         <a th:if="${pagedMeals.currentPage < pagedMeals.totalPages - 1}"
                            th:href="@{/meal/today(pageNumber=${pagedMeals.currentPage + 1}, pageSize=${pagedMeals.pageSize},
-                                     consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal})}"
+                                     consumedAtAfter=${consumedAtAfter}, consumedAtBefore=${consumedAtBefore}, isFreeMeal=${isFreeMeal}, userTimezone=${userTimezone})}"
                            class="page-link">&gt;</a>
                         <span th:if="${pagedMeals.currentPage >= pagedMeals.totalPages - 1}" class="page-link disabled">&gt;</span>
                     </div>
@@ -178,6 +173,13 @@
                         const url = new URL(window.location);
                         url.searchParams.set('pageSize', newSize);
                         url.searchParams.set('pageNumber', '0'); // Reset to first page
+
+                        // Ensure timezone is included
+                        const timezone = TimezoneManager.getTimezone();
+                        if (timezone) {
+                            url.searchParams.set('userTimezone', timezone);
+                        }
+
                         window.location.href = url.toString();
                     }
                 </script>
@@ -188,5 +190,8 @@
             <p>&copy; 2025 SanJy - Food Control System</p>
         </footer>
     </div>
+
+    <script th:replace="~{fragments/header :: header-scripts}"></script>
+    <script src="/js/timezone.js"></script>
 </body>
 </html>

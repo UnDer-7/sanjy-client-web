@@ -1,5 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request;
 
+import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Builder;
 
@@ -13,10 +14,10 @@ public record DietPlanRequestDTO(
     @JsonPropertyDescription("Name/identifier of the diet plan. Example: Plan N°02 - Cutting")
     String name,
 
-    @JsonPropertyDescription("Date when this diet plan starts. Example: 2025-01-15")
+    @JsonPropertyDescription("Date when this diet plan starts. Example: " + RequestConstants.Examples.DATE)
     LocalDate startDate,
 
-    @JsonPropertyDescription("Date when this diet plan ends. Example: 2025-03-15")
+    @JsonPropertyDescription("Date when this diet plan ends. Example: " + RequestConstants.Examples.DATE)
     LocalDate endDate,
 
     @JsonPropertyDescription("Target daily calories. Example: 2266")

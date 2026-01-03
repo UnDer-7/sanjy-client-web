@@ -1,5 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response;
 
+import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -10,19 +12,44 @@ import java.util.Set;
 
 @Builder(toBuilder = true)
 public record DietPlanResponseDTO(
+    @JsonPropertyDescription("Unique identifier of the Diet Plan. Example: 123")
     Long id,
+
+    @JsonPropertyDescription("Name/identifier of the diet plan. Example: Plan N°02 - Cutting")
     String name,
+
+    @JsonPropertyDescription("Date when this diet plan starts. Example: " + RequestConstants.Examples.DATE)
     LocalDate startDate,
+
+    @JsonPropertyDescription("Date when this diet plan ends. Example: " + RequestConstants.Examples.DATE)
     LocalDate endDate,
-    Boolean isActive,
+
+    @JsonPropertyDescription("Target daily calories. Example: 2266")
     Integer dailyCalories,
+
+    @JsonPropertyDescription("Target daily protein in grams. Example: 186")
     Integer dailyProteinInG,
+
+    @JsonPropertyDescription("Target daily carbohydrates in grams. Example: 288")
     Integer dailyCarbsInG,
+
+    @JsonPropertyDescription("Target daily fat in grams. Example: 30")
     Integer dailyFatInG,
+
+    @JsonPropertyDescription("Main goal of this diet plan. Example: Body fat reduction with muscle mass preservation")
     String goal,
+
+    @JsonPropertyDescription("Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products")
     String nutritionistNotes,
+
+    @JsonPropertyDescription("List of meal types associated with this diet plan")
     Set<MealTypeResponseDTO> mealTypes,
-    LocalDateTime createdAt
+
+    @JsonPropertyDescription("Indicates whether this diet plan is currently active. Example: true")
+    Boolean isActive,
+
+    @JsonPropertyDescription("Metadata information containing creation and last update timestamps, along with other contextual data")
+    MetadataResponseDto metadata
 ) {
 
     public DietPlanResponseDTO {
