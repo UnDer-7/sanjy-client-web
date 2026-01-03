@@ -138,33 +138,49 @@ The project follows the architecture described in [Bundling React (Vite) with Sp
 
 ### Building the Project
 
-**Backend:**
+**Integrated Build (Frontend + Backend):**
+The project is configured with an integrated build system where the frontend is automatically built and bundled with the backend:
+
 ```bash
-# Clean install (compile and package)
+# Clean install - builds both frontend and backend
 mvn clean install
 
-# Compile only (quieter output)
-mvn clean compile -q
+# Clean - removes target/ directory and static resources
+mvn clean
 
-# Run the Spring Boot BFF
+# Compile only (quieter output) - includes frontend build
+mvn clean compile -q
+```
+
+**What happens during `mvn clean install`:**
+1. `maven-clean-plugin` deletes `target/` and `src/main/resources/static/`
+2. `exec-maven-plugin` runs `npm install` in `src/main/frontend/` (generate-sources phase)
+3. `exec-maven-plugin` runs `npm run build` to build the React app directly to `src/main/resources/static/`
+4. Backend is compiled and packaged with the frontend assets included
+
+**Note:** The `node_modules/` folder is NOT deleted by `mvn clean` to speed up builds. If you need to clean dependencies, manually delete it or run `npm ci` in the frontend directory.
+
+**Backend Only (for development):**
+```bash
+# Run the Spring Boot BFF (serves the bundled React app in production)
 ./mvnw spring-boot:run
 
-# Access BFF API
+# Access BFF API and bundled frontend
 http://localhost:8081
 ```
 
-**Frontend:**
+**Frontend Only (for development with HMR):**
 ```bash
 # Navigate to frontend directory
 cd src/main/frontend
 
-# Install dependencies
+# Install dependencies (if not already installed)
 npm install
 
 # Run development server with HMR
 npm run dev
 
-# Build for production
+# Build for production (standalone)
 npm run build
 
 # Preview production build
@@ -173,6 +189,8 @@ npm run preview
 # Access frontend dev server
 http://localhost:5173
 ```
+
+**Important:** For active frontend development, use `npm run dev` to run the Vite dev server with hot module replacement. The frontend will proxy API requests to the backend running on port 8081.
 
 ### Running Tests
 
@@ -235,9 +253,17 @@ docker run --rm -p 8081:8081 sanjy-client:0.0.1-SNAPSHOT
 - **TypeScript**: Project uses strict TypeScript configuration for type safety
 - **ESLint**: Code quality is enforced via ESLint with React-specific rules
 
+**Integrated Build:**
+- **Automatic Frontend Build**: The `pom.xml` is configured with `exec-maven-plugin` to automatically run `npm install` and `npm run build` during the `generate-sources` phase
+- **Automatic Cleanup**: The `maven-clean-plugin` is configured to delete `src/main/resources/static/` when running `mvn clean` (node_modules is preserved to speed up builds)
+- **Single Build Command**: Running `mvn clean install` builds both frontend and backend, bundling the React app into the Spring Boot JAR
+- **No Manual Frontend Build**: You don't need to manually build the frontend before running Maven commands - it's handled automatically
+- **Direct Build to Static**: Vite builds the React app directly to `src/main/resources/static/` (no intermediate `dist/` folder)
+
 **Integration:**
-- Frontend build output should be copied to `src/main/resources/static` for production deployment
+- Frontend build output is generated directly in `src/main/resources/static` during the Maven build
 - Spring Boot must be configured to serve `index.html` for all non-API routes to support client-side routing
+- For development with hot module replacement, run the Vite dev server separately (`npm run dev`) and let it proxy to the backend
 
 ## Application Structure
 
