@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 @FeignClient(
@@ -33,15 +34,13 @@ public interface MealRecordFeignClient {
     MealRecordResponseDTO newMealRecord(@RequestBody MealRecordRequestDTO requestDTO);
 
 
-    // ToDo: Falta documentar os abaixo
-
     /**
      * Retrieves all meals consumed today, ordered by consumption time. Includes both standard meals (following the diet plan) and free meals (off-plan).
      * Use this to check daily food intake and diet adherence.
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @GetMapping("/today")
-    List<MealRecordResponseDTO> getTodayMealRecords();
+    List<MealRecordResponseDTO> getTodayMealRecords(@RequestParam(required = false, name = RequestConstants.Query.TIMEZONE) ZoneId timezone);
 
     /**
      * Searches meal records with pagination and optional filters (date range, meal type). Returns paginated results with total count.
@@ -59,6 +58,6 @@ public interface MealRecordFeignClient {
      */
     @GetMapping("/statistics")
     MealRecordStatisticsResponseDTO getMealRecordStatisticsByDateRange(
-        @RequestParam(name = RequestConstants.Query.CONSUMED_AT_AFTER, required = false) final LocalDateTime consumedAtAfter,
-        @RequestParam(name = RequestConstants.Query.CONSUMED_AT_BEFORE, required = false) final LocalDateTime consumedAtBefore);
+        @RequestParam(name = RequestConstants.Query.CONSUMED_AT_AFTER, required = false) final Instant consumedAtAfter,
+        @RequestParam(name = RequestConstants.Query.CONSUMED_AT_BEFORE, required = false) final Instant consumedAtBefore);
 }

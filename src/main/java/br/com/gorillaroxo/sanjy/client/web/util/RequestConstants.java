@@ -12,6 +12,7 @@ public final class RequestConstants {
         public static final String IS_FREE_MEAL = "isFreeMeal";
         public static final String PAGE_SIZE = "pageSize";
         public static final String PAGE_NUMBER = "pageNumber";
+        public static final String TIMEZONE = "timezone";
 
         private Query() {
             throw new IllegalStateException("Utility class");

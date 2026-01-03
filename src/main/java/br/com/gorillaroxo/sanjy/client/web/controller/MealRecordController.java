@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 
 @Slf4j
@@ -74,8 +75,8 @@ public class MealRecordController {
         final SearchMealRecordDomain searchResult = searchMealRecordService.search(
             pageNumber,
             pageSize,
-            effectiveConsumedAtAfter,
-            effectiveConsumedAtBefore,
+            effectiveConsumedAtAfter.toInstant(ZoneOffset.UTC),
+            effectiveConsumedAtBefore.toInstant(ZoneOffset.UTC),
             isFreeMeal
         );
 

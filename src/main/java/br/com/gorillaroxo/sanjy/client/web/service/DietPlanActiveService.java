@@ -33,7 +33,7 @@ public class DietPlanActiveService {
                 StructuredArguments.kv(LogField.DIET_PLAN_IS_ACTIVE.label(), dietPlan.isActive()),
                 StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), dietPlan.goal()),
                 StructuredArguments.kv(LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(), dietPlan.mealTypes().size()),
-                StructuredArguments.kv(LogField.DIET_PLAN_CREATED_AT.label(), dietPlan.createdAt()));
+                StructuredArguments.kv(LogField.DIET_PLAN_CREATED_AT.label(), dietPlan.metadata().createdAt()));
 
             return Optional.of(dietPlan);
         } catch (final DietPlanNotFoundException e) {

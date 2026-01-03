@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -28,7 +28,7 @@ public class SearchMealRecordService {
     @Qualifier("applicationTaskExecutor")
     private final TaskExecutor taskExecutor;
 
-    public SearchMealRecordDomain search(Integer pageNumber, Integer pageSize, LocalDateTime consumedAtAfter, LocalDateTime consumedAtBefore,
+    public SearchMealRecordDomain search(Integer pageNumber, Integer pageSize, Instant consumedAtAfter, Instant consumedAtBefore,
         Boolean isFreeMeal) {
         final CompletableFuture<PagedResponseDTO<MealRecordResponseDTO>> mealRecordFuture = ThreadUtils.supplyAsyncWithMDC(() -> {
             log.info(
