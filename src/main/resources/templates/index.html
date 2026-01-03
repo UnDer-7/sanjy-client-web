@@ -6,6 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <title>SanJy - Food Control System</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:replace="~{fragments/header :: header-styles}">
     <style>
         .hero {
             text-align: center;
@@ -96,6 +97,8 @@
 </head>
 <body>
     <div class="container">
+        <div th:replace="~{fragments/header :: app-header}"></div>
+
         <div class="hero">
             <h1>🥗 SanJy</h1>
             <p>Your complete food control system. Track your meals, manage diet plans, and achieve your nutrition goals.</p>
@@ -115,7 +118,7 @@
                     <div class="feature-icon">🍽️</div>
                     <h2>Meal Tracking</h2>
                     <p>Record your daily meals, whether planned or free. Track quantities, timing, and nutritional information.</p>
-                    <a th:href="@{/meal/today}" class="btn btn-primary">Today's Meals</a>
+                    <a href="#" onclick="event.preventDefault(); TimezoneManager.navigateTo('/meal/today');" class="btn btn-primary">Today's Meals</a>
                     <a th:href="@{/meal/new}" class="btn btn-secondary" style="margin-top: var(--spacing-sm);">Record Meal</a>
                 </div>
 
@@ -123,7 +126,7 @@
                     <div class="feature-icon">📊</div>
                     <h2>Progress Monitoring</h2>
                     <p>Monitor your adherence to planned meals vs free meals. Stay on track with your nutrition goals.</p>
-                    <a th:href="@{/meal/today}" class="btn btn-primary">View Progress</a>
+                    <a href="#" onclick="event.preventDefault(); TimezoneManager.navigateTo('/meal/today');" class="btn btn-primary">View Progress</a>
                 </div>
             </div>
 
@@ -131,7 +134,7 @@
                 <h3>Quick Actions</h3>
                 <div class="action-buttons">
                     <a th:href="@{/meal/new}" class="btn btn-primary btn-large">🍴 Record a Meal</a>
-                    <a th:href="@{/meal/today}" class="btn btn-secondary btn-large">📅 View Today</a>
+                    <a href="#" onclick="event.preventDefault(); TimezoneManager.navigateTo('/meal/today');" class="btn btn-secondary btn-large">📅 View Today</a>
                     <a th:href="@{/diet-plan/active}" class="btn btn-secondary btn-large">📋 My Plan</a>
                 </div>
             </div>
@@ -141,5 +144,8 @@
             <p>&copy; 2025 SanJy - Food Control System</p>
         </footer>
     </div>
+
+    <script th:replace="~{fragments/header :: header-scripts}"></script>
+    <script src="/js/timezone.js"></script>
 </body>
 </html>

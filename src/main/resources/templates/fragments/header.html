@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header-styles">
+    <style>
+        .app-header {
+            background-color: var(--surface-color);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .app-header-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .app-header-nav {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .app-header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .app-header-nav a:hover {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+        }
+
+        .app-header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .app-header-datetime {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-align: right;
+        }
+
+        .app-header-datetime-date {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .app-header-datetime-time {
+            color: var(--text-secondary);
+        }
+
+        .settings-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .settings-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header th:fragment="app-header" class="app-header">
+        <div class="app-header-left">
+            <a href="/" class="app-header-logo">🥗 SanJy</a>
+            <nav class="app-header-nav">
+                <a th:href="@{/}">Home</a>
+                <a th:href="@{/diet-plan/active}">Diet Plan</a>
+                <a href="#" onclick="event.preventDefault(); TimezoneManager.navigateTo('/meal/today');">Meals</a>
+            </nav>
+        </div>
+        <div class="app-header-right">
+            <div class="app-header-datetime">
+                <div class="app-header-datetime-date" id="current-date">Loading...</div>
+                <div class="app-header-datetime-time" id="current-time">Loading...</div>
+            </div>
+            <a th:href="@{/settings}" class="settings-link">
+                ⚙️ Settings
+            </a>
+        </div>
+    </header>
+
+    <script th:fragment="header-scripts">
+        // Timezone and datetime display functionality
+        (function() {
+            function updateDateTime() {
+                const now = new Date();
+                const dateElement = document.getElementById('current-date');
+                const timeElement = document.getElementById('current-time');
+
+                if (dateElement && timeElement) {
+                    const dateOptions = {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    };
+                    const timeOptions = {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+
+                    dateElement.textContent = now.toLocaleDateString('en-US', dateOptions);
+                    timeElement.textContent = now.toLocaleTimeString('en-US', timeOptions);
+                }
+            }
+
+            // Update immediately and then every second
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        })();
+    </script>
+</body>
+</html>

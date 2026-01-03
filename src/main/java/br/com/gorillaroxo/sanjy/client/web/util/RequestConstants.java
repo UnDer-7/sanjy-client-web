@@ -36,6 +36,12 @@ public final class RequestConstants {
         public static final String TIME_FORMAT = "HH:mm:ss";
         public static final String DATE_TIME_FORMAT_UTC = "yyyy-MM-ddTHH:mm:ssZ";
 
+        /**
+         * Format for HTML datetime-local input (ISO 8601 without timezone)
+         * Used for user input in their local timezone
+         */
+        public static final String DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm";
+
         private DateTimeFormats() {
             throw new IllegalStateException("Utility class");
         }

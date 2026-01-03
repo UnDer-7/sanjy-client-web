@@ -7,6 +7,7 @@
     <title>New Diet Plan - SanJy</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/diet-plan.css}">
+    <link rel="stylesheet" th:replace="~{fragments/header :: header-styles}">
     <style>
         /* Loading Overlay */
         .loading-overlay {
@@ -468,16 +469,10 @@
         <div class="loading-text">Processing file... Please wait</div>
     </div>
     <div class="container">
-        <header>
-            <h1>New Diet Plan</h1>
-            <nav>
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/diet-plan/active}">Active Plan</a>
-                <a th:href="@{/meal/today}">Today's Meals</a>
-            </nav>
-        </header>
+        <div th:replace="~{fragments/header :: app-header}"></div>
 
         <main>
+            <h1 style="margin-bottom: var(--spacing-lg);">New Diet Plan</h1>
             <!-- Upload Form Section -->
             <section class="upload-section">
                 <h2>Import from File</h2>
@@ -1088,5 +1083,8 @@
             });
         }
     </script>
+
+    <script th:replace="~{fragments/header :: header-scripts}"></script>
+    <script src="/js/timezone.js"></script>
 </body>
 </html>

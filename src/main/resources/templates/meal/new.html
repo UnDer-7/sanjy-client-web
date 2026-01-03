@@ -7,19 +7,14 @@
     <title>Record Meal - SanJy</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/meal.css}">
+    <link rel="stylesheet" th:replace="~{fragments/header :: header-styles}">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Record Meal</h1>
-            <nav>
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/diet-plan/active}">Active Plan</a>
-                <a th:href="@{/meal/today}">Today's Meals</a>
-            </nav>
-        </header>
+        <div th:replace="~{fragments/header :: app-header}"></div>
 
         <main>
+            <h1 style="margin-bottom: var(--spacing-lg);">Record Meal</h1>
             <!-- Message when no diet plan exists -->
             <div th:if="${mealTypes == null || mealTypes.isEmpty()}" class="form-section" style="text-align: center; padding: 2rem;">
                 <h2 style="color: #dc3545;">Diet Plan Not Found</h2>
@@ -136,6 +131,8 @@
         </footer>
     </div>
 
+    <script th:replace="~{fragments/header :: header-scripts}"></script>
+    <script src="/js/timezone.js"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
         // Mock data - In production, this would come from backend

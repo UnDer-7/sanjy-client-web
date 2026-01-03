@@ -7,6 +7,7 @@
     <title>Active Plan - SanJy</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/diet-plan.css}">
+    <link rel="stylesheet" th:replace="~{fragments/header :: header-styles}">
     <style>
         /* Info Message Styles */
         .info-message {
@@ -102,17 +103,10 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Active Diet Plan</h1>
-            <nav>
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/diet-plan/new}">New Plan</a>
-                <a th:href="@{/meal/today}">Today's Meals</a>
-                <a th:href="@{/meal/new}">Record Meal</a>
-            </nav>
-        </header>
+        <div th:replace="~{fragments/header :: app-header}"></div>
 
         <main>
+            <h1 style="margin-bottom: var(--spacing-lg);">Active Diet Plan</h1>
             <div th:if="${dietPlan == null}" class="info-message">
                 <div class="info-content">
                     <span class="info-icon">ℹ</span>
@@ -210,5 +204,8 @@
             <p>&copy; 2025 SanJy - Food Control System</p>
         </footer>
     </div>
+
+    <script th:replace="~{fragments/header :: header-scripts}"></script>
+    <script src="/js/timezone.js"></script>
 </body>
 </html>

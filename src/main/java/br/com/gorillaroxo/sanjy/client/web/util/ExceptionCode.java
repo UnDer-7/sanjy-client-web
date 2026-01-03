@@ -14,7 +14,9 @@ public enum ExceptionCode {
     FILE_MAX_UPLOAD_SIZE("006", "File size exceeds the maximum allowed limit. Please upload a smaller file."),
     SERIALIZATION_FAIL("007", "A data processing error has occurred. Please try again later."),
     DESERIALIZATION_FAIL("008", "Failed to process server response. Please try again later."),
-    DIET_PLAN_NOT_FOUND("009", "Diet plan not found. Please create a new diet plan to get started.");
+    DIET_PLAN_NOT_FOUND("009", "Diet plan not found. Please create a new diet plan to get started."),
+    TIMEZONE_NOT_PROVIDED("010", "Timezone is required but was not provided."),
+    TIMEZONE_INVALID("011", "The provided timezone is not supported or invalid.");
 
     /**
      * Error code shown to the user
