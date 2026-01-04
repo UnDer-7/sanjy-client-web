@@ -15,7 +15,7 @@ interface HeaderProps {
 
 const navItems = [
   { path: '/diet-plan', label: 'Diet Plan' },
-  { path: '/', label: 'Meal' },
+  { path: '/meal', label: 'Meal' },
   { path: '/settings', label: 'Settings' },
 ];
 

@@ -35,9 +35,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
-@Controller
+//@Controller
 @RequiredArgsConstructor
-@RequestMapping("/meal")
+//@RequestMapping("/meal")
 public class MealRecordController {
 
     private static final String ATTRIBUTE_MEAL_TYPES = "mealTypes";
@@ -47,7 +47,7 @@ public class MealRecordController {
     private final SearchMealRecordService searchMealRecordService;
     private final TimezoneConversionService timezoneConversionService;
 
-    @GetMapping("/new")
+//    @GetMapping("/new")
     public String showNewMealForm(Model model) {
         // Adicionar objeto vazio para binding
         model.addAttribute("mealRecordRequest", MealRecordRequestDTO.builder().build());
@@ -59,7 +59,7 @@ public class MealRecordController {
         return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.MEAL_NEW);
     }
 
-    @PostMapping
+//    @PostMapping
     public String recordMeal(
             @RequestParam(required = false) @DateTimeFormat(pattern = RequestConstants.DateTimeFormats.DATE_TIME_LOCAL_FORMAT) LocalDateTime consumedAt,
             @RequestParam(required = false) String userTimezone,
@@ -96,7 +96,7 @@ public class MealRecordController {
         return LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.MEAL_TODAY);
     }
 
-    @GetMapping("/today")
+//    @GetMapping("/today")
     public String showTodayMeals(
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "20") Integer pageSize,

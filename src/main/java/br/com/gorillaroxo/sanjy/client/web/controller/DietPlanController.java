@@ -2,6 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.TemplateConstants;
 import br.com.gorillaroxo.sanjy.client.web.service.DietPlanActiveService;
@@ -12,13 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,9 +26,9 @@ import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/diet-plan")
+@RequestMapping("/api/diet-plan")
 public class DietPlanController {
 
     private static final String ATTRIBUTE_DIET_PLAN = "dietPlan";
@@ -44,7 +44,7 @@ public class DietPlanController {
         MediaType.TEXT_MARKDOWN_VALUE,
         MediaType.TEXT_PLAIN_VALUE);
 
-    @GetMapping("/new")
+//    @GetMapping("/new")
     public String showNewPlanForm(Model model) {
         // Only add empty object if not already present (from flash attributes)
         if (!model.containsAttribute(ATTRIBUTE_DIET_PLAN_REQUEST)) {
@@ -60,20 +60,19 @@ public class DietPlanController {
         return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_NEW);
     }
 
-    @PostMapping
+//    @PostMapping
     public String createPlan(@ModelAttribute DietPlanRequestDTO request) {
         dietPlanFeignClient.newDietPlan(request);
 
         return LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.DIET_PLAN_ACTIVE);
     }
 
-    @GetMapping("/active")
-    public String showActivePlan(Model model) {
-        dietPlanActiveService.get().ifPresent(dietPlan -> model.addAttribute(ATTRIBUTE_DIET_PLAN, dietPlan));
-        return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_ACTIVE);
+    @GetMapping
+    public DietPlanResponseDTO showActivePlan() {
+        return dietPlanActiveService.get().orElse(null);
     }
 
-    @PostMapping("/upload")
+//    @PostMapping("/upload")
     public String uploadAndFillForm(@RequestParam("file") MultipartFile file, Model model, RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
             log.warn(

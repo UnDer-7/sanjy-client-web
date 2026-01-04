@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Controller
+//@Controller
 @RequiredArgsConstructor
-@RequestMapping("/settings")
+//@RequestMapping("/settings")
 public class SettingsController {
 
-    @GetMapping
+//    @GetMapping
     public String showSettings(Model model) {
         // Get all available timezones
         List<String> timezones = ZoneId.getAvailableZoneIds()

@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css';
 import { MantineProvider, AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { theme } from './theme';
 import { Header, NavigationMenu } from './components/Header';
 import { MealPage } from './pages/MealPage';
@@ -28,7 +28,8 @@ function App() {
 
           <AppShell.Main>
             <Routes>
-              <Route path="/" element={<MealPage />} />
+              <Route path="/" element={<Navigate to="/meal" replace />} />
+              <Route path="/meal" element={<MealPage />} />
               <Route path="/diet-plan" element={<DietPlanPage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
