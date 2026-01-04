@@ -5,6 +5,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.Search
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.interceptor.FeignInterceptor;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,8 +21,9 @@ import java.util.List;
 
 @FeignClient(
     value = "br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient",
-    url = "${sanjy-client-web.external-apis.sanjy-server.url}",
-    path = "/v1/meal-record"
+    url = "${sanjy-client-web.external-http-clients.sanjy-server.url}",
+    path = "/v1/meal-record",
+    configuration = FeignInterceptor.class
 )
 public interface MealRecordFeignClient {
 

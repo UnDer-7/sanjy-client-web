@@ -49,7 +49,13 @@ public enum LogField {
     CLASS_SERIALIZATION_SOURCE,
     DIET_PLAN_ID,
     DIET_PLAN_IS_ACTIVE,
-    DIET_PLAN_CREATED_AT;
+    DIET_PLAN_CREATED_AT,
+    PROJECT_CURRENT_VERSION,
+    PROJECT_LATEST_VERSION,
+    RUNTIME_MODE,
+    APPLICATION_TIMEZONE,
+    PROJECT_NAME,
+    TIMEZONE_ID;
 
     public String label() {
         return this.name().toLowerCase();

@@ -9,17 +9,29 @@ sanjy-client-web:
     level: ${SANJY_CLIENT_WEB_LOGGING_LEVEL}
     file-path: ${SANJY_CLIENT_WEB_LOGGING_FILE_PATH:}
     appender: ${SANJY_CLIENT_WEB_LOGGING_APPENDER}
-  external-apis:
+  application:
+    name: ${spring.application.name}
+    version: "@project.version@"
+    description: "@project.description@"
+    contact:
+      name: ToDo-put-name #ToDo: Put real name
+      url: https://google.com #ToDo: Put real site
+      email: admin@admin.com #ToDo: Put real email
+    documentation:
+      url: https://google.com #ToDo: Put real site
+      description: ToDo-put-documentation-description #ToDo: Put real doc
+    channel: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_CHANNEL}
+  external-http-clients:
+    http-retry:
+      max-attempt: ${SANJY_CLIENT_WEB_HTTP_RETRY_MAX_ATTEMPT}
+      interval: ${SANJY_CLIENT_WEB_HTTP_RETRY_INTERVAL}
+      backoff-multiplier: ${SANJY_CLIENT_WEB_HTTP_RETRY_BACKOFF_MULTIPLIER}
     sanjy-server:
       url: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_URL}
-  application:
-    channel: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_CHANNEL}
+    github:
+      url: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_GITHUB_URL}
   upload:
     max-file-size-in-mb: ${SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_FILE_SIZE_IN_MB}
-  http-retry:
-    max-attempt: ${SANJY_CLIENT_WEB_HTTP_RETRY_MAX_ATTEMPT}
-    interval: ${SANJY_CLIENT_WEB_HTTP_RETRY_INTERVAL}
-    backoff-multiplier: ${SANJY_CLIENT_WEB_HTTP_RETRY_BACKOFF_MULTIPLIER}
 
 spring:
   servlet:
@@ -43,6 +55,16 @@ spring:
   threads:
     virtual:
       enabled: true
+
+springdoc:
+  api-docs:
+    path: ${SANJY_CLIENT_WEB_OPEN_API_API_DOCS_PATH}
+    resolve-schema-properties: true
+    enabled: ${SANJY_CLIENT_WEB_OPEN_API_API_DOCS_ENABLE}
+  override-with-generic-response: false
+  swagger-ui:
+    path: ${SANJY_CLIENT_WEB_OPEN_API_SWAGGER_UI_REDIRECT_PATH}
+    enabled: ${SANJY_CLIENT_WEB_OPEN_API_SWAGGER_UI_ENABLE}
 
 logging:
   level:

@@ -5,7 +5,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.Search
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.domain.SearchMealRecordDomain;
+import br.com.gorillaroxo.sanjy.client.web.presentation.SearchMealRecordDomain;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.ThreadUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j

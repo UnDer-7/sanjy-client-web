@@ -16,7 +16,8 @@ public enum ExceptionCode {
     DESERIALIZATION_FAIL("008", "Failed to process server response. Please try again later."),
     DIET_PLAN_NOT_FOUND("009", "Diet plan not found. Please create a new diet plan to get started."),
     TIMEZONE_NOT_PROVIDED("010", "Timezone is required but was not provided."),
-    TIMEZONE_INVALID("011", "The provided timezone is not supported or invalid.");
+    TIMEZONE_INVALID("011", "The provided timezone is not supported or invalid."),
+    INVALID_VALUES("012", "Some informed value(s) is invalid");
 
     /**
      * Error code shown to the user

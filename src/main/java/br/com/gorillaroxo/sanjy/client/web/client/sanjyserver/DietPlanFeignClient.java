@@ -2,6 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.interceptor.FeignInterceptor;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanNotFoundException;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
     value = "br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient",
-    url = "${sanjy-client-web.external-apis.sanjy-server.url}",
-    path = "/v1/diet-plan"
+    url = "${sanjy-client-web.external-http-clients.sanjy-server.url}",
+    path = "/v1/diet-plan",
+    configuration = FeignInterceptor.class
 )
 public interface DietPlanFeignClient {
 

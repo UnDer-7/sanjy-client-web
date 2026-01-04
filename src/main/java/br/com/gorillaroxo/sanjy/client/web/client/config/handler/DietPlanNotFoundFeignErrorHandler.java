@@ -39,7 +39,7 @@ public class DietPlanNotFoundFeignErrorHandler implements FeignErrorHandler {
         final boolean isUrlInvalid = Optional.ofNullable(response)
             .map(Response::request)
             .map(Request::url)
-            .filter(uri -> uri.contains(sanjyClientWebConfigProp.externalApis().sanjyServer().url()))
+            .filter(uri -> uri.contains(sanjyClientWebConfigProp.externalHttpClients().sanjyServer().url()))
             .isEmpty();
 
         if (isUrlInvalid) {

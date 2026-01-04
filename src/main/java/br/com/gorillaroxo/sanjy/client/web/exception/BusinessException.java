@@ -8,6 +8,7 @@ import net.logstash.logback.argument.StructuredArguments;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +18,7 @@ import java.util.function.Predicate;
 @Getter
 public abstract class BusinessException extends RuntimeException {
 
-    private final String timestamp;
+    private final Instant timestamp;
     private final int httpStatusCode;
     private final Throwable originalCause;
     private final ExceptionCode exceptionCode;
@@ -34,7 +35,7 @@ public abstract class BusinessException extends RuntimeException {
         super(getExceptionMessage(exceptionCode, customMessage, originalCause), originalCause);
 
         this.exceptionCode = exceptionCode;
-        this.timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        this.timestamp = Instant.now();
         this.customMessage = customMessage;
         this.httpStatusCode = httpStatus.value();
         this.originalCause = originalCause;
@@ -47,7 +48,7 @@ public abstract class BusinessException extends RuntimeException {
         super(getExceptionMessage(exceptionCode));
 
         this.exceptionCode = exceptionCode;
-        this.timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        this.timestamp = Instant.now();
         this.customMessage = null;
         this.httpStatusCode = httpStatus.value();
         this.originalCause = null;
@@ -62,7 +63,7 @@ public abstract class BusinessException extends RuntimeException {
         super(getExceptionMessage(exceptionCode, originalCause), originalCause);
 
         this.exceptionCode = exceptionCode;
-        this.timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        this.timestamp = Instant.now();
         this.customMessage = null;
         this.httpStatusCode = httpStatus.value();
         this.originalCause = originalCause;
@@ -76,7 +77,7 @@ public abstract class BusinessException extends RuntimeException {
         super(getExceptionMessage(exceptionCode, customMessage));
 
         this.exceptionCode = exceptionCode;
-        this.timestamp = LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        this.timestamp = Instant.now();
         this.customMessage = customMessage;
         this.httpStatusCode = httpStatus.value();
         this.originalCause = null;

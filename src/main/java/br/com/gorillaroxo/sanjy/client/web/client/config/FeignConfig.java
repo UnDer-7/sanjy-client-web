@@ -26,7 +26,7 @@ public class FeignConfig {
 
     @Bean
     public Retryer retryer() {
-        final var httpRetryProp = sanjyClientWebConfigProp.httpRetry();
+        final var httpRetryProp = sanjyClientWebConfigProp.externalHttpClients().httpRetry();
 
         return new FeignRetryer(httpRetryProp);
     }

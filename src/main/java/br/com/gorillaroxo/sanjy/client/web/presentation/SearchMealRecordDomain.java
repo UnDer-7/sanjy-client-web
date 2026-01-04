@@ -1,4 +1,4 @@
-package br.com.gorillaroxo.sanjy.client.web.domain;
+package br.com.gorillaroxo.sanjy.client.web.presentation;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;

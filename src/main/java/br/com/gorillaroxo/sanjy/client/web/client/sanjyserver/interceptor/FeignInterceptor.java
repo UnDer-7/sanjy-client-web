@@ -1,4 +1,4 @@
-package br.com.gorillaroxo.sanjy.client.web.client.config;
+package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.interceptor;
 
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.util.DistributedTracingUtil;
@@ -7,10 +7,8 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class FeignInterceptor implements RequestInterceptor {
 
