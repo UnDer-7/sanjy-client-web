@@ -13,6 +13,7 @@ import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.AntPathMatcher;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,6 +47,10 @@ public class RequiredHeaderFilterConfig extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) throws ServletException {
+        if (Objects.equals(request.getMethod(), HttpMethod.OPTIONS.name())) {
+            return true;
+        }
+
         final var requestUrl = request.getRequestURI();
         return !pathMatcher.match("/api/**/*", requestUrl);
     }
