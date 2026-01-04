@@ -1,31 +1,11 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.presentation.SearchMealRecordDomain;
-import br.com.gorillaroxo.sanjy.client.web.exception.TimezoneNotProvidedException;
-import br.com.gorillaroxo.sanjy.client.web.service.DietPlanActiveService;
+import br.com.gorillaroxo.sanjy.client.web.service.ActiveDietPlanService;
 import br.com.gorillaroxo.sanjy.client.web.service.SearchMealRecordService;
 import br.com.gorillaroxo.sanjy.client.web.service.TimezoneConversionService;
-import br.com.gorillaroxo.sanjy.client.web.util.LoggingHelper;
-import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 //@Controller
@@ -36,7 +16,7 @@ public class MealRecordController {
     private static final String ATTRIBUTE_MEAL_TYPES = "mealTypes";
 
     private final MealRecordFeignClient mealRecordFeignClient;
-    private final DietPlanActiveService dietPlanActiveService;
+    private final ActiveDietPlanService activeDietPlanService;
     private final SearchMealRecordService searchMealRecordService;
     private final TimezoneConversionService timezoneConversionService;
 

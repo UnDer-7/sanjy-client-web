@@ -1,42 +1,42 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
-import br.com.gorillaroxo.sanjy.client.web.service.DietPlanActiveService;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.service.ActiveDietPlanService;
+import br.com.gorillaroxo.sanjy.client.web.service.NewDietPlanService;
 import br.com.gorillaroxo.sanjy.client.web.service.ProcessDietPlanFileService;
-import br.com.gorillaroxo.sanjy.client.web.util.LogField;
-import br.com.gorillaroxo.sanjy.client.web.util.LoggingHelper;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/diet-plan")
+@Tag(name = "Diet Plan", description = "Handles diet plan operations")
 public class DietPlanController {
 
     private static final String ATTRIBUTE_DIET_PLAN = "dietPlan";
     private static final String ATTRIBUTE_DIET_PLAN_REQUEST = "dietPlanRequest";
 
-    private final DietPlanFeignClient dietPlanFeignClient;
+
     private final ProcessDietPlanFileService processDietPlanFileService;
     private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
-    private final DietPlanActiveService dietPlanActiveService;
+    private final ActiveDietPlanService activeDietPlanService;
+    private final NewDietPlanService newDietPlanService;
 
     private static final Set<String> AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES = Set.of(
         MediaType.APPLICATION_PDF_VALUE,
@@ -59,16 +59,14 @@ public class DietPlanController {
 //        return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_NEW);
 //    }
 
-//    @PostMapping
-//    public String createPlan(@ModelAttribute DietPlanRequestDTO request) {
-//        dietPlanFeignClient.newDietPlan(request);
-//
-//        return LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.DIET_PLAN_ACTIVE);
-//    }
+    @PostMapping
+    public DietPlanControllerResponseDTO createPlan(@RequestBody @Valid @NonNull DietPlanControllerRequestDTO request) {
+        return newDietPlanService.execute(request);
+    }
 
     @GetMapping
-    public DietPlanResponseDTO showActivePlan() {
-        return dietPlanActiveService.get().orElse(null);
+    public DietPlanControllerResponseDTO showActivePlan() {
+        return activeDietPlanService.execute();
     }
 
 //    @PostMapping("/upload")
