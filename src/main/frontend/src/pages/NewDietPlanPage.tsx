@@ -280,6 +280,7 @@ export function NewDietPlanPage() {
                       <TimePicker
                         label="Scheduled Time"
                         format="12h"
+                        clearable
                         withDropdown
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.scheduledTime`)}
