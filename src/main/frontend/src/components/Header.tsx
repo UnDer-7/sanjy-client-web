@@ -27,9 +27,11 @@ export function Header({ opened, toggle }: HeaderProps) {
       <Group h="100%" px="md" justify="space-between">
         <Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Title order={3} size="h3">
-            🍽️ SanJy
-          </Title>
+          <Anchor component={Link} to="/" underline="never" c="inherit">
+            <Title order={3} size="h3">
+              🍽️ SanJy
+            </Title>
+          </Anchor>
         </Group>
 
         <Group gap="md" visibleFrom="sm">
