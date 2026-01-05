@@ -53,7 +53,11 @@ export function Header({ opened, toggle }: HeaderProps) {
   );
 }
 
-export function NavigationMenu() {
+interface NavigationMenuProps {
+  onNavigate?: () => void;
+}
+
+export function NavigationMenu({ onNavigate }: NavigationMenuProps) {
   const location = useLocation();
 
   return (
@@ -66,6 +70,7 @@ export function NavigationMenu() {
           label={item.label}
           active={location.pathname === item.path}
           mb="xs"
+          onClick={onNavigate}
         />
       ))}
     </AppShell.Navbar>

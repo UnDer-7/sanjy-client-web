@@ -12,7 +12,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { LoadingProvider } from './contexts/LoadingContext';
 
 function App() {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <MantineProvider theme={theme}>
@@ -28,7 +28,7 @@ function App() {
             padding="md"
           >
             <Header opened={opened} toggle={toggle} />
-            <NavigationMenu />
+            <NavigationMenu onNavigate={close} />
 
             <AppShell.Main>
               <Routes>

@@ -13,7 +13,7 @@ import {
   Divider,
   Box,
 } from '@mantine/core';
-import { DateInput, TimeInput } from '@mantine/dates';
+import {DateInput, TimePicker} from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router';
 import { IconTrash, IconPlus } from '@tabler/icons-react';
@@ -277,8 +277,10 @@ export function NewDietPlanPage() {
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.name`)}
                       />
-                      <TimeInput
+                      <TimePicker
                         label="Scheduled Time"
+                        format="12h"
+                        withDropdown
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.scheduledTime`)}
                       />
