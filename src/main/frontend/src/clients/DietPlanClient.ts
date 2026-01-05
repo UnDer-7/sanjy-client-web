@@ -1,7 +1,7 @@
 import { HttpClient } from "./AxiosConfig.ts";
-import type {DietPlan, DietPlanCrete} from "../models/DietPlan.ts";
+import type {DietPlan, DietPlanCreate} from "../models/DietPlan.ts";
 
-async function createDietPlan(request: DietPlanCrete): Promise<DietPlan> {
+async function createDietPlan(request: DietPlanCreate): Promise<DietPlan> {
     const response = await HttpClient.post<DietPlan>('/diet-plan', request);
     return response.data;
 }

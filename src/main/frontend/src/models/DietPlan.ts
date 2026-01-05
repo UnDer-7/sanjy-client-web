@@ -18,6 +18,6 @@ export interface DietPlan {
     metadata: Metadata
 }
 
-export interface DietPlanCrete extends Omit<DietPlan, 'id' | 'isActive' | 'metadata' | 'mealTypes'> {
-    mealType: MealTypeCreate[];
+export interface DietPlanCreate extends Omit<DietPlan, 'id' | 'isActive' | 'metadata' | 'mealTypes'> {
+    mealTypes: MealTypeCreate[];
 }
