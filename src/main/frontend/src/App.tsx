@@ -10,14 +10,16 @@ import { DietPlanPage } from './pages/DietPlanPage';
 import { NewDietPlanPage } from './pages/NewDietPlanPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoadingProvider } from './contexts/LoadingContext';
+import { TimezoneProvider } from './contexts/TimezoneContext';
 
 function App() {
   const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <MantineProvider theme={theme}>
-      <LoadingProvider>
-        <BrowserRouter>
+      <TimezoneProvider>
+        <LoadingProvider>
+          <BrowserRouter>
           <AppShell
             header={{ height: 60 }}
             navbar={{
@@ -40,8 +42,9 @@ function App() {
               </Routes>
             </AppShell.Main>
           </AppShell>
-        </BrowserRouter>
-      </LoadingProvider>
+          </BrowserRouter>
+        </LoadingProvider>
+      </TimezoneProvider>
     </MantineProvider>
   );
 }

@@ -5,8 +5,13 @@ import {
   Title,
   NavLink,
   Anchor,
+  Text,
 } from '@mantine/core';
 import { Link, useLocation } from 'react-router';
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
+import { useTimezone } from '../contexts/TimezoneContext';
 
 interface HeaderProps {
   opened: boolean;
@@ -18,6 +23,28 @@ const navItems = [
   { path: '/meal', label: 'Meal' },
   { path: '/settings', label: 'Settings' },
 ];
+
+function CurrentDateTime() {
+  const { timezone } = useTimezone();
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const zonedTime = toZonedTime(currentTime, timezone);
+  const formattedDateTime = format(zonedTime, 'MMM dd, yyyy HH:mm:ss');
+
+  return (
+    <Text size="sm" c="dimmed">
+      {formattedDateTime}
+    </Text>
+  );
+}
 
 export function Header({ opened, toggle }: HeaderProps) {
   const location = useLocation();
@@ -47,6 +74,7 @@ export function Header({ opened, toggle }: HeaderProps) {
               {item.label}
             </Anchor>
           ))}
+          <CurrentDateTime />
         </Group>
       </Group>
     </AppShell.Header>

@@ -7,7 +7,7 @@ async function createDietPlan(request: DietPlanCreate): Promise<DietPlan> {
 }
 
 async function activeDietPlan(): Promise<DietPlan> {
-    const response = await HttpClient.get('/diet-plan');
+    const response = await HttpClient.get('/v1/diet-plan');
     return response.data;
 }
 
