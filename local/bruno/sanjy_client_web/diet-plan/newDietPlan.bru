@@ -1,0 +1,62 @@
+meta {
+  name: newDietPlan
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{SERVER_URL}}/api/v1/diet-plan
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Plan N°02 - Cutting",
+    "startDate": "2025-01-15",
+    "endDate": "2026-04-15",
+    "dailyCalories": 2266,
+    "dailyProteinInG": 186,
+    "dailyCarbsInG": 288,
+    "dailyFatInG": 30,
+    "goal": "Body fat reduction with muscle mass preservation",
+    "nutritionistNotes": "Patient has lactose intolerance. Avoid dairy products.",
+    "mealTypes": [
+      {
+        "name": "Breakfast",
+        "scheduledTime": "09:30:00",
+        "observation": "45 g proteína | 35 g carbo | 6 g gordura | 380 kcal",
+        "standardOptions": [
+          {
+            "optionNumber": 1,
+            "description": "Pão francês sem miolo -- 45g | Ovos mexidos -- 3 ovos (150g) | Queijo minas frescal zero lactose -- 25g"
+          },
+          {
+            "optionNumber": 2,
+            "description": "Ovos mexidos -- 2 ovos inteiros (100g) | Pão integral -- 25g (meia fatia grande ou 1 fatia pequena) | Suco natural (sem açúcar) -- 180ml"
+          }
+        ]
+      },
+      {
+        "name": "Jantar",
+        "scheduledTime": "21:00:00",
+        "observation": "45–48 g proteína | 30 g carbo | 5 g gordura | 360 kca",
+        "standardOptions": [
+          {
+            "optionNumber": 1,
+            "description": "Macarrão cozido -- 90g | Carne moída (patinho) -- 120g | Molho de tomate caseiro -- 50g | Brócolis cozido -- 100g"
+          },
+          {
+            "optionNumber": 2,
+            "description": "Frango grelhado -- 140g | Purê de batata ou batata doce (sem leite) -- 130g ou 170g | Mix de legumes -- 100g | Azeite -- 5g"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,16 @@
+meta {
+  name: activeDietPlan
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/diet-plan
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

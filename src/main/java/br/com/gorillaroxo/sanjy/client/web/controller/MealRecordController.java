@@ -1,24 +1,34 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.service.ActiveDietPlanService;
+import br.com.gorillaroxo.sanjy.client.web.service.NewMealRecordService;
 import br.com.gorillaroxo.sanjy.client.web.service.SearchMealRecordService;
 import br.com.gorillaroxo.sanjy.client.web.service.TimezoneConversionService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-//@Controller
+@RestController
 @RequiredArgsConstructor
-//@RequestMapping("/meal")
+@RequestMapping("/api/v1/meal-record")
 public class MealRecordController {
 
     private static final String ATTRIBUTE_MEAL_TYPES = "mealTypes";
 
-    private final MealRecordFeignClient mealRecordFeignClient;
+
     private final ActiveDietPlanService activeDietPlanService;
     private final SearchMealRecordService searchMealRecordService;
     private final TimezoneConversionService timezoneConversionService;
+    private final NewMealRecordService newMealRecordService;
 
 //    @GetMapping("/new")
 //    public String showNewMealForm(Model model) {
@@ -32,42 +42,10 @@ public class MealRecordController {
 //        return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.MEAL_NEW);
 //    }
 
-//    @PostMapping
-//    public String recordMeal(
-//            @RequestParam(required = false) @DateTimeFormat(pattern = RequestConstants.DateTimeFormats.DATE_TIME_LOCAL_FORMAT) LocalDateTime consumedAt,
-//            @RequestParam(required = false) String userTimezone,
-//            @CookieValue(name = "sanjy-user-timezone", required = false) String userTimezoneCookie,
-//            @RequestParam Long mealTypeId,
-//            @RequestParam Boolean isFreeMeal,
-//            @RequestParam(required = false) Long standardOptionId,
-//            @RequestParam(required = false) String freeMealDescription,
-//            @RequestParam(required = false) Double quantity,
-//            @RequestParam(required = false) String unit,
-//            @RequestParam(required = false) String notes) {
-//
-//        // Get timezone from parameter or cookie
-//        String effectiveTimezone = getEffectiveTimezone(userTimezone, userTimezoneCookie);
-//
-//        // Convert consumedAt from user's timezone to UTC in the controller
-//        Instant utcConsumedAt = Optional.ofNullable(consumedAt)
-//            .map(c -> timezoneConversionService.convertToUTC(c, effectiveTimezone))
-//            .orElse(null);
-//
-//        // Build the request DTO with the converted UTC time
-//        MealRecordRequestDTO request = MealRecordRequestDTO.builder()
-//            .mealTypeId(mealTypeId)
-//            .consumedAt(utcConsumedAt)
-//            .isFreeMeal(isFreeMeal)
-//            .standardOptionId(standardOptionId)
-//            .freeMealDescription(freeMealDescription)
-//            .quantity(quantity)
-//            .unit(unit)
-//            .notes(notes)
-//            .build();
-//
-//        mealRecordFeignClient.newMealRecord(request);
-//        return LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.MEAL_TODAY);
-//    }
+    @PostMapping
+    public MealRecordControllerResponseDTO newMealRecord(@RequestBody @Valid @NotNull MealRecordControllerRequestDTO requestDTO) {
+        return newMealRecordService.execute(requestDTO);
+    }
 
 //    @GetMapping("/today")
 //    public String showTodayMeals(

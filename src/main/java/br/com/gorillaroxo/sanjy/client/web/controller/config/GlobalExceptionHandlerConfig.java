@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -142,6 +143,10 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
             return buildInvalidTimeResponse(exception, exception.getName(), exception.getValue());
         }
 
+        if (Objects.equals(exception.getRequiredType(), ZonedDateTime.class)) {
+            return buildInvalidZonedDateTimeResponse(exception, exception.getName(), exception.getValue());
+        }
+
         return buildInvalidRequestParameters(
             exception.getName(), exception.getMessage(), exception.getValue(), exception);
     }
@@ -178,6 +183,10 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
 
             if (Objects.equals(targetType, LocalTime.class)) {
                 return buildInvalidTimeResponse(ex, fieldName, invalidValue);
+            }
+
+            if (Objects.equals(targetType, ZonedDateTime.class)) {
+                return buildInvalidZonedDateTimeResponse(ex, fieldName, invalidValue);
             }
 
             // Handle other format errors generically
@@ -251,6 +260,14 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
         final Exception ex, final String fieldName, final Object invalidValue) {
         final String description = "time must be in the following format: %s - example: %s"
             .formatted(RequestConstants.DateTimeFormats.TIME_FORMAT, RequestConstants.Examples.TIME);
+
+        return buildInvalidRequestParameters(fieldName, "invalid time format", invalidValue, description, ex);
+    }
+
+    private ResponseEntity<Object> buildInvalidZonedDateTimeResponse(
+        final Exception ex, final String fieldName, final Object invalidValue) {
+        final String description = "date-time must be in the following format: %s - example: %s"
+            .formatted(RequestConstants.DateTimeFormats.DATE_TIME_FORMAT_TIMEZONE, RequestConstants.Examples.DATE_TIME_TIMEZONE);
 
         return buildInvalidRequestParameters(fieldName, "invalid time format", invalidValue, description, ex);
     }

@@ -25,7 +25,7 @@ import java.util.Set;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/diet-plan")
+@RequestMapping("/api/v1/diet-plan")
 @Tag(name = "Diet Plan", description = "Handles diet plan operations")
 public class DietPlanController {
 

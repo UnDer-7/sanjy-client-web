@@ -50,11 +50,19 @@ spring:
       api-key: ${SANJY_CLIENT_WEB_OPENAI_API_KEY}
       organization-id: ${SANJY_CLIENT_WEB_OPENAI_ORGANIZATION_ID}
       project-id: ${SANJY_CLIENT_WEB_OPENAI_PROJECT_ID}
+
   main:
     banner-mode: off
+
   threads:
     virtual:
       enabled: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust-dates-to-context-time-zone: false
 
 springdoc:
   api-docs:
