@@ -24,6 +24,7 @@ import type { MealTypeCreate } from '../models/MealType';
 import type { StandardOptionCreate } from '../models/StandardOption';
 import { DateTimeService } from '../services/DateTimeService';
 import { useLoading } from '../contexts/LoadingContext';
+import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
 
 interface FormMealType {
   name: string;
@@ -39,6 +40,7 @@ interface FormStandardOption {
 export function NewDietPlanPage() {
   const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
+  const { settings: { userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
 
   const today = new Date();
   const twoMonthsFromNow = addMonths(new Date(), 2);
@@ -279,7 +281,7 @@ export function NewDietPlanPage() {
                       />
                       <TimePicker
                         label="Scheduled Time"
-                        format="12h"
+                        format={timeFormat}
                         clearable
                         withDropdown
                         required

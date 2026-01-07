@@ -1,9 +1,10 @@
 import {Container, Title, Select, Stack, Text, useMantineColorScheme, type MantineColorScheme } from '@mantine/core';
 import { TIMEZONES } from '../timezones';
 import {useCustomLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import type {TimeFormat} from "../models/CustomTypes.ts";
 
 export function SettingsPage() {
-  const { settings: { userTimezone: { value: timezone, setValue: setTimezone } }} = useCustomLocalStorage();
+  const { settings: { userTimezone, userTimeFormat }} = useCustomLocalStorage();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
 
   const timezoneOptions = TIMEZONES.map((tz) => ({
@@ -15,6 +16,11 @@ export function SettingsPage() {
     { value: 'light', label: 'Light' },
     { value: 'dark', label: 'Dark' },
     { value: 'auto', label: 'Auto' },
+  ];
+
+  const timeFormatOptions: {value: TimeFormat, label: string}[] = [
+    { value: '12h', label: '12-Hour Format (AM/PM)' },
+    { value: '24h', label: '24-Hour Format' },
   ];
 
   return (
@@ -48,12 +54,30 @@ export function SettingsPage() {
             label="Timezone"
             placeholder="Select timezone"
             data={timezoneOptions}
-            value={timezone}
-            onChange={(value) => value && setTimezone(value)}
+            value={userTimezone.value}
+            onChange={(value) => value && userTimezone.setValue(value)}
             searchable
             maxDropdownHeight={300}
             nothingFoundMessage="No timezone found"
             clearable
+          />
+        </div>
+
+        <div>
+          <Title order={2} size="h3" mb="sm">Time Format</Title>
+          <Text c="dimmed" size="sm" mb="md">
+            Choose how you want to display time throughout the application.
+          </Text>
+          <Select
+            label="Time Format"
+            placeholder="Select time format"
+            data={timeFormatOptions}
+            value={userTimeFormat.value}
+            onChange={(value) => {
+              if (value === '12h' || value === '24h') {
+                  userTimeFormat.setValue(value);
+              }
+            }}
           />
         </div>
       </Stack>

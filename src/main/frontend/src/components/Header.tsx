@@ -9,9 +9,9 @@ import {
 } from '@mantine/core';
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import {useCustomLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import { DateTimeService } from '../services/DateTimeService';
 
 interface HeaderProps {
   opened: boolean;
@@ -25,7 +25,7 @@ const navItems = [
 ];
 
 function CurrentDateTime() {
-  const { settings: { userTimezone: { value: timezone } }} = useCustomLocalStorage();
+  const { settings: { userTimezone: { value: timezone }, userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function CurrentDateTime() {
   }, []);
 
   const zonedTime = toZonedTime(currentTime, timezone);
-  const formattedDateTime = format(zonedTime, 'MMM dd, yyyy HH:mm:ss');
+  const formattedDateTime = DateTimeService.formatDateTimeForDisplay(zonedTime, timeFormat);
 
   return (
     <Text size="sm" c="dimmed">

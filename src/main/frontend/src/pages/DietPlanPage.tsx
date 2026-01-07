@@ -5,9 +5,12 @@ import { IconAlertCircle, IconPlus } from '@tabler/icons-react';
 import { DietPlanClient } from '../clients/DietPlanClient';
 import type { DietPlan } from '../models/DietPlan';
 import type { ApiError } from '../models/ApiError';
+import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
+import { DateTimeService } from '../services/DateTimeService';
 
 export function DietPlanPage() {
   const navigate = useNavigate();
+  const { settings: { userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
   const [dietPlan, setDietPlan] = useState<DietPlan | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -133,7 +136,7 @@ export function DietPlanPage() {
                         <Paper key={mealType.id} p="md" withBorder>
                           <Group justify="space-between" mb="xs">
                             <Text fw={600}>{mealType.name}</Text>
-                            <Badge variant="light">{mealType.scheduledTime}</Badge>
+                            <Badge variant="light">{DateTimeService.formatTimeForDisplay(mealType.scheduledTime, timeFormat)}</Badge>
                           </Group>
                           {mealType.observation && (
                             <Text size="sm" c="dimmed" mb="xs">{mealType.observation}</Text>
