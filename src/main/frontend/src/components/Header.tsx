@@ -11,7 +11,7 @@ import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { useTimezone } from '../contexts/TimezoneContext';
+import {useCustomLocalStorage} from "../hooks/useCustomLocalStorage.ts";
 
 interface HeaderProps {
   opened: boolean;
@@ -25,7 +25,7 @@ const navItems = [
 ];
 
 function CurrentDateTime() {
-  const { timezone } = useTimezone();
+  const { settings: { userTimezone: { value: timezone } }} = useCustomLocalStorage();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

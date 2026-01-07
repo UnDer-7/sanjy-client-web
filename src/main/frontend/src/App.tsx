@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import { MantineProvider, AppShell } from '@mantine/core';
+import {MantineProvider, AppShell} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { theme } from './theme';
@@ -10,14 +10,12 @@ import { DietPlanPage } from './pages/DietPlanPage';
 import { NewDietPlanPage } from './pages/NewDietPlanPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoadingProvider } from './contexts/LoadingContext';
-import { TimezoneProvider } from './contexts/TimezoneContext';
 
 function App() {
   const [opened, { toggle, close }] = useDisclosure();
 
   return (
-    <MantineProvider theme={theme}>
-      <TimezoneProvider>
+    <MantineProvider theme={theme} defaultColorScheme={'auto'}>
         <LoadingProvider>
           <BrowserRouter>
           <AppShell
@@ -44,7 +42,6 @@ function App() {
           </AppShell>
           </BrowserRouter>
         </LoadingProvider>
-      </TimezoneProvider>
     </MantineProvider>
   );
 }
