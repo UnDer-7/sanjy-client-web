@@ -1,0 +1,116 @@
+meta {
+  name: searchMealRecords
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/meal-record?pageNumber=0&pageSize=2&consumedAtAfter=2026-01-08T14:25:00-03:00[America/Sao_Paulo]&consumedAtBefore=2026-01-08T17:36:00-03:00[America/Sao_Paulo]
+  body: none
+  auth: inherit
+}
+
+params:query {
+  pageNumber: 0
+  pageSize: 2
+  consumedAtAfter: 2026-01-08T14:25:00-03:00[America/Sao_Paulo]
+  consumedAtBefore: 2026-01-08T17:36:00-03:00[America/Sao_Paulo]
+  ~isFreeMeal: false
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: success
+  description: found two meals
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/meal-record?pageNumber=0&pageSize=2&consumedAtAfter=2026-01-08T14:25:00-03:00[America/Sao_Paulo]&consumedAtBefore=2026-01-08T17:36:00-03:00[America/Sao_Paulo]
+    method: GET
+    mode: none
+    params:query: {
+      pageNumber: 0
+      pageSize: 2
+      consumedAtAfter: 2026-01-08T14:25:00-03:00[America/Sao_Paulo]
+      consumedAtBefore: 2026-01-08T17:36:00-03:00[America/Sao_Paulo]
+    }
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Thu, 08 Jan 2026 23:44:32 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "page": {
+            "totalPages": 1,
+            "currentPage": 0,
+            "pageSize": 2,
+            "totalItems": 2,
+            "content": [
+              {
+                "id": 129,
+                "consumedAt": "2026-01-08T17:25:16.557873Z",
+                "mealType": {
+                  "id": 2
+                },
+                "isFreeMeal": false,
+                "standardOption": {
+                  "id": 4
+                },
+                "freeMealDescription": null,
+                "quantity": 1,
+                "unit": "serving",
+                "notes": "Good energy for workout",
+                "metadata": {
+                  "createdAt": "2026-01-08T17:25:16.557873Z",
+                  "updatedAt": "2026-01-08T17:25:16.557873Z"
+                }
+              },
+              {
+                "id": 130,
+                "consumedAt": "2026-01-08T20:35:16.557873Z",
+                "mealType": {
+                  "id": 1
+                },
+                "isFreeMeal": false,
+                "standardOption": {
+                  "id": 3
+                },
+                "freeMealDescription": null,
+                "quantity": 1,
+                "unit": "serving",
+                "notes": null,
+                "metadata": {
+                  "createdAt": "2026-01-08T20:35:16.557873Z",
+                  "updatedAt": "2026-01-08T20:35:16.557873Z"
+                }
+              }
+            ]
+          },
+          "mealRecordStatistics": {
+            "freeMealQuantity": 0,
+            "plannedMealQuantity": 2,
+            "mealQuantity": 2
+          }
+        }
+      '''
+    }
+  }
+}

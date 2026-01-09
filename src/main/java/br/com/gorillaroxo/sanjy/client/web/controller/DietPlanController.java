@@ -11,12 +11,14 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -29,43 +31,17 @@ import java.util.Set;
 @Tag(name = "Diet Plan", description = "Handles diet plan operations")
 public class DietPlanController {
 
-    private static final String ATTRIBUTE_DIET_PLAN = "dietPlan";
-    private static final String ATTRIBUTE_DIET_PLAN_REQUEST = "dietPlanRequest";
-
-
-    private final ProcessDietPlanFileService processDietPlanFileService;
-    private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
     private final ActiveDietPlanService activeDietPlanService;
     private final NewDietPlanService newDietPlanService;
 
-    private static final Set<String> AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES = Set.of(
-        MediaType.APPLICATION_PDF_VALUE,
-        MediaType.TEXT_MARKDOWN_VALUE,
-        MediaType.TEXT_PLAIN_VALUE);
-
-//    @GetMapping("/new")
-//    public String showNewPlanForm(Model model) {
-//        // Only add empty object if not already present (from flash attributes)
-//        if (!model.containsAttribute(ATTRIBUTE_DIET_PLAN_REQUEST)) {
-//            model.addAttribute(ATTRIBUTE_DIET_PLAN_REQUEST, DietPlanRequestDTO.builder().build());
-//        }
-//
-//        // Add max file size for client-side validation
-//        model.addAttribute("maxFileSizeInMb", sanjyClientWebConfigProp.upload().maxFileSizeInMb());
-//
-//        // Add allowed content types for client-side validation
-//        model.addAttribute("allowedContentTypes", AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES);
-//
-//        return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_NEW);
-//    }
-
     @PostMapping
-    public DietPlanControllerResponseDTO createPlan(@RequestBody @Valid @NonNull DietPlanControllerRequestDTO request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public DietPlanControllerResponseDTO create(@RequestBody @Valid @NonNull DietPlanControllerRequestDTO request) {
         return newDietPlanService.execute(request);
     }
 
     @GetMapping
-    public DietPlanControllerResponseDTO showActivePlan() {
+    public DietPlanControllerResponseDTO get() {
         return activeDietPlanService.execute();
     }
 

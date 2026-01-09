@@ -55,7 +55,8 @@ public enum LogField {
     RUNTIME_MODE,
     APPLICATION_TIMEZONE,
     PROJECT_NAME,
-    TIMEZONE_ID;
+    TIMEZONE_ID,
+    SEARCH_PARAMS;
 
     public String label() {
         return this.name().toLowerCase();
