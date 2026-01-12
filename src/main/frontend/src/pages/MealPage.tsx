@@ -74,8 +74,11 @@ export function MealPage() {
                 return null;
             }
 
-            if (paramIsFreeMeal.trim().toLowerCase() === 'true' || paramIsFreeMeal.trim().toLowerCase() === 'false') {
-                return Boolean(paramIsFreeMeal);
+            const trimmedValue = paramIsFreeMeal.trim().toLowerCase();
+            if (trimmedValue === 'true') {
+                return true;
+            } else if (trimmedValue === 'false') {
+                return false;
             }
 
             throw new Error(`${paramIsFreeMeal} is not a boolean`);
@@ -125,7 +128,9 @@ export function MealPage() {
         const newParams = new URLSearchParams();
         newParams.set('consumedAtAfter', format(params.consumedAtAfter, "yyyy-MM-dd'T'HH:mm:ss"));
         newParams.set('consumedAtBefore', format(params.consumedAtBefore, "yyyy-MM-dd'T'HH:mm:ss"));
-        if (params.isFreeMeal) newParams.set('isFreeMeal', params.isFreeMeal.toString());
+        if (params.isFreeMeal !== null) {
+            newParams.set('isFreeMeal', params.isFreeMeal.toString());
+        }
         newParams.set('pageNumber', params.pageNumber.toString());
         newParams.set('pageSize', params.pageSize.toString());
         setSearchParams(newParams);
@@ -188,12 +193,22 @@ export function MealPage() {
         }
     };
 
+    // Convert isFreeMeal state (boolean | null) to select value (string)
     const getMealTypeValue = (): string => {
-        if (isFreeMeal) return isFreeMeal.toString();
-        return 'all';
+        if (isFreeMeal === null) return 'all';
+        return isFreeMeal.toString();
     };
 
-    console.log('Value before: ', getMealTypeValue())
+    // Convert select value (string) to isFreeMeal state (boolean | null)
+    const setMealTypeFromValue = (value: string | null) => {
+        if (value === 'all' || value === null) {
+            setIsFreeMeal(null);
+        } else if (value === 'true') {
+            setIsFreeMeal(true);
+        } else if (value === 'false') {
+            setIsFreeMeal(false);
+        }
+    };
     return (
         <Container size="xl" py="xl">
             <Title order={1} mb="xl">Meal Records</Title>
@@ -245,14 +260,7 @@ export function MealPage() {
                                 label="Meal Type"
                                 placeholder="Select type"
                                 value={getMealTypeValue()}
-                                onChange={(value) => {
-                                    console.log(`Value: ${value} | IF: ${value != 'null'}`);
-                                    if (value == 'all') {
-                                        setIsFreeMeal(null);
-                                    } else {
-                                        setIsFreeMeal(Boolean(value));
-                                    }
-                                }}
+                                onChange={setMealTypeFromValue}
                                 data={[
                                     {value: 'all', label: 'All Meals'},
                                     {value: 'true', label: 'Free Meals Only'},
