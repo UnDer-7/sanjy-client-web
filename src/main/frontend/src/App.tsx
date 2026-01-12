@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import 'mantine-datatable/styles.layer.css';
 import {MantineProvider, AppShell} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';

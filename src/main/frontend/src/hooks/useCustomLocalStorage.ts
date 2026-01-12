@@ -1,5 +1,6 @@
 import {useLocalStorage} from "@mantine/hooks";
 import type {TimeFormat} from "../models/CustomTypes.ts";
+import {defaultTo} from "ramda";
 
 export type LocalStorageAction<T> = {
     value: T,
@@ -55,6 +56,25 @@ export function useCustomLocalStorage(): UseCustomLocalStorageType {
         settings: {
             userTimezone: { value: valueTimezone, setValue: setValueTimezone },
             userTimeFormat: { value: valueTimeFormat, setValue: setValueTimeFormat },
+        }
+    }
+}
+
+export interface GetFromLocalStorage {
+    settings: {
+        userTimezone: string;
+        userTimeFormat: TimeFormat;
+    }
+}
+
+export function getFromLocalStorage() {
+    const userTimezone = localStorage.getItem(localStorageKeys.userTimezone);
+    const userTimeFormat = localStorage.getItem(localStorageKeys.userTimeFormat);
+
+    return {
+        settings: {
+            userTimezone: defaultTo(getDefaultTimezone(), userTimezone).replaceAll('"', ''),
+            userTimeFormat: defaultTo(getDefaultTimeFormat(), userTimeFormat).replaceAll('"', ''),
         }
     }
 }

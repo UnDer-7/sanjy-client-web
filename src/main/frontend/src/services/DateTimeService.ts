@@ -1,5 +1,7 @@
 import {format, type DateArg } from 'date-fns';
 import type {TimeFormat} from "../models/CustomTypes.ts";
+import {getFromLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import {formatInTimeZone} from 'date-fns-tz';
 
 function formateDate(date: DateArg<Date>): string {
     return format(date, 'yyyy-MM-dd');
@@ -52,9 +54,17 @@ function formatDateTimeForDisplay(date: Date, timeFormat: TimeFormat): string {
     }
 }
 
+// Format date for backend: 2026-01-08T14:25:00-03:00[America/Sao_Paulo]
+function formatDateTimeForBackend(date: Date): string {
+    const {settings: { userTimezone }} = getFromLocalStorage();
+    const formatted = formatInTimeZone(date, userTimezone, "yyyy-MM-dd'T'HH:mm:ssXXX");
+    return `${formatted}[${userTimezone}]`;
+}
+
 export const DateTimeService = {
     formateDate,
     formatTime,
     formatTimeForDisplay,
     formatDateTimeForDisplay,
+    formatDateTimeForBackend,
 }

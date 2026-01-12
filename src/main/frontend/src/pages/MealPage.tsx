@@ -1,12 +1,339 @@
-import {Container, Title, Text } from '@mantine/core';
+import {Button, Center, Container, Grid, Group, Loader, Paper, Select, Stack, Text, Title} from '@mantine/core';
+import {DateTimePicker} from '@mantine/dates';
+import {DataTable} from 'mantine-datatable';
+import {useEffect, useState} from 'react';
+import {useSearchParams} from 'react-router';
+import {endOfDay, format, isValid, startOfDay, toDate} from 'date-fns';
+import {toZonedTime} from 'date-fns-tz';
+import {MealRecordClient} from '../clients/MealRecordClient';
+import {useCustomLocalStorage} from '../hooks/useCustomLocalStorage';
+import type {SearchMealRecordResponse} from '../models/SearchMealRecordResponse';
+import type {MealRecord} from '../models/MealRecord';
+import type {SearchMealRecordRequest} from '../models/SearchMealRecordRequest';
+
+const PAGE_SIZES = [10, 20, 50, 100];
 
 export function MealPage() {
-  return (
-    <Container size="lg" py="xl">
-      <Title order={1}>Meal</Title>
-      <Text c="dimmed" mt="md">
-        Meal page content will be implemented here
-      </Text>
-    </Container>
-  );
+    const {settings: {userTimezone, userTimeFormat}} = useCustomLocalStorage();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState<SearchMealRecordResponse | null>(null);
+
+    // Filter states
+    const [consumedAtAfter, setConsumedAtAfter] = useState<Date | null>(null);
+    const [consumedAtBefore, setConsumedAtBefore] = useState<Date | null>(null);
+    const [isFreeMeal, setIsFreeMeal] = useState<boolean | null>(null);
+    const [pageNumber, setPageNumber] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+
+    // Track if this is the initial load
+    const [initialized, setInitialized] = useState(false);
+
+    // Initialize filters from URL or defaults
+    useEffect(() => {
+        const currentDate = toZonedTime(new Date(), userTimezone.value);
+
+        function safelyGetConsumedAtAfterFromParams(): Date {
+            const consumedAtAfterParam = searchParams.get('consumedAtAfter');
+            if (consumedAtAfterParam) {
+                if (isValid(consumedAtAfterParam)) {
+                    throw new Error('Invalid date');
+                }
+                return toDate(consumedAtAfterParam);
+            } else {
+                return startOfDay(currentDate);
+            }
+        }
+
+        function safelyGetConsumedAtBeforeFromParam(): Date {
+            const consumedAtBeforeParam = searchParams.get('consumedAtBefore');
+            if (consumedAtBeforeParam) {
+                if (isValid(consumedAtBeforeParam)) {
+                    throw new Error('Invalid date');
+                }
+                return toDate(consumedAtBeforeParam);
+            } else {
+                return endOfDay(currentDate);
+            }
+        }
+
+        function safelyGetNumber(value: string | null, defaultValue: number): number {
+            if (!value) {
+                return defaultValue;
+            }
+            if (!Number.isNaN(value.trim())) {
+                return Number.parseInt(value);
+            }
+            throw new Error(`${value} is not a number`);
+        }
+
+        function safelyGetIsFreeMealParam(): boolean | null {
+            const paramIsFreeMeal = searchParams.get('isFreeMeal');
+            if (!paramIsFreeMeal) {
+                return null;
+            }
+
+            if (paramIsFreeMeal.trim().toLowerCase() === 'true' || paramIsFreeMeal.trim().toLowerCase() === 'false') {
+                return Boolean(paramIsFreeMeal);
+            }
+
+            throw new Error(`${paramIsFreeMeal} is not a boolean`);
+        }
+
+        const consumedAtAfterParam = safelyGetConsumedAtAfterFromParams();
+        setConsumedAtAfter(consumedAtAfterParam);
+
+        const consumedAtBeforeParam = safelyGetConsumedAtBeforeFromParam();
+        setConsumedAtBefore(consumedAtBeforeParam);
+
+        const isFreeMealParam = safelyGetIsFreeMealParam();
+        setIsFreeMeal(isFreeMealParam);
+
+        const pageNumberParam = (safelyGetNumber(searchParams.get('pageNumber'), 0));
+        setPageNumber(pageNumberParam);
+
+        const pageSizeParam = safelyGetNumber(searchParams.get('pageSize'), 20);
+        setPageSize(pageSizeParam);
+
+        updateQueryParams({
+            consumedAtAfter: consumedAtAfterParam,
+            consumedAtBefore: consumedAtBeforeParam,
+            isFreeMeal: isFreeMealParam,
+            pageNumber: pageNumberParam,
+            pageSize: pageSizeParam,
+        });
+
+        setInitialized(true);
+    }, [userTimezone.value]);
+
+    // Fetch data on initial load and when filters/pagination change
+    useEffect(() => {
+        if (initialized && consumedAtAfter && consumedAtBefore) {
+            fetchData();
+        }
+    }, [initialized, pageNumber, pageSize]);
+
+    // Update URL query params
+    const updateQueryParams = (params: {
+        consumedAtAfter: Date;
+        consumedAtBefore: Date;
+        isFreeMeal: boolean | null;
+        pageNumber: number;
+        pageSize: number;
+    }) => {
+        const newParams = new URLSearchParams();
+        newParams.set('consumedAtAfter', format(params.consumedAtAfter, "yyyy-MM-dd'T'HH:mm:ss"));
+        newParams.set('consumedAtBefore', format(params.consumedAtBefore, "yyyy-MM-dd'T'HH:mm:ss"));
+        if (params.isFreeMeal) newParams.set('isFreeMeal', params.isFreeMeal.toString());
+        newParams.set('pageNumber', params.pageNumber.toString());
+        newParams.set('pageSize', params.pageSize.toString());
+        setSearchParams(newParams);
+    };
+
+    const fetchData = async () => {
+        if (!consumedAtAfter || !consumedAtBefore) {
+            throw new Error('Dates are null or undefined');
+        }
+
+        setLoading(true);
+        try {
+            const request: SearchMealRecordRequest = {
+                consumedAtAfter: consumedAtAfter,
+                consumedAtBefore: consumedAtBefore,
+                isFreeMeal,
+                pageNumber,
+                pageSize,
+            };
+
+            const response = await MealRecordClient.search(request);
+            setData(response);
+        } catch (error) {
+            console.error('Error fetching meal records:', error);
+            setData(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSearch = () => {
+        if (!consumedAtAfter || !consumedAtBefore) return;
+
+        // Reset to first page when searching
+        const newPageNumber = 0;
+        setPageNumber(newPageNumber);
+
+        // Update URL
+        updateQueryParams({
+            consumedAtAfter,
+            consumedAtBefore,
+            isFreeMeal,
+            pageNumber: newPageNumber,
+            pageSize,
+        });
+
+        // Fetch data
+        fetchData();
+    };
+
+    // Format date for display (UTC to user timezone)
+    const formatDateForDisplay = (date: Date): string => {
+        const timezone = userTimezone.value;
+        const zonedDate = toZonedTime(date, timezone);
+
+        if (userTimeFormat.value === '12h') {
+            return format(zonedDate, 'MMM dd, yyyy hh:mm:ss a');
+        } else {
+            return format(zonedDate, 'MMM dd, yyyy HH:mm:ss');
+        }
+    };
+
+    const getMealTypeValue = (): string => {
+        if (isFreeMeal) return isFreeMeal.toString();
+        return 'all';
+    };
+
+    console.log('Value before: ', getMealTypeValue())
+    return (
+        <Container size="xl" py="xl">
+            <Title order={1} mb="xl">Meal Records</Title>
+
+            {/* Summary Statistics */}
+            {data?.mealRecordStatistics && (
+                <Paper p="md" mb="xl" withBorder>
+                    <Group justify="space-around">
+                        <div>
+                            <Text size="sm" c="dimmed" ta="center">Free Meals</Text>
+                            <Text size="xl" fw={700} ta="center">{data.mealRecordStatistics.freeMealQuantity}</Text>
+                        </div>
+                        <div>
+                            <Text size="sm" c="dimmed" ta="center">Planned Meals</Text>
+                            <Text size="xl" fw={700} ta="center">{data.mealRecordStatistics.plannedMealQuantity}</Text>
+                        </div>
+                        <div>
+                            <Text size="sm" c="dimmed" ta="center">Total Meals</Text>
+                            <Text size="xl" fw={700} ta="center">{data.mealRecordStatistics.mealQuantity}</Text>
+                        </div>
+                    </Group>
+                </Paper>
+            )}
+
+            {/* Filters */}
+            <Paper p="md" mb="xl" withBorder>
+                <Stack gap="md">
+                    <Grid>
+                        <Grid.Col span={{base: 12, sm: 6, md: 4}}>
+                            <DateTimePicker
+                                label="Consumed After"
+                                placeholder="Select date and time"
+                                value={consumedAtAfter}
+                                onChange={(value) => setConsumedAtAfter(value as Date | null)}
+                                clearable
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={{base: 12, sm: 6, md: 4}}>
+                            <DateTimePicker
+                                label="Consumed Before"
+                                placeholder="Select date and time"
+                                value={consumedAtBefore}
+                                onChange={(value) => setConsumedAtBefore(value as Date | null)}
+                                clearable
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={{base: 12, sm: 6, md: 4}}>
+                            <Select
+                                label="Meal Type"
+                                placeholder="Select type"
+                                value={getMealTypeValue()}
+                                onChange={(value) => {
+                                    console.log(`Value: ${value} | IF: ${value != 'null'}`);
+                                    if (value == 'all') {
+                                        setIsFreeMeal(null);
+                                    } else {
+                                        setIsFreeMeal(Boolean(value));
+                                    }
+                                }}
+                                data={[
+                                    {value: 'all', label: 'All Meals'},
+                                    {value: 'true', label: 'Free Meals Only'},
+                                    {value: 'false', label: 'Planned Meals Only'},
+                                ]}
+                                clearable
+                            />
+                        </Grid.Col>
+                    </Grid>
+                    <Button onClick={handleSearch} disabled={!consumedAtAfter || !consumedAtBefore}>
+                        Search
+                    </Button>
+                </Stack>
+            </Paper>
+
+            {/* Data Table */}
+            {loading ? (
+                <Center py="xl">
+                    <Loader size="lg"/>
+                </Center>
+            ) : (
+                <Paper withBorder>
+                    <DataTable
+                        records={data?.page.content || []}
+                        columns={[
+                            {
+                                accessor: 'consumedAt',
+                                title: 'Consumed At',
+                                render: (record: MealRecord) => formatDateForDisplay(record.consumedAt),
+                            },
+                            {
+                                accessor: 'isFreeMeal',
+                                title: 'Free Meal',
+                                render: (record: MealRecord) => (record.isFreeMeal ? 'Yes' : 'No'),
+                            },
+                            {
+                                accessor: 'freeMealDescription',
+                                title: 'Description',
+                                render: (record: MealRecord) => record.freeMealDescription || '-',
+                            },
+                            {
+                                accessor: 'quantity',
+                                title: 'Quantity & Unit',
+                                render: (record: MealRecord) => `${record.quantity} ${record.unit}`,
+                            },
+                        ]}
+                        totalRecords={data?.page.totalItems || 0}
+                        recordsPerPage={pageSize}
+                        page={pageNumber + 1} // DataTable uses 1-based indexing
+                        onPageChange={(page) => {
+                            const newPageNumber = page - 1; // Convert to 0-based
+                            setPageNumber(newPageNumber);
+                            if (consumedAtAfter && consumedAtBefore) {
+                                updateQueryParams({
+                                    consumedAtAfter,
+                                    consumedAtBefore,
+                                    isFreeMeal,
+                                    pageNumber: newPageNumber,
+                                    pageSize,
+                                });
+                            }
+                        }}
+                        recordsPerPageOptions={PAGE_SIZES}
+                        onRecordsPerPageChange={(newPageSize) => {
+                            setPageSize(newPageSize);
+                            setPageNumber(0); // Reset to first page
+                            if (consumedAtAfter && consumedAtBefore) {
+                                updateQueryParams({
+                                    consumedAtAfter,
+                                    consumedAtBefore,
+                                    isFreeMeal,
+                                    pageNumber: 0,
+                                    pageSize: newPageSize,
+                                });
+                            }
+                        }}
+                        minHeight={200}
+                        noRecordsText="No meal records found"
+                    />
+                </Paper>
+            )}
+        </Container>
+    );
 }
