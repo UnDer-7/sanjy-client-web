@@ -11,7 +11,22 @@ import type {SearchMealRecordResponse} from '../models/SearchMealRecordResponse'
 import type {MealRecord} from '../models/MealRecord';
 import type {SearchMealRecordRequest} from '../models/SearchMealRecordRequest';
 
-const PAGE_SIZES = [10, 20, 50, 100];
+const PAGE_SIZES: number[] = [10, 20, 50, 100];
+
+const PAGE_REQUEST_PARAM_NAMES: {
+    readonly consumedAtAfter: string;
+    readonly consumedAtBefore: string;
+    readonly isFreeMeal: string;
+    readonly pageNumber: string;
+    readonly pageSize: string;
+} = Object.freeze({
+        consumedAtAfter: 'consumedAtAfter',
+        consumedAtBefore: 'consumedAtBefore',
+        isFreeMeal: 'isFreeMeal',
+        pageNumber: 'pageNumber',
+        pageSize: 'pageSize'
+    }
+);
 
 export function MealPage() {
     const {settings: {userTimezone, userTimeFormat}} = useCustomLocalStorage();
@@ -35,7 +50,7 @@ export function MealPage() {
         const currentDate = toZonedTime(new Date(), userTimezone.value);
 
         function safelyGetConsumedAtAfterFromParams(): Date {
-            const consumedAtAfterParam = searchParams.get('consumedAtAfter');
+            const consumedAtAfterParam = searchParams.get(PAGE_REQUEST_PARAM_NAMES.consumedAtAfter);
             if (consumedAtAfterParam) {
                 if (isValid(consumedAtAfterParam)) {
                     throw new Error('Invalid date');
@@ -47,7 +62,7 @@ export function MealPage() {
         }
 
         function safelyGetConsumedAtBeforeFromParam(): Date {
-            const consumedAtBeforeParam = searchParams.get('consumedAtBefore');
+            const consumedAtBeforeParam = searchParams.get(PAGE_REQUEST_PARAM_NAMES.consumedAtBefore);
             if (consumedAtBeforeParam) {
                 if (isValid(consumedAtBeforeParam)) {
                     throw new Error('Invalid date');
@@ -69,7 +84,7 @@ export function MealPage() {
         }
 
         function safelyGetIsFreeMealParam(): boolean | null {
-            const paramIsFreeMeal = searchParams.get('isFreeMeal');
+            const paramIsFreeMeal = searchParams.get(PAGE_REQUEST_PARAM_NAMES.isFreeMeal);
             if (!paramIsFreeMeal) {
                 return null;
             }
@@ -93,10 +108,10 @@ export function MealPage() {
         const isFreeMealParam = safelyGetIsFreeMealParam();
         setIsFreeMeal(isFreeMealParam);
 
-        const pageNumberParam = (safelyGetNumber(searchParams.get('pageNumber'), 0));
+        const pageNumberParam = (safelyGetNumber(searchParams.get(PAGE_REQUEST_PARAM_NAMES.pageNumber), 0));
         setPageNumber(pageNumberParam);
 
-        const pageSizeParam = safelyGetNumber(searchParams.get('pageSize'), 20);
+        const pageSizeParam = safelyGetNumber(searchParams.get(PAGE_REQUEST_PARAM_NAMES.pageSize), 20);
         setPageSize(pageSizeParam);
 
         updateQueryParams({
@@ -126,13 +141,13 @@ export function MealPage() {
         pageSize: number;
     }) => {
         const newParams = new URLSearchParams();
-        newParams.set('consumedAtAfter', format(params.consumedAtAfter, "yyyy-MM-dd'T'HH:mm:ss"));
-        newParams.set('consumedAtBefore', format(params.consumedAtBefore, "yyyy-MM-dd'T'HH:mm:ss"));
+        newParams.set(PAGE_REQUEST_PARAM_NAMES.consumedAtAfter, format(params.consumedAtAfter, "yyyy-MM-dd'T'HH:mm:ss"));
+        newParams.set(PAGE_REQUEST_PARAM_NAMES.consumedAtBefore, format(params.consumedAtBefore, "yyyy-MM-dd'T'HH:mm:ss"));
         if (params.isFreeMeal !== null) {
-            newParams.set('isFreeMeal', params.isFreeMeal.toString());
+            newParams.set(PAGE_REQUEST_PARAM_NAMES.isFreeMeal, params.isFreeMeal.toString());
         }
-        newParams.set('pageNumber', params.pageNumber.toString());
-        newParams.set('pageSize', params.pageSize.toString());
+        newParams.set(PAGE_REQUEST_PARAM_NAMES.pageNumber, params.pageNumber.toString());
+        newParams.set(PAGE_REQUEST_PARAM_NAMES.pageSize, params.pageSize.toString());
         setSearchParams(newParams);
     };
 
@@ -209,6 +224,7 @@ export function MealPage() {
             setIsFreeMeal(false);
         }
     };
+
     return (
         <Container size="xl" py="xl">
             <Title order={1} mb="xl">Meal Records</Title>
