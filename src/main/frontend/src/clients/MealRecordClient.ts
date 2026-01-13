@@ -7,7 +7,10 @@ import {DateTimeService} from "../services/DateTimeService.ts";
 const RESOURCE_URL = "/v1/meal-record";
 
 async function create(requestBody: MealRecordCreate): Promise<MealRecord> {
-    const response = await HttpClient.post<MealRecord>(RESOURCE_URL, requestBody);
+    const response = await HttpClient.post<MealRecord>(RESOURCE_URL, {
+        ...requestBody,
+        consumedAt: DateTimeService.formatDateTimeForBackend(requestBody.consumedAt)
+    });
     return response.data;
 }
 
