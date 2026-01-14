@@ -46,7 +46,7 @@ function CurrentDateTime() {
   );
 }
 
-export function Header({ opened, toggle }: HeaderProps) {
+export function HeaderSanjy({ opened, toggle }: HeaderProps) {
   const location = useLocation();
 
   return (

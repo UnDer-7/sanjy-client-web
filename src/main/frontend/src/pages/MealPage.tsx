@@ -2,7 +2,7 @@ import {Button, Center, Container, Grid, Group, Loader, Paper, Select, Stack, Te
 import {DateTimePicker} from '@mantine/dates';
 import {DataTable} from 'mantine-datatable';
 import {useEffect, useState} from 'react';
-import {useSearchParams} from 'react-router';
+import {useSearchParams, useNavigate} from 'react-router';
 import {endOfDay, format, isValid, startOfDay, toDate} from 'date-fns';
 import {toZonedTime} from 'date-fns-tz';
 import {MealRecordClient} from '../clients/MealRecordClient';
@@ -29,6 +29,7 @@ const PAGE_REQUEST_PARAM_NAMES: {
 );
 
 export function MealPage() {
+    const navigate = useNavigate();
     const {settings: {userTimezone, userTimeFormat}} = useCustomLocalStorage();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -227,7 +228,10 @@ export function MealPage() {
 
     return (
         <Container size="xl" py="xl">
-            <Title order={1} mb="xl">Meal Records</Title>
+            <Group justify="space-between" align="center" mb="xl">
+                <Title order={1}>Meal Records</Title>
+                <Button onClick={() => navigate('/meal/new')}>+ New Meal Record</Button>
+            </Group>
 
             {/* Summary Statistics */}
             {data?.mealRecordStatistics && (

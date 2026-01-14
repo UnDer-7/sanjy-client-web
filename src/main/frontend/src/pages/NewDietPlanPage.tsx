@@ -23,7 +23,7 @@ import type { DietPlanCreate } from '../models/DietPlan';
 import type { MealTypeCreate } from '../models/MealType';
 import type { StandardOptionCreate } from '../models/StandardOption';
 import { DateTimeService } from '../services/DateTimeService';
-import { useLoading } from '../contexts/LoadingContext';
+import { useLoadingGlobal } from '../contexts/LoadingContext';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
 
 interface FormMealType {
@@ -39,7 +39,7 @@ interface FormStandardOption {
 
 export function NewDietPlanPage() {
   const navigate = useNavigate();
-  const { showLoading, hideLoading } = useLoading();
+  const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
   const { settings: { userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
 
   const today = new Date();
@@ -129,7 +129,7 @@ export function NewDietPlanPage() {
     }
 
     try {
-      showLoading();
+      showLoadingGlobal();
 
       const mealTypes: MealTypeCreate[] = values.mealTypes.map((mealType) => ({
         name: mealType.name,
@@ -159,7 +159,7 @@ export function NewDietPlanPage() {
     } catch (error) {
       console.error('Failed to create diet plan:', error);
     } finally {
-      hideLoading();
+      hideLoadingGlobal();
     }
   };
 

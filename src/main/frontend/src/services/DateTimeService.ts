@@ -47,11 +47,15 @@ function formatTimeForDisplay(time: string | Date, timeFormat: TimeFormat): stri
 
 // Format datetime for display based on user preference
 function formatDateTimeForDisplay(date: Date, timeFormat: TimeFormat): string {
-    if (timeFormat === '12h') {
-        return format(date, 'MMM dd, yyyy hh:mm:ss a'); // e.g., "Jan 07, 2026 09:30:45 PM"
-    } else {
-        return format(date, 'MMM dd, yyyy HH:mm:ss'); // e.g., "Jan 07, 2026 21:30:45"
-    }
+    const dateFormatPattern = navigator.language === 'en-US' ?
+        "MMM dd, yyyy" :
+        "dd MMM, yyyy";
+
+    const timeFormatPattern = timeFormat === '24h' ?
+        "HH:mm:ss" :
+        "hh:mm:ss a";
+
+    return format(date, `${dateFormatPattern} ${timeFormatPattern}`);
 }
 
 // Format date for backend: 2026-01-08T14:25:00-03:00[America/Sao_Paulo]

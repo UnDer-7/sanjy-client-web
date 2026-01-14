@@ -15,4 +15,7 @@ export interface MealRecord {
 
 }
 
-export interface MealRecordCreate extends Omit<MealRecord, 'id' | 'metadata'> {}
+export interface MealRecordCreate extends Omit<MealRecord, 'id' | 'metadata' | 'mealType' | 'standardOption'> {
+    mealTypeId: number;
+    standardOptionId?: number;
+}
