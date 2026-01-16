@@ -1,14 +1,13 @@
 import {DateTimePicker, type DateTimePickerProps} from '@mantine/dates'
-import {useCustomLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import {getFromLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import {DateFormatPatternService} from "../services/DateFormatPatternService.ts";
 
 export function DateTimePickerSanjy(props: Readonly<DateTimePickerProps>) {
-    const { settings: { userTimeFormat: { value: timeFormatValue }}} = useCustomLocalStorage();
+    const { settings: { userTimeFormat }} = getFromLocalStorage();
 
-    const dateFormat = navigator.language === 'en-US' ?
-        "MMM DD, YYYY" :
-        "DD MMM, YYYY";
+    const dateFormat = DateFormatPatternService.getFormat().dayjs;
 
-    const timeFormat = timeFormatValue === '24h' ?
+    const timeFormat = userTimeFormat === '24h' ?
         "HH:mm" :
         "hh:mm A"
 

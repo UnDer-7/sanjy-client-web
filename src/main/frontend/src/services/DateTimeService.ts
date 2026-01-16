@@ -2,6 +2,7 @@ import {format, type DateArg } from 'date-fns';
 import type {TimeFormat} from "../models/CustomTypes.ts";
 import {getFromLocalStorage} from "../hooks/useCustomLocalStorage.ts";
 import {formatInTimeZone} from 'date-fns-tz';
+import {DateFormatPatternService} from "./DateFormatPatternService.ts";
 
 function formateDate(date: DateArg<Date>): string {
     return format(date, 'yyyy-MM-dd');
@@ -47,9 +48,7 @@ function formatTimeForDisplay(time: string | Date, timeFormat: TimeFormat): stri
 
 // Format datetime for display based on user preference
 function formatDateTimeForDisplay(date: Date, timeFormat: TimeFormat): string {
-    const dateFormatPattern = navigator.language === 'en-US' ?
-        "MMM dd, yyyy" :
-        "dd MMM, yyyy";
+    const dateFormatPattern = DateFormatPatternService.getFormat().dateFns
 
     const timeFormatPattern = timeFormat === '24h' ?
         "HH:mm:ss" :
