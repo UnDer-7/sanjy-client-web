@@ -16,9 +16,17 @@ Sanjy Client Web is a modern full-stack application for diet and meal tracking. 
 
 1. **English Only**: ALL code, comments, commit messages, variable names, class names, method names, and documentation MUST be written in English. Never use Portuguese or any other language in the codebase.
 
-2. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns.
+2. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS fetch and consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns. This is MANDATORY before writing any Mantine component code.
 
-3. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
+3. **Browser Validation**: You have access to Google Chrome for debugging the application. Use it to validate your implementation by checking:
+   - Visual rendering of components
+   - Console errors and warnings
+   - Network requests and responses
+   - Application behavior and user interactions
+
+4. **Dependency Installation**: You MAY install new libraries in `package.json` if necessary for implementing features. Use `npm install <package>` in the frontend directory.
+
+5. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
    - Run `mvn clean install` from the project root
    - If the build fails, analyze errors, fix them, and run `mvn clean install` again
    - Repeat until the build succeeds with `BUILD SUCCESS`
@@ -64,7 +72,7 @@ The project is a single-module Maven application with two main parts:
 **Frontend:**
 - **React 19.2.0** (UI library)
 - **TypeScript ~5.9.3** (type safety)
-- **Mantine v8.3.10** (component library - [LLM docs](https://mantine.dev/llms.txt))
+- **Mantine v8.3.10** (component library - see Essential Rule #2 for docs)
 - **Vite 7.2.4** (build tool and dev server)
 - **PostCSS** with Mantine preset (styling)
 
@@ -166,7 +174,7 @@ mvn clean compile -q
 ./mvnw spring-boot:run
 
 # Access BFF API and bundled frontend
-http://localhost:8081
+http://localhost:8081/api
 ```
 
 **Frontend Only (for development with HMR):**
@@ -224,7 +232,7 @@ npm run test:coverage
 **Frontend Environment:**
 - Create `.env` file in `src/main/frontend/` if needed
 - Use `VITE_` prefix for environment variables exposed to the browser
-- Example: `VITE_API_BASE_URL=http://localhost:8081` for development
+- Example: `VITE_API_BASE_URL=http://localhost:8081/api` for development
 
 ### GraalVM Native Image
 
@@ -316,20 +324,22 @@ src/main/frontend/
 **Key Components:**
 - **App.tsx**: Root component that wraps the application with `MantineProvider`
 - **theme.ts**: Mantine theme customization (colors, fonts, spacing, etc.)
-- **Components**: Use Mantine v8 components - always consult https://mantine.dev/llms.txt for correct usage
+- **Components**: Use Mantine v8 components (see Essential Rule #2)
 
 ## Development Workflow
 
 ### Adding New Features
 
 **Full-Stack Feature (Frontend + Backend):**
-1. **Define DTOs** in the backend under `dto.request` and `dto.response`
-2. **Create/update Feign client interface** if communicating with sanjy-server
-3. **Implement REST controller** in the BFF with `@RestController`
-4. **Create API service** in frontend (`src/main/frontend/src/services/`)
-5. **Define TypeScript types** matching the backend DTOs
-6. **Create React components** using Mantine v8 (consult https://mantine.dev/llms.txt)
-7. **Create page components** that use the services and components
+1. **Consult Swagger** - Check sanjy-server Swagger for available backend APIs
+2. **Define DTOs** in the backend under `dto.request` and `dto.response`
+3. **Create/update Feign client interface** if communicating with sanjy-server
+4. **Implement REST controller** in the BFF with `@RestController`
+5. **Create API service** in frontend (`src/main/frontend/src/services/`)
+6. **Define TypeScript types** matching the backend DTOs
+7. **Create React components** using Mantine v8 (see Essential Rule #2)
+8. **Create page components** that use the services and components
+9. **Validate in browser** - Use Chrome to verify the implementation works correctly
 
 **Backend-Only Feature:**
 1. Define DTOs in `dto.request` and `dto.response`
@@ -339,9 +349,10 @@ src/main/frontend/
 
 **Frontend-Only Feature:**
 1. Create TypeScript types in `src/types/`
-2. Create Mantine components (consult https://mantine.dev/llms.txt for correct usage)
+2. Create Mantine components (see Essential Rule #2 for docs)
 3. Add custom hooks in `src/hooks/` if needed
 4. Create page components
+5. Validate in browser - Use Chrome to verify the implementation
 
 ### Exception Handling
 
@@ -355,13 +366,20 @@ src/main/frontend/
 - Handle API errors in service layer
 - Display user-friendly error messages using Mantine notifications
 
-## API Documentation
+## API Documentation & Development URLs
 
-Swagger UI is available when the BFF is running:
-- Swagger UI: `http://localhost:8081/swagger-ui.html`
-- OpenAPI spec: `http://localhost:8081/v3/api-docs`
+**Development URLs:**
+- **Frontend (Vite dev server)**: http://localhost:5173
+- **Backend BFF**: http://localhost:8081/api
+- **Backend Server (sanjy-server)**: http://localhost:8080
 
-Documents all REST API endpoints exposed by the Backend for Frontend.
+**Swagger UI (API Documentation):**
+- **BFF Swagger** (APIs that frontend calls): http://localhost:8081/swagger-ui/index.html
+- **sanjy-server Swagger** (APIs that BFF calls): http://localhost:8080/swagger-ui/index.html
+- **OpenAPI spec (BFF)**: http://localhost:8081/api-docs
+- **OpenAPI spec (sanjy-server)**: http://localhost:8080/api-docs
+
+Use these Swagger UIs to understand available endpoints, request/response schemas, and test API calls during development.
 
 ## Code Style Notes
 
@@ -377,12 +395,13 @@ Documents all REST API endpoints exposed by the Backend for Frontend.
 **Frontend:**
 - Use functional components with TypeScript
 - Define proper TypeScript types for all props and state
-- Use Mantine v8 components (consult https://mantine.dev/llms.txt)
+- Use Mantine v8 components (see Essential Rule #2)
 - Follow React best practices: hooks, composition, single responsibility
 - Organize components by feature or domain
 - Use custom hooks for reusable logic
 - Handle errors gracefully with error boundaries
 - Use ESLint rules defined in the project
+- Validate all changes in Chrome browser (see Essential Rule #3)
 
 **Integration:**
 - Keep TypeScript types in sync with backend DTOs
