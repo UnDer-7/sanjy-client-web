@@ -1,7 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.controller.dto.response;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.IdOnlyResponseDto;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +28,7 @@ public record MealRecordControllerResponseDTO(
         description = "Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity",
         requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity")
-        IdOnlyControllerResponseDto mealType,
+    MealTypeSimplifiedControllerResponseDto mealType,
 
     @Schema(
         description =
@@ -54,7 +52,7 @@ public record MealRecordControllerResponseDTO(
                     Returns only the ID of the related standard option entity. \
                     NULL when isFreeMeal = TRUE (free meals don't follow the plan)
                     """)
-        IdOnlyControllerResponseDto standardOption,
+    StandardOptionSimplifiedControllerResponseDTO standardOption,
 
     @Schema(
         description = "Text description of the free meal item consumed. "

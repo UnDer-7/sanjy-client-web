@@ -15,3 +15,5 @@ export interface MealType {
 export interface MealTypeCreate extends Omit<MealType, 'id' | 'dietPlanId' | 'metadata' | 'standardOptions'> {
     standardOptions: StandardOptionCreate[];
 }
+
+export interface MealTypeSimplified extends Omit<MealType, 'dietPlanId' | 'standardOptions'> {}

@@ -16,7 +16,7 @@ public record MealRecordResponseDTO(
         Instant consumedAt,
 
         @JsonPropertyDescription("Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity")
-        IdOnlyResponseDto mealType,
+        MealTypeSimplifiedResponseDto mealType,
 
         @JsonPropertyDescription("""
             Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan).
@@ -26,10 +26,9 @@ public record MealRecordResponseDTO(
 
         @JsonPropertyDescription("""
                     The selected diet plan option that was consumed. This field contains the standard option chosen from the diet plan. \
-                    Returns only the ID of the related standard option entity. \
                     NULL when isFreeMeal = TRUE (free meals don't follow the plan)
                     """)
-        IdOnlyResponseDto standardOption,
+        StandardOptionSimplifiedResponseDTO standardOption,
 
         @JsonPropertyDescription("""
             Text description of the free meal item consumed.

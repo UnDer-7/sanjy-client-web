@@ -9,3 +9,5 @@ export interface StandardOption {
 }
 
 export interface StandardOptionCreate extends Omit<StandardOption, 'id' | 'mealTypeId' | 'metadata'>{}
+
+export interface StandardOptionSimplified extends Omit<StandardOption, 'mealTypeId'> {}

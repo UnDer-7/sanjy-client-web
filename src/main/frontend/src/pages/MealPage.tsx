@@ -7,7 +7,7 @@ import {endOfDay, format, isValid, startOfDay, toDate} from 'date-fns';
 import {toZonedTime} from 'date-fns-tz';
 import {MealRecordClient} from '../clients/MealRecordClient';
 import {useCustomLocalStorage} from '../hooks/useCustomLocalStorage';
-import type {SearchMealRecordResponse} from '../models/SearchMealRecordResponse';
+import type {MealRecordPageResponse} from '../models/MealRecordPageResponse.ts';
 import type {MealRecord} from '../models/MealRecord';
 import type {SearchMealRecordRequest} from '../models/SearchMealRecordRequest';
 
@@ -34,7 +34,7 @@ export function MealPage() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<SearchMealRecordResponse | null>(null);
+    const [data, setData] = useState<MealRecordPageResponse | null>(null);
 
     // Filter states
     const [consumedAtAfter, setConsumedAtAfter] = useState<Date | null>(null);

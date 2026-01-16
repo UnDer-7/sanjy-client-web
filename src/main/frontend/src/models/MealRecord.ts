@@ -1,5 +1,7 @@
 import type {IdOnlyObject} from "./CustomTypes.ts";
 import type {Metadata} from "./Metadata.ts";
+import type {MealTypeSimplified} from "./MealType.ts";
+import type {StandardOptionSimplified} from "./StandardOption.ts";
 
 export interface MealRecord {
     id: number;
@@ -18,4 +20,9 @@ export interface MealRecord {
 export interface MealRecordCreate extends Omit<MealRecord, 'id' | 'metadata' | 'mealType' | 'standardOption'> {
     mealTypeId: number;
     standardOptionId?: number;
+}
+
+export interface MealRecordSearchResult extends Omit<MealRecord, 'mealType' | 'standardOption'> {
+    mealType: MealTypeSimplified;
+    standardOption: StandardOptionSimplified
 }
