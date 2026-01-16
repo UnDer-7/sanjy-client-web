@@ -67,14 +67,14 @@ export interface GetFromLocalStorage {
     }
 }
 
-export function getFromLocalStorage() {
+export function getFromLocalStorage(): GetFromLocalStorage {
     const userTimezone = localStorage.getItem(localStorageKeys.userTimezone);
     const userTimeFormat = localStorage.getItem(localStorageKeys.userTimeFormat);
 
     return {
         settings: {
             userTimezone: defaultTo(getDefaultTimezone(), userTimezone).replaceAll('"', ''),
-            userTimeFormat: defaultTo(getDefaultTimeFormat(), userTimeFormat).replaceAll('"', ''),
+            userTimeFormat: defaultTo(getDefaultTimeFormat(), userTimeFormat).replaceAll('"', '') as TimeFormat,
         }
     }
 }

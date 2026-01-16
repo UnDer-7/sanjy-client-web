@@ -76,11 +76,11 @@ export function DietPlanPage() {
               <Group grow>
                 <div>
                   <Text size="sm" c="dimmed">Start Date</Text>
-                  <Text fw={500}>{dietPlan.startDate}</Text>
+                  <Text fw={500}>{DateTimeService.formatDateForDisplay(dietPlan.startDate)}</Text>
                 </div>
                 <div>
                   <Text size="sm" c="dimmed">End Date</Text>
-                  <Text fw={500}>{dietPlan.endDate}</Text>
+                  <Text fw={500}>{DateTimeService.formatDateForDisplay(dietPlan.endDate)}</Text>
                 </div>
               </Group>
 

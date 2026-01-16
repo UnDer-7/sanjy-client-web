@@ -1,5 +1,4 @@
 import {Button, Center, Container, Grid, Group, Loader, Paper, Select, Stack, Text, Title} from '@mantine/core';
-import {DateTimePicker} from '@mantine/dates';
 import {DataTable} from 'mantine-datatable';
 import {useEffect, useState} from 'react';
 import {useSearchParams, useNavigate} from 'react-router';
@@ -8,8 +7,10 @@ import {toZonedTime} from 'date-fns-tz';
 import {MealRecordClient} from '../clients/MealRecordClient';
 import {useCustomLocalStorage} from '../hooks/useCustomLocalStorage';
 import type {MealRecordPageResponse} from '../models/MealRecordPageResponse.ts';
-import type {MealRecord} from '../models/MealRecord';
+import type {MealRecordSearchResult} from '../models/MealRecord';
 import type {SearchMealRecordRequest} from '../models/SearchMealRecordRequest';
+import {DateTimeService} from "../services/DateTimeService.ts";
+import {DateTimePickerSanjy} from "../components/DateTimePickerSanjy.tsx";
 
 const PAGE_SIZES: number[] = [10, 20, 50, 100];
 
@@ -197,18 +198,6 @@ export function MealPage() {
         fetchData();
     };
 
-    // Format date for display (UTC to user timezone)
-    const formatDateForDisplay = (date: Date): string => {
-        const timezone = userTimezone.value;
-        const zonedDate = toZonedTime(date, timezone);
-
-        if (userTimeFormat.value === '12h') {
-            return format(zonedDate, 'MMM dd, yyyy hh:mm:ss a');
-        } else {
-            return format(zonedDate, 'MMM dd, yyyy HH:mm:ss');
-        }
-    };
-
     // Convert isFreeMeal state (boolean | null) to select value (string)
     const getMealTypeValue = (): string => {
         if (isFreeMeal === null) return 'all';
@@ -258,7 +247,7 @@ export function MealPage() {
                 <Stack gap="md">
                     <Grid>
                         <Grid.Col span={{base: 12, sm: 6, md: 4}}>
-                            <DateTimePicker
+                            <DateTimePickerSanjy
                                 label="Consumed After"
                                 placeholder="Select date and time"
                                 value={consumedAtAfter}
@@ -267,7 +256,7 @@ export function MealPage() {
                             />
                         </Grid.Col>
                         <Grid.Col span={{base: 12, sm: 6, md: 4}}>
-                            <DateTimePicker
+                            <DateTimePickerSanjy
                                 label="Consumed Before"
                                 placeholder="Select date and time"
                                 value={consumedAtBefore}
@@ -309,22 +298,25 @@ export function MealPage() {
                             {
                                 accessor: 'consumedAt',
                                 title: 'Consumed At',
-                                render: (record: MealRecord) => formatDateForDisplay(record.consumedAt),
+                                render: (record: MealRecordSearchResult) => DateTimeService.formatDateTimeForDisplay(toZonedTime(record.consumedAt, userTimezone.value), userTimeFormat.value),
                             },
                             {
                                 accessor: 'isFreeMeal',
                                 title: 'Free Meal',
-                                render: (record: MealRecord) => (record.isFreeMeal ? 'Yes' : 'No'),
+                                render: (record: MealRecordSearchResult) => (record.isFreeMeal ? 'Yes' : 'No'),
                             },
                             {
-                                accessor: 'freeMealDescription',
+                                accessor: 'description',
                                 title: 'Description',
-                                render: (record: MealRecord) => record.freeMealDescription || '-',
+                                render: (record: MealRecordSearchResult) =>
+                                    record.isFreeMeal
+                                        ? record.freeMealDescription || '-'
+                                        : record.standardOption?.description || '-',
                             },
                             {
                                 accessor: 'quantity',
                                 title: 'Quantity & Unit',
-                                render: (record: MealRecord) => `${record.quantity} ${record.unit}`,
+                                render: (record: MealRecordSearchResult) => `${record.quantity} ${record.unit}`,
                             },
                         ]}
                         totalRecords={data?.page.totalItems || 0}

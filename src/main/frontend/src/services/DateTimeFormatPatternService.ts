@@ -1,9 +1,23 @@
+import type {TimeFormat} from "../models/CustomTypes.ts";
+
 type getDateFormatTypeReturn = {
     dayjs: string
     dateFns: string
 };
 
-function getFormat(): getDateFormatTypeReturn {
+function getTimeFormat(timeFormat: TimeFormat, withSeconds = false): string {
+    if (timeFormat === '12h') {
+        return withSeconds ?
+            'hh:mm:ss a' : // e.g., "09:30:49 AM"
+            'hh:mm a'; // e.g., "09:30 AM"
+    } else {
+        return withSeconds ?
+            'HH:mm:ss' : // e.g., "15:30:30"
+            'HH:mm'; // e.g., "15:30"
+    }
+}
+
+function getDateFormat(): getDateFormatTypeReturn {
     // https://en.wikipedia.org/wiki/List_of_date_formats_by_country
 
     const formatToParts = new Intl.DateTimeFormat(navigator.language)
@@ -36,6 +50,7 @@ function getFormat(): getDateFormatTypeReturn {
     };
 }
 
-export const DateFormatPatternService = {
-    getFormat,
+export const DateTimeFormatPatternService = {
+    getDateFormat,
+    getTimeFormat,
 }

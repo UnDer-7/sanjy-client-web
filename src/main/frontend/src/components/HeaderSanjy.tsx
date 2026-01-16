@@ -37,7 +37,7 @@ function CurrentDateTime() {
   }, []);
 
   const zonedTime = toZonedTime(currentTime, timezone);
-  const formattedDateTime = DateTimeService.formatDateTimeForDisplay(zonedTime, timeFormat);
+  const formattedDateTime = DateTimeService.formatDateTimeForDisplay(zonedTime, timeFormat, true);
 
   return (
     <Text size="sm" c="dimmed">

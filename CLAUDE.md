@@ -32,6 +32,8 @@ Sanjy Client Web is a modern full-stack application for diet and meal tracking. 
    - Repeat until the build succeeds with `BUILD SUCCESS`
    - Only consider the task complete when the build passes successfully
 
+6. **Use Custom DateTimePickerSanjy Component**: When adding date-time pickers in the frontend, ALWAYS use the `DateTimePickerSanjy` component from `src/components/DateTimePickerSanjy.tsx`. NEVER use the Mantine `DateTimePicker` directly. The custom component automatically applies the user's preferred date and time format settings from local storage.
+
 ## Architecture
 
 ### Project Structure

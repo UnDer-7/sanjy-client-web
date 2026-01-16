@@ -133,7 +133,7 @@ export function NewDietPlanPage() {
 
       const mealTypes: MealTypeCreate[] = values.mealTypes.map((mealType) => ({
         name: mealType.name,
-        scheduledTime: DateTimeService.formatTime(mealType.scheduledTime),
+        scheduledTime: DateTimeService.formatTimeIso(mealType.scheduledTime),
         observation: mealType.observation || undefined,
         standardOptions: mealType.standardOptions.map((option, index): StandardOptionCreate => ({
           optionNumber: index + 1,
@@ -143,8 +143,8 @@ export function NewDietPlanPage() {
 
       const request: DietPlanCreate = {
         name: values.name,
-        startDate: DateTimeService.formateDate(values.startDate!),
-        endDate: DateTimeService.formateDate(values.endDate!),
+        startDate: DateTimeService.formatDateIso(values.startDate!),
+        endDate: DateTimeService.formatDateIso(values.endDate!),
         dailyCalories: values.dailyCalories || undefined,
         dailyProteinInG: values.dailyProteinInG || undefined,
         dailyCarbsInG: values.dailyCarbsInG || undefined,

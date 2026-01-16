@@ -2,13 +2,13 @@ import {format, type DateArg } from 'date-fns';
 import type {TimeFormat} from "../models/CustomTypes.ts";
 import {getFromLocalStorage} from "../hooks/useCustomLocalStorage.ts";
 import {formatInTimeZone} from 'date-fns-tz';
-import {DateFormatPatternService} from "./DateFormatPatternService.ts";
+import {DateTimeFormatPatternService} from "./DateTimeFormatPatternService.ts";
 
-function formateDate(date: DateArg<Date>): string {
+function formatDateIso(date: DateArg<Date>): string {
     return format(date, 'yyyy-MM-dd');
 }
 
-function formatTime(time: DateArg<Date>): string {
+function formatTimeIso(time: DateArg<Date>): string {
     if (typeof time === 'string') {
         const parts = time.split(':');
         if (parts.length === 3) {
@@ -22,8 +22,7 @@ function formatTime(time: DateArg<Date>): string {
     return format(time, 'HH:mm:ss');
 }
 
-// Format time for display based on user preference (12h or 24h)
-function formatTimeForDisplay(time: string | Date, timeFormat: TimeFormat): string {
+function formatTimeForDisplay(time: string | Date, timeFormat: TimeFormat, withSeconds = false): string {
     let date: Date;
 
     // Convert string time to Date object
@@ -32,27 +31,39 @@ function formatTimeForDisplay(time: string | Date, timeFormat: TimeFormat): stri
         const timeParts = time.split(':');
         const hours = Number.parseInt(timeParts[0], 10);
         const minutes = Number.parseInt(timeParts[1], 10);
+        const seconds = timeParts.length == 3 ? Number.parseInt(timeParts[2], 10) : 0
         date = new Date();
-        date.setHours(hours, minutes, 0, 0);
+        date.setHours(hours, minutes, seconds, 0);
     } else {
         date = time;
     }
 
     // Format based on preference
-    if (timeFormat === '12h') {
-        return format(date, 'hh:mm a'); // e.g., "09:30 AM"
-    } else {
-        return format(date, 'HH:mm'); // e.g., "09:30"
-    }
+    return format(date, DateTimeFormatPatternService.getTimeFormat(timeFormat, withSeconds))
 }
 
-// Format datetime for display based on user preference
-function formatDateTimeForDisplay(date: Date, timeFormat: TimeFormat): string {
-    const dateFormatPattern = DateFormatPatternService.getFormat().dateFns
+function formatDateForDisplay(date: DateArg<Date>): string {
+    const dateFormatPattern = DateTimeFormatPatternService.getDateFormat().dateFns
 
-    const timeFormatPattern = timeFormat === '24h' ?
-        "HH:mm:ss" :
-        "hh:mm:ss a";
+    let dateObj: Date;
+    if (typeof date === 'string') {
+        // Parse date string as local date to avoid timezone issues
+        // new Date("2026-03-17") interprets as UTC midnight, causing off-by-one day in negative UTC offsets
+        // Handle both 'yyyy-MM-dd' and 'yyyy-MM-ddTHH:mm:ss' formats
+        const datePart = date.split('T')[0];
+        const [year, month, day] = datePart.split('-').map(Number);
+        dateObj = new Date(year, month - 1, day); // month is 0-indexed in JS Date
+    } else {
+        dateObj = date as Date;
+    }
+
+    return format(dateObj, dateFormatPattern);
+}
+
+function formatDateTimeForDisplay(date: Date, timeFormat: TimeFormat, withSeconds = false): string {
+    const dateFormatPattern = DateTimeFormatPatternService.getDateFormat().dateFns
+
+    const timeFormatPattern = DateTimeFormatPatternService.getTimeFormat(timeFormat, withSeconds);
 
     return format(date, `${dateFormatPattern} ${timeFormatPattern}`);
 }
@@ -65,9 +76,10 @@ function formatDateTimeForBackend(date: Date): string {
 }
 
 export const DateTimeService = {
-    formateDate,
-    formatTime,
+    formatTimeIso,
     formatTimeForDisplay,
+    formatDateIso,
+    formatDateForDisplay,
     formatDateTimeForDisplay,
     formatDateTimeForBackend,
 }
