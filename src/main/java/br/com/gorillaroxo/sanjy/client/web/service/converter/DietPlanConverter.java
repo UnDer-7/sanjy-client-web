@@ -6,20 +6,36 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service that converts text-based meal plans into structured DietPlanRequestDTO using AI.
+ * If no AI provider is configured, the convert method will return an empty Optional.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DietPlanConverter {
 
-    @Qualifier("dietPlanConverterChatClient")
-    private final ChatClient chatClient;
+    private final Optional<ChatClient> chatClient;
 
+    /**
+     * Converts the input message (meal plan text) to a DietPlanRequestDTO using AI.
+     *
+     * @param inputMessage the meal plan text to convert
+     * @return Optional containing the converted DTO, or empty if conversion fails or AI is not available
+     */
     public Optional<DietPlanRequestDTO> convert(final String inputMessage) {
+        if (chatClient.isEmpty()) {
+            log.warn(
+                LogField.Placeholders.ONE.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(),
+                    "AI conversion not available - no AI provider configured. Set some API Key Environment Variable to enable it."));
+            return Optional.empty();
+        }
+
         log.info(
             LogField.Placeholders.ONE.placeholder,
             StructuredArguments.kv(LogField.MSG.label(), "Converting inputMessage to Diet Plan class using A.I."));
@@ -27,7 +43,7 @@ public class DietPlanConverter {
         final Class<DietPlanRequestDTO> type = DietPlanRequestDTO.class;
 
         try {
-            final DietPlanRequestDTO entity = chatClient
+            final DietPlanRequestDTO entity = chatClient.get()
                 .prompt()
                 .user(inputMessage)
                 .call()

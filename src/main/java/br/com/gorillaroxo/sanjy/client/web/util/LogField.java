@@ -56,7 +56,12 @@ public enum LogField {
     APPLICATION_TIMEZONE,
     PROJECT_NAME,
     TIMEZONE_ID,
-    SEARCH_PARAMS;
+    SEARCH_PARAMS,
+    AI_MODEL,
+    AI_MAX_TOKENS,
+    AI_TEMPERTURE,
+    AI_STOP_SEQUENCES,
+    AI_TOP_P;
 
     public String label() {
         return this.name().toLowerCase();

@@ -32,6 +32,21 @@ sanjy-client-web:
       url: ${SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_GITHUB_URL}
   upload:
     max-file-size-in-mb: ${SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_FILE_SIZE_IN_MB}
+  ai:
+    openai:
+      api-key: ${SANJY_CLIENT_WEB_AI_API_KEY_OPENAI:}
+      model: ${SANJY_CLIENT_WEB_AI_MODEL:}
+      max-tokens: ${SANJY_CLIENT_WEB_AI_MAX_TOKENS}
+      temperature: ${SANJY_CLIENT_WEB_AI_MAX_TEMPERATURE}
+      stop-sequences: ${SANJY_CLIENT_WEB_AI_MAX_STOP_SEQUENCES}
+      top-p: ${SANJY_CLIENT_WEB_AI_MAX_STOP_TOP_P}
+    anthropic:
+      api-key: ${SANJY_CLIENT_WEB_AI_API_KEY_ANTHROPIC:}
+      model: ${SANJY_CLIENT_WEB_AI_MODEL:}
+      max-tokens: ${SANJY_CLIENT_WEB_AI_MAX_TOKENS}
+      temperature: ${SANJY_CLIENT_WEB_AI_MAX_TEMPERATURE}
+      stop-sequences: ${SANJY_CLIENT_WEB_AI_MAX_STOP_SEQUENCES}
+      top-p: ${SANJY_CLIENT_WEB_AI_MAX_STOP_TOP_P}
 
 spring:
   servlet:
@@ -41,15 +56,6 @@ spring:
 
   application:
     name: "@project.name@"
-
-  ai:
-    chat:
-      client:
-        enabled: true
-    openai:
-      api-key: ${SANJY_CLIENT_WEB_OPENAI_API_KEY}
-      organization-id: ${SANJY_CLIENT_WEB_OPENAI_ORGANIZATION_ID}
-      project-id: ${SANJY_CLIENT_WEB_OPENAI_PROJECT_ID}
 
   main:
     banner-mode: off
