@@ -43,10 +43,10 @@ class ChatModelProviderOpenAi implements ChatModelProviderStrategy {
             .build();
         final OpenAiChatOptions openAiOptions = OpenAiChatOptions.builder()
             .model(Objects.requireNonNull(config.model()))
-            .maxTokens(Objects.requireNonNull(config.maxTokens()))
-            .temperature(Objects.requireNonNull(config.temperature()))
-            .stop(Objects.requireNonNull(config.stopSequences()))
-            .topP(Objects.requireNonNull(config.topP()))
+            .maxTokens(config.maxTokens())
+            .temperature(config.temperature())
+            .stop(config.stopSequences())
+            .topP(config.topP())
             .build();
         final OpenAiChatModel chatModel = OpenAiChatModel.builder()
             .openAiApi(openAi)

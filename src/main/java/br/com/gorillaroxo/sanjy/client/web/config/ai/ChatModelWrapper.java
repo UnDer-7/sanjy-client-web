@@ -5,6 +5,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.lang.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,4 +38,7 @@ public class ChatModelWrapper {
         return getChatModel().map(model -> ChatClient.create(model).mutate());
     }
 
+    public boolean isAvailable() {
+        return Objects.nonNull(chatModel);
+    }
 }

@@ -38,7 +38,7 @@ public class DietPlanConverterChatClientConfig {
 
     private final ChatModelWrapper chatModelWrapper;
 
-    @Bean
+    @Bean("dietPlanConverterChatClient")
     public Optional<ChatClient> dietPlanConverterChatClient() {
         return chatModelWrapper.getChatClientBuilder()
                 .map(builder -> builder
@@ -47,15 +47,4 @@ public class DietPlanConverterChatClientConfig {
                         .build());
     }
 
-    @EventListener(ContextRefreshedEvent.class)
-    public void contextRefreshedEvent() {
-        chatModelWrapper.getChatClientBuilder().map(ChatClient.Builder::build)
-            .ifPresentOrElse(
-                f -> {
-                    final String result = f.prompt().user("Qual seu nome").call().content();
-                    log.info("Result: {}", result);
-                },
-                () -> log.warn("No AI Stuff")
-                            );
-    }
 }
