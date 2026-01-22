@@ -13,7 +13,20 @@ async function activeDietPlan(): Promise<DietPlan> {
     return response.data;
 }
 
+async function extractDietPlanFromFile(file: File): Promise<DietPlanCreate> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await HttpClient.post<DietPlanCreate>(`${RESOURCE_URL}/extract`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+}
+
 export const DietPlanClient = {
     createDietPlan,
     activeDietPlan,
+    extractDietPlanFromFile,
 };

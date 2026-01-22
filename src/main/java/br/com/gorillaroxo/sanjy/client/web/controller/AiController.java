@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapper;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapperControllerResponseDTO;
 import br.com.gorillaroxo.sanjy.client.web.service.AiAvailabilityService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class AiController {
     private final AiAvailabilityService aiAvailabilityService;
 
     @GetMapping(value = "/availability", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BooleanWrapper isAvailable() {
+    public BooleanWrapperControllerResponseDTO isAvailable() {
         final boolean result = aiAvailabilityService.execute();
-        return new BooleanWrapper(result);
+        return new BooleanWrapperControllerResponseDTO(result);
     }
 }
