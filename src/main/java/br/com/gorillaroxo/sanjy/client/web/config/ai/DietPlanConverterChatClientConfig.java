@@ -6,10 +6,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-
-import java.util.Optional;
+import org.springframework.lang.Nullable;
 
 /**
  * Configuration for the Diet Plan Converter ChatClient.
@@ -38,13 +35,15 @@ public class DietPlanConverterChatClientConfig {
 
     private final ChatModelWrapper chatModelWrapper;
 
+    @Nullable
     @Bean("dietPlanConverterChatClient")
-    public Optional<ChatClient> dietPlanConverterChatClient() {
+    public ChatClient dietPlanConverterChatClient() {
         return chatModelWrapper.getChatClientBuilder()
                 .map(builder -> builder
                         .defaultSystem(SYSTEM_MESSAGE)
                         .defaultAdvisors(new SimpleLoggerAdvisor())
-                        .build());
+                        .build())
+                .orElse(null);
     }
 
 }

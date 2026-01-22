@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -55,8 +56,8 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
     }
 
     @Override
-    public boolean accept(final MultipartFile file) {
-        return MediaType.APPLICATION_PDF_VALUE.equals(file.getContentType());
+    public List<MediaType> mediaTypeAccepted() {
+        return List.of(MediaType.APPLICATION_PDF);
     }
 
 }

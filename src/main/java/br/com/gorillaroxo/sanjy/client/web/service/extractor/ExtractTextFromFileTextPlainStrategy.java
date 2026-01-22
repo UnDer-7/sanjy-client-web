@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -53,8 +54,8 @@ public class ExtractTextFromFileTextPlainStrategy implements ExtractTextFromFile
     }
 
     @Override
-    public boolean accept(final MultipartFile file) {
-        return MediaType.TEXT_MARKDOWN_VALUE.equals(file.getContentType()) || MediaType.TEXT_PLAIN_VALUE.equals(file.getContentType());
+    public List<MediaType> mediaTypeAccepted() {
+        return List.of(MediaType.TEXT_MARKDOWN, MediaType.TEXT_PLAIN);
     }
 
 }

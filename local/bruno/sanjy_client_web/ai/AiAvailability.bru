@@ -5,11 +5,48 @@ meta {
 }
 
 get {
-  url: 
+  url: {{SERVER_URL}}/api/v1/ai/availability
   body: none
   auth: inherit
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  description: Is available
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/ai/availability
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Thu, 22 Jan 2026 02:20:12 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "value": true
+        }
+      '''
+    }
+  }
 }

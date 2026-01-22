@@ -18,7 +18,10 @@ public enum ExceptionCode {
     TIMEZONE_NOT_PROVIDED("010", "Timezone is required but was not provided."),
     TIMEZONE_INVALID("011", "The provided timezone is not supported or invalid."),
     INVALID_VALUES("012", "Some informed value(s) is invalid"),
-    AMBIGUOUS_AI_PROVIDER("013", "Multiple AI providers are configured. Please configure only one or none.");
+    AMBIGUOUS_AI_PROVIDER("013", "Multiple AI providers are configured. Please configure only one or none."),
+    NO_AI_PROVIDER_AVAILABLE("014", "No AI provider is configured. Please configure an AI provider to use this feature."),
+    AI_MODEL_INTEGRATION_FAILURE("015", "Failed to process your request using AI. Please try again later."),
+    DIET_PLAN_CONVERSION_FAILURE("016", "Could not extract a diet plan from your file. Please ensure the file contains a valid diet plan structure.");
 
     /**
      * Error code shown to the user

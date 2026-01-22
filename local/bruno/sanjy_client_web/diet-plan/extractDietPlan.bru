@@ -1,0 +1,20 @@
+meta {
+  name: extractDietPlan
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{SERVER_URL}}/api/v1/diet-plan/extract
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/home/under7/Downloads/Plano Alimentar N°03 Mateus Gomes da Silva Cardoso.pdf)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

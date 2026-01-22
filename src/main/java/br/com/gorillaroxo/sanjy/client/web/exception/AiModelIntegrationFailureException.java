@@ -6,24 +6,24 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 
 @Slf4j
-public class DietPlanExtractorStrategyNotFoundException extends BusinessException {
+public class AiModelIntegrationFailureException extends BusinessException {
 
-    private static final ExceptionCode CODE = ExceptionCode.DIET_PLAN_EXTRACTOR_STRATEGY_NOT_FOUND;
-    private static final HttpStatus STATUS = HttpStatus.BAD_REQUEST;
+    private static final ExceptionCode CODE = ExceptionCode.AI_MODEL_INTEGRATION_FAILURE;
+    private static final HttpStatus STATUS = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    public DietPlanExtractorStrategyNotFoundException(final String customMessage, final Throwable originalCause) {
+    public AiModelIntegrationFailureException(final String customMessage, final Throwable originalCause) {
         super(CODE, STATUS, customMessage, originalCause);
     }
 
-    public DietPlanExtractorStrategyNotFoundException() {
+    public AiModelIntegrationFailureException() {
         super(CODE, STATUS);
     }
 
-    public DietPlanExtractorStrategyNotFoundException(final Throwable originalCause) {
+    public AiModelIntegrationFailureException(final Throwable originalCause) {
         super(CODE, STATUS, originalCause);
     }
 
-    public DietPlanExtractorStrategyNotFoundException(final String customMessage) {
+    public AiModelIntegrationFailureException(final String customMessage) {
         super(CODE, STATUS, customMessage);
     }
 
@@ -36,5 +36,4 @@ public class DietPlanExtractorStrategyNotFoundException extends BusinessExceptio
     protected Logger getLogger() {
         return log;
     }
-
 }

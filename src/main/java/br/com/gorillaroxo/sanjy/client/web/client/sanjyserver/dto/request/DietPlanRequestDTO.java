@@ -46,17 +46,4 @@ public record DietPlanRequestDTO(
         mealTypes = Objects.requireNonNullElseGet(mealTypes, Collections::emptyList);
     }
 
-    public boolean isEmpty() {
-        return (name == null || name.isBlank()) &&
-               startDate == null &&
-               endDate == null &&
-               dailyCalories == null &&
-               dailyProteinInG == null &&
-               dailyCarbsInG == null &&
-               dailyFatInG == null &&
-               (goal == null || goal.isBlank()) &&
-               (nutritionistNotes == null || nutritionistNotes.isBlank()) &&
-               (mealTypes == null || mealTypes.isEmpty());
-    }
-
 }

@@ -1,16 +1,18 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDTO;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.exception.InvalidValuesException;
 import br.com.gorillaroxo.sanjy.client.web.service.ActiveDietPlanService;
 import br.com.gorillaroxo.sanjy.client.web.service.NewDietPlanService;
 import br.com.gorillaroxo.sanjy.client.web.service.ProcessDietPlanFileService;
+import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -33,6 +37,7 @@ public class DietPlanController {
 
     private final ActiveDietPlanService activeDietPlanService;
     private final NewDietPlanService newDietPlanService;
+    private final ProcessDietPlanFileService processDietPlanFileService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,43 +50,15 @@ public class DietPlanController {
         return activeDietPlanService.execute();
     }
 
-//    @PostMapping("/upload")
-//    public String uploadAndFillForm(@RequestParam("file") MultipartFile file, Model model, RedirectAttributes redirectAttributes) {
-//        if (file.isEmpty()) {
-//            log.warn(
-//                LogField.Placeholders.ONE.placeholder,
-//                StructuredArguments.kv(LogField.MSG.label(), "Empty file uploaded"));
-//
-//            model.addAttribute("error", "Please select a file to upload");
-//            model.addAttribute(ATTRIBUTE_DIET_PLAN_REQUEST, DietPlanRequestDTO.builder().build());
-//
-//            return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_NEW);
-//        }
-//
-//        if (!AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES.contains(file.getContentType())) {
-//            String validFormats = String.join(", ", AVAILABLE_FILE_FILL_FORM_MEDIA_TYPES);
-//            String errorMessage = String.format("Invalid file format. Valid formats are: %s", validFormats);
-//
-//            log.warn(
-//                LogField.Placeholders.THREE.placeholder,
-//                StructuredArguments.kv(LogField.MSG.label(), "Invalid file format uploaded"),
-//                StructuredArguments.kv(LogField.FILE_CONTENT_TYPE.label(), file.getContentType()),
-//                StructuredArguments.kv(LogField.VALID_FILE_CONTENT_TYPES.label(), "( " + validFormats + " )"));
-//
-//            model.addAttribute("error", errorMessage);
-//            model.addAttribute(ATTRIBUTE_DIET_PLAN_REQUEST, DietPlanRequestDTO.builder().build());
-//
-//            return LoggingHelper.loggingAndReturnControllerPagePath(TemplateConstants.PageNames.DIET_PLAN_NEW);
-//        }
-//
-//        final Optional<DietPlanRequestDTO> dietPlan = processDietPlanFileService.process(file);
-//
-//        // Add to flash attributes to survive redirect
-//        dietPlan.ifPresent(dp -> redirectAttributes.addFlashAttribute(ATTRIBUTE_DIET_PLAN_REQUEST, dp));
-//
-//        return dietPlan
-//            .map(_ -> LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.DIET_PLAN_NEW + "?uploaded=success"))
-//            .orElseGet(() -> LoggingHelper.loggingAndReturnControllerPagePath("redirect:/" + TemplateConstants.PageNames.DIET_PLAN_NEW + "?uploaded=failure"));
-//    }
+    @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public DietPlanControllerRequestDTO extractDietPlanFromFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            log.warn(LogField.Placeholders.ONE.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Empty file uploaded"));
+            throw new InvalidValuesException("Please select a file to upload");
+        }
+
+        return processDietPlanFileService.process(file);
+    }
 
 }
