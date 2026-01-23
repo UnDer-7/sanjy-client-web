@@ -14,41 +14,44 @@ import { DietPlanPage } from './pages/DietPlanPage';
 import { NewDietPlanPage } from './pages/NewDietPlanPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoadingProvider } from './contexts/LoadingContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
   const [opened, { toggle, close }] = useDisclosure();
 
   return (
-    <MantineProvider theme={theme} defaultColorScheme={'auto'}>
-        <Notifications position="top-right" />
-        <LoadingProvider>
-          <BrowserRouter>
-          <AppShell
-            header={{ height: 60 }}
-            navbar={{
-              width: 250,
-              breakpoint: 'sm',
-              collapsed: { desktop: true, mobile: !opened },
-            }}
-            padding="md"
-          >
-            <HeaderSanjy opened={opened} toggle={toggle} />
-            <NavigationMenu onNavigate={close} />
+    <ErrorBoundary>
+      <MantineProvider theme={theme} defaultColorScheme={'auto'}>
+          <Notifications position="top-right" />
+          <LoadingProvider>
+            <BrowserRouter>
+            <AppShell
+              header={{ height: 60 }}
+              navbar={{
+                width: 250,
+                breakpoint: 'sm',
+                collapsed: { desktop: true, mobile: !opened },
+              }}
+              padding="md"
+            >
+              <HeaderSanjy opened={opened} toggle={toggle} />
+              <NavigationMenu onNavigate={close} />
 
-            <AppShell.Main>
-              <Routes>
-                <Route path="/" element={<Navigate to="/meal" replace />} />
-                <Route path="/meal" element={<MealPage />} />
-                <Route path="/meal/new" element={<NewMealRecordPage />} />
-                <Route path="/diet-plan" element={<DietPlanPage />} />
-                <Route path="/diet-plan/new" element={<NewDietPlanPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-              </Routes>
-            </AppShell.Main>
-          </AppShell>
-          </BrowserRouter>
-        </LoadingProvider>
-    </MantineProvider>
+              <AppShell.Main>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/meal" replace />} />
+                  <Route path="/meal" element={<MealPage />} />
+                  <Route path="/meal/new" element={<NewMealRecordPage />} />
+                  <Route path="/diet-plan" element={<DietPlanPage />} />
+                  <Route path="/diet-plan/new" element={<NewDietPlanPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                </Routes>
+              </AppShell.Main>
+            </AppShell>
+            </BrowserRouter>
+          </LoadingProvider>
+      </MantineProvider>
+    </ErrorBoundary>
   );
 }
 
