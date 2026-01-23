@@ -11,6 +11,6 @@ export interface ErrorLogEntry {
     message: string;
     timestamp: string;
     type: ErrorType;
-    url: string;
+    pageUrl: string;
     detail: string;
 }

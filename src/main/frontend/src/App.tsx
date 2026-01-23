@@ -3,6 +3,7 @@ import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import 'mantine-datatable/styles.layer.css';
 import {MantineProvider, AppShell} from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
@@ -22,6 +23,7 @@ function App() {
   return (
     <ErrorBoundary>
       <MantineProvider theme={theme} defaultColorScheme={'auto'}>
+          <ModalsProvider>
           <Notifications position="top-right" />
           <LoadingProvider>
             <BrowserRouter>
@@ -50,6 +52,7 @@ function App() {
             </AppShell>
             </BrowserRouter>
           </LoadingProvider>
+          </ModalsProvider>
       </MantineProvider>
     </ErrorBoundary>
   );

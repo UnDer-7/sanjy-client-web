@@ -1,7 +1,7 @@
 import { type ErrorLogEntry, ErrorType } from '../models/ErrorLog';
 import { localStorageKeys } from '../hooks/useCustomLocalStorage';
 
-const MAX_ERROR_ENTRIES = 66;
+export const MAX_ERROR_ENTRIES = 69;
 
 function getErrorLogs(): ErrorLogEntry[] {
     try {
@@ -43,7 +43,7 @@ function createErrorEntry(
         message,
         timestamp: new Date().toISOString(),
         type,
-        url: window.location.pathname,
+        pageUrl: window.location.pathname,
         detail
     };
 }
