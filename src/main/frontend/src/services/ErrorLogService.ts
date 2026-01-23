@@ -1,11 +1,11 @@
 import { type ErrorLogEntry, ErrorType } from '../models/ErrorLog';
+import { localStorageKeys } from '../hooks/useCustomLocalStorage';
 
-const LOCAL_STORAGE_KEY = 'sanjy_error_logs';
 const MAX_ERROR_ENTRIES = 66;
 
 function getErrorLogs(): ErrorLogEntry[] {
     try {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const stored = localStorage.getItem(localStorageKeys.errorLogs);
         if (!stored) {
             return [];
         }
@@ -17,7 +17,7 @@ function getErrorLogs(): ErrorLogEntry[] {
 
 function saveErrorLogs(logs: ErrorLogEntry[]): void {
     try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(logs));
+        localStorage.setItem(localStorageKeys.errorLogs, JSON.stringify(logs));
     } catch {
         // localStorage might be full or unavailable
     }
@@ -92,7 +92,7 @@ export function logReactError(error: Error, componentStack: string): void {
 }
 
 export function clearErrorLogs(): void {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    localStorage.removeItem(localStorageKeys.errorLogs);
 }
 
 export function getStoredErrorLogs(): ErrorLogEntry[] {
