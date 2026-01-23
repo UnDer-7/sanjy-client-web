@@ -32,6 +32,7 @@ import type { StandardOptionCreate } from '../models/StandardOption';
 import { DateTimeService } from '../services/DateTimeService';
 import { useLoadingGlobal } from '../contexts/LoadingContext';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
+import {toZonedTime} from "date-fns-tz";
 
 interface FormMealType {
   name: string;
@@ -47,14 +48,14 @@ interface FormStandardOption {
 export function NewDietPlanPage() {
   const navigate = useNavigate();
   const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
-  const { settings: { userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
+  const { settings: { userTimeFormat: { value: timeFormat }, userTimezone: { value: timezone} }} = useCustomLocalStorage();
 
   const [aiAvailable, setAiAvailable] = useState<boolean | null>(null);
   const [importModalOpened, { open: openImportModal, close: closeImportModal }] = useDisclosure(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const today = new Date();
-  const twoMonthsFromNow = addMonths(new Date(), 2);
+  const today = toZonedTime(new Date(), timezone);
+  const twoMonthsFromNow = addMonths(today, 2);
 
   useEffect(() => {
     AiClient.checkAvailability()
@@ -105,6 +106,11 @@ export function NewDietPlanPage() {
       },
     },
   });
+
+  useEffect(() => {
+    form.setFieldValue('startDate', today);
+    form.setFieldValue('endDate', twoMonthsFromNow);
+  }, [timezone]);
 
   const addMealType = () => {
     form.insertListItem('mealTypes', {
