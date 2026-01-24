@@ -47,35 +47,35 @@ compile:
 ## ===== CODING STYLE =====
 # ==================================================================================== #
 ## ----- Geral -----
-## fmt: Format all source code files using Spotless
+## fmt: Format all source code (backend + frontend)
 .PHONY: fmt
 fmt: fmt/backend fmt/frontend
 
-## fmt/check: Check code formatting without applying changes
+## fmt/check: Check all code formatting (backend + frontend)
 .PHONY: fmt/check
-fmt/check: fmt/backend/check fmt/backend/check
+fmt/check: fmt/backend/check fmt/frontend/check
 
 ## ----- Backend -----
-## fmt/backend: Format all source code files using Spotless
+## fmt/backend: Format backend code using Spotless
 .PHONY: fmt/backend
 fmt/backend:
-	@echo ">>> Formatting all source code files…"
+	@echo ">>> Formatting backend source code…"
 	./mvnw -B -ntp clean spotless:apply
 
-## fmt/backend/check: Check code formatting without applying changes
+## fmt/backend/check: Check backend code formatting
 .PHONY: fmt/backend/check
 fmt/backend/check:
-	@echo ">>> Checking code formatting…"
+	@echo ">>> Checking backend code formatting…"
 	./mvnw -B -ntp clean spotless:check
 
 ## ----- Frontend -----
-## fmt/frontend: Format frontend source code using Prettier
+## fmt/frontend: Format frontend code using Prettier
 .PHONY: fmt/frontend
 fmt/frontend:
 	@echo ">>> Formatting frontend source code…"
 	cd src/main/frontend && npm run format
 
-## fmt/frontend/check: Check frontend code formatting without applying changes
+## fmt/frontend/check: Check frontend code formatting
 .PHONY: fmt/frontend/check
 fmt/frontend/check:
 	@echo ">>> Checking frontend code formatting…"
