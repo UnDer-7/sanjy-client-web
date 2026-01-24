@@ -1,3 +1,3 @@
 export interface BooleanWrapperResponse {
-    value: boolean;
+  value: boolean;
 }

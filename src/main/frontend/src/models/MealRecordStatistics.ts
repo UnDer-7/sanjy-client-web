@@ -1,5 +1,5 @@
 export interface MealRecordStatistics {
-    freeMealQuantity: number
-    plannedMealQuantity: number
-    mealQuantity: number
+  freeMealQuantity: number;
+  plannedMealQuantity: number;
+  mealQuantity: number;
 }

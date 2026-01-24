@@ -1,16 +1,8 @@
-import {
-  AppShell,
-  Burger,
-  Group,
-  Title,
-  NavLink,
-  Anchor,
-  Text,
-} from '@mantine/core';
+import { AppShell, Burger, Group, Title, NavLink, Anchor, Text } from '@mantine/core';
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import { toZonedTime } from 'date-fns-tz';
-import {useCustomLocalStorage} from "../hooks/useCustomLocalStorage.ts";
+import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
 import { DateTimeService } from '../services/DateTimeService';
 
 interface HeaderProps {
@@ -25,7 +17,12 @@ const navItems = [
 ];
 
 function CurrentDateTime() {
-  const { settings: { userTimezone: { value: timezone }, userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
+  const {
+    settings: {
+      userTimezone: { value: timezone },
+      userTimeFormat: { value: timeFormat },
+    },
+  } = useCustomLocalStorage();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

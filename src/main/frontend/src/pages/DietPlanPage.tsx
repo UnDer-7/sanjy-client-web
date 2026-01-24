@@ -1,4 +1,15 @@
-import { Container, Title, Button, Paper, Text, Stack, Group, Badge, Divider, Alert } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Button,
+  Paper,
+  Text,
+  Stack,
+  Group,
+  Badge,
+  Divider,
+  Alert,
+} from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IconAlertCircle, IconPlus } from '@tabler/icons-react';
@@ -10,7 +21,11 @@ import { DateTimeService } from '../services/DateTimeService';
 
 export function DietPlanPage() {
   const navigate = useNavigate();
-  const { settings: { userTimeFormat: { value: timeFormat } }} = useCustomLocalStorage();
+  const {
+    settings: {
+      userTimeFormat: { value: timeFormat },
+    },
+  } = useCustomLocalStorage();
   const [dietPlan, setDietPlan] = useState<DietPlan | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,10 +57,7 @@ export function DietPlanPage() {
       <Stack gap="md">
         <Group justify="space-between" align="center">
           <Title order={1}>Diet Plan</Title>
-          <Button
-            leftSection={<IconPlus size={16} />}
-            onClick={() => navigate('/diet-plan/new')}
-          >
+          <Button leftSection={<IconPlus size={16} />} onClick={() => navigate('/diet-plan/new')}>
             New Diet Plan
           </Button>
         </Group>
@@ -63,11 +75,17 @@ export function DietPlanPage() {
             <Stack gap="md">
               <Group justify="space-between" align="flex-start">
                 <div>
-                  <Title order={2} size="h3">Current Plan</Title>
-                  <Text size="xl" fw={600} mt="xs">{dietPlan.name}</Text>
+                  <Title order={2} size="h3">
+                    Current Plan
+                  </Title>
+                  <Text size="xl" fw={600} mt="xs">
+                    {dietPlan.name}
+                  </Text>
                 </div>
                 {dietPlan.isActive && (
-                  <Badge color="green" size="lg">Active</Badge>
+                  <Badge color="green" size="lg">
+                    Active
+                  </Badge>
                 )}
               </Group>
 
@@ -75,18 +93,24 @@ export function DietPlanPage() {
 
               <Group grow>
                 <div>
-                  <Text size="sm" c="dimmed">Start Date</Text>
+                  <Text size="sm" c="dimmed">
+                    Start Date
+                  </Text>
                   <Text fw={500}>{DateTimeService.formatDateForDisplay(dietPlan.startDate)}</Text>
                 </div>
                 <div>
-                  <Text size="sm" c="dimmed">End Date</Text>
+                  <Text size="sm" c="dimmed">
+                    End Date
+                  </Text>
                   <Text fw={500}>{DateTimeService.formatDateForDisplay(dietPlan.endDate)}</Text>
                 </div>
               </Group>
 
               {dietPlan.dailyCalories && (
                 <div>
-                  <Text size="sm" c="dimmed">Daily Calories</Text>
+                  <Text size="sm" c="dimmed">
+                    Daily Calories
+                  </Text>
                   <Text fw={500}>{dietPlan.dailyCalories} kcal</Text>
                 </div>
               )}
@@ -94,19 +118,25 @@ export function DietPlanPage() {
               <Group grow>
                 {dietPlan.dailyProteinInG && (
                   <div>
-                    <Text size="sm" c="dimmed">Protein</Text>
+                    <Text size="sm" c="dimmed">
+                      Protein
+                    </Text>
                     <Text fw={500}>{dietPlan.dailyProteinInG}g</Text>
                   </div>
                 )}
                 {dietPlan.dailyCarbsInG && (
                   <div>
-                    <Text size="sm" c="dimmed">Carbs</Text>
+                    <Text size="sm" c="dimmed">
+                      Carbs
+                    </Text>
                     <Text fw={500}>{dietPlan.dailyCarbsInG}g</Text>
                   </div>
                 )}
                 {dietPlan.dailyFatInG && (
                   <div>
-                    <Text size="sm" c="dimmed">Fat</Text>
+                    <Text size="sm" c="dimmed">
+                      Fat
+                    </Text>
                     <Text fw={500}>{dietPlan.dailyFatInG}g</Text>
                   </div>
                 )}
@@ -114,14 +144,18 @@ export function DietPlanPage() {
 
               {dietPlan.goal && (
                 <div>
-                  <Text size="sm" c="dimmed">Goal</Text>
+                  <Text size="sm" c="dimmed">
+                    Goal
+                  </Text>
                   <Text>{dietPlan.goal}</Text>
                 </div>
               )}
 
               {dietPlan.nutritionistNotes && (
                 <div>
-                  <Text size="sm" c="dimmed">Nutritionist Notes</Text>
+                  <Text size="sm" c="dimmed">
+                    Nutritionist Notes
+                  </Text>
                   <Text>{dietPlan.nutritionistNotes}</Text>
                 </div>
               )}
@@ -130,20 +164,31 @@ export function DietPlanPage() {
                 <>
                   <Divider />
                   <div>
-                    <Text size="sm" c="dimmed" mb="xs">Meal Types</Text>
+                    <Text size="sm" c="dimmed" mb="xs">
+                      Meal Types
+                    </Text>
                     <Stack gap="sm">
                       {dietPlan.mealTypes.map((mealType) => (
                         <Paper key={mealType.id} p="md" withBorder>
                           <Group justify="space-between" mb="xs">
                             <Text fw={600}>{mealType.name}</Text>
-                            <Badge variant="light">{DateTimeService.formatTimeForDisplay(mealType.scheduledTime, timeFormat)}</Badge>
+                            <Badge variant="light">
+                              {DateTimeService.formatTimeForDisplay(
+                                mealType.scheduledTime,
+                                timeFormat
+                              )}
+                            </Badge>
                           </Group>
                           {mealType.observation && (
-                            <Text size="sm" c="dimmed" mb="xs">{mealType.observation}</Text>
+                            <Text size="sm" c="dimmed" mb="xs">
+                              {mealType.observation}
+                            </Text>
                           )}
                           {mealType.standardOptions && mealType.standardOptions.length > 0 && (
                             <Stack gap="xs" mt="sm">
-                              <Text size="sm" fw={500}>Options:</Text>
+                              <Text size="sm" fw={500}>
+                                Options:
+                              </Text>
                               {mealType.standardOptions.map((option) => (
                                 <Text key={option.id} size="sm" pl="md">
                                   {option.optionNumber}. {option.description}

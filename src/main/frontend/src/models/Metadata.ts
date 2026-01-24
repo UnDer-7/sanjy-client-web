@@ -1,4 +1,4 @@
 export interface Metadata {
-    createdAt: Date;
-    updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

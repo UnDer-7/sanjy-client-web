@@ -1,4 +1,4 @@
-import { createTheme, type MantineColorsTuple } from "@mantine/core";
+import { createTheme, type MantineColorsTuple } from '@mantine/core';
 
 // Custom color palette
 const alabasterGrey: MantineColorsTuple = [

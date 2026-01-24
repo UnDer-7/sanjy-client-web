@@ -17,7 +17,7 @@ import {
   Tooltip,
   List,
 } from '@mantine/core';
-import {DateInput, TimePicker} from '@mantine/dates';
+import { DateInput, TimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router';
@@ -32,7 +32,7 @@ import type { StandardOptionCreate } from '../models/StandardOption';
 import { DateTimeService } from '../services/DateTimeService';
 import { useLoadingGlobal } from '../contexts/LoadingContext';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
-import {toZonedTime} from "date-fns-tz";
+import { toZonedTime } from 'date-fns-tz';
 
 interface FormMealType {
   name: string;
@@ -48,10 +48,16 @@ interface FormStandardOption {
 export function NewDietPlanPage() {
   const navigate = useNavigate();
   const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
-  const { settings: { userTimeFormat: { value: timeFormat }, userTimezone: { value: timezone} }} = useCustomLocalStorage();
+  const {
+    settings: {
+      userTimeFormat: { value: timeFormat },
+      userTimezone: { value: timezone },
+    },
+  } = useCustomLocalStorage();
 
   const [aiAvailable, setAiAvailable] = useState<boolean | null>(null);
-  const [importModalOpened, { open: openImportModal, close: closeImportModal }] = useDisclosure(false);
+  const [importModalOpened, { open: openImportModal, close: closeImportModal }] =
+    useDisclosure(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const today = toZonedTime(new Date(), timezone);
@@ -158,10 +164,12 @@ export function NewDietPlanPage() {
         name: mealType.name,
         scheduledTime: DateTimeService.formatTimeIso(mealType.scheduledTime),
         observation: mealType.observation || undefined,
-        standardOptions: mealType.standardOptions.map((option, index): StandardOptionCreate => ({
-          optionNumber: index + 1,
-          description: option.description,
-        })),
+        standardOptions: mealType.standardOptions.map(
+          (option, index): StandardOptionCreate => ({
+            optionNumber: index + 1,
+            description: option.description,
+          })
+        ),
       }));
 
       const request: DietPlanCreate = {
@@ -219,9 +227,10 @@ export function NewDietPlanPage() {
         name: mealType.name || '',
         scheduledTime: mealType.scheduledTime || '',
         observation: mealType.observation || '',
-        standardOptions: mealType.standardOptions?.map((option) => ({
-          description: option.description || '',
-        })) || [],
+        standardOptions:
+          mealType.standardOptions?.map((option) => ({
+            description: option.description || '',
+          })) || [],
       }));
       form.setFieldValue('mealTypes', formMealTypes);
     }
@@ -239,12 +248,11 @@ export function NewDietPlanPage() {
           <Title order={1}>New Diet Plan</Title>
           <Group>
             {aiAvailable === false ? (
-              <Tooltip label="No AI provider enabled. Enable one in the backend settings." withArrow>
-                <Button
-                  variant="light"
-                  leftSection={<IconFileUpload size={16} />}
-                  disabled
-                >
+              <Tooltip
+                label="No AI provider enabled. Enable one in the backend settings."
+                withArrow
+              >
+                <Button variant="light" leftSection={<IconFileUpload size={16} />} disabled>
                   Import from File
                 </Button>
               </Tooltip>
@@ -272,8 +280,8 @@ export function NewDietPlanPage() {
         >
           <Stack gap="md">
             <Text size="sm" c="dimmed">
-              Upload a file with your diet plan.
-              The AI will extract the data and fill the form. The file can include:
+              Upload a file with your diet plan. The AI will extract the data and fill the form. The
+              file can include:
             </Text>
 
             <List size="sm" c="dimmed">
@@ -300,10 +308,7 @@ export function NewDietPlanPage() {
               <Button variant="subtle" onClick={handleCloseImportModal}>
                 Cancel
               </Button>
-              <Button
-                onClick={handleImportDietPlan}
-                disabled={!selectedFile}
-              >
+              <Button onClick={handleImportDietPlan} disabled={!selectedFile}>
                 Import
               </Button>
             </Group>
@@ -480,11 +485,7 @@ export function NewDietPlanPage() {
                 </Paper>
               ))}
 
-              <Button
-                variant="outline"
-                leftSection={<IconPlus size={16} />}
-                onClick={addMealType}
-              >
+              <Button variant="outline" leftSection={<IconPlus size={16} />} onClick={addMealType}>
                 Add Meal Type
               </Button>
 
@@ -494,9 +495,7 @@ export function NewDietPlanPage() {
                 <Button variant="subtle" onClick={() => navigate('/diet-plan')}>
                   Cancel
                 </Button>
-                <Button type="submit">
-                  Save Diet Plan
-                </Button>
+                <Button type="submit">Save Diet Plan</Button>
               </Group>
             </Stack>
           </form>

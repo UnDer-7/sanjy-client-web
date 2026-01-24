@@ -1,7 +1,7 @@
-import type {PageRequest} from "./PageRequest.ts";
+import type { PageRequest } from './PageRequest.ts';
 
 export interface SearchMealRecordRequest extends PageRequest {
-    consumedAtAfter: Date;
-    consumedAtBefore: Date;
-    isFreeMeal?: boolean | null;
+  consumedAtAfter: Date;
+  consumedAtBefore: Date;
+  isFreeMeal?: boolean | null;
 }

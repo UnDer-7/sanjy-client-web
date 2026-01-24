@@ -17,16 +17,16 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   const hideLoadingGlobal = () => setIsLoading(false);
 
   return (
-      <LoadingContext.Provider value={{ isLoadingGlobal, showLoadingGlobal, hideLoadingGlobal }}>
-        <div style={{ position: 'relative', minHeight: '100vh' }}>
-          <LoadingOverlay
-              visible={isLoadingGlobal}
-              zIndex={9999}
-              overlayProps={{ radius: 'sm', blur: 2 }}
-          />
-          {children}
-        </div>
-      </LoadingContext.Provider>
+    <LoadingContext.Provider value={{ isLoadingGlobal, showLoadingGlobal, hideLoadingGlobal }}>
+      <div style={{ position: 'relative', minHeight: '100vh' }}>
+        <LoadingOverlay
+          visible={isLoadingGlobal}
+          zIndex={9999}
+          overlayProps={{ radius: 'sm', blur: 2 }}
+        />
+        {children}
+      </div>
+    </LoadingContext.Provider>
   );
 }
 

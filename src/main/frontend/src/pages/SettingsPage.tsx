@@ -18,11 +18,21 @@ import {
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
-import { IconDownload, IconTrash, IconEye, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import {
+  IconDownload,
+  IconTrash,
+  IconEye,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-react';
 import { TIMEZONES } from '../timezones';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
 import type { TimeFormat } from '../models/CustomTypes.ts';
-import { MAX_ERROR_ENTRIES, clearErrorLogs, getStoredErrorLogs } from '../services/ErrorLogService.ts';
+import {
+  MAX_ERROR_ENTRIES,
+  clearErrorLogs,
+  getStoredErrorLogs,
+} from '../services/ErrorLogService.ts';
 import { DateTimeService } from '../services/DateTimeService.ts';
 import { ErrorType, type ErrorLogEntry } from '../models/ErrorLog.ts';
 import { toZonedTime } from 'date-fns-tz';
@@ -43,7 +53,11 @@ function getErrorTypeBadgeColor(type: ErrorType): string {
   }
 }
 
-function formatTimestampForUser(timestamp: string, timezone: string, timeFormat: TimeFormat): string {
+function formatTimestampForUser(
+  timestamp: string,
+  timezone: string,
+  timeFormat: TimeFormat
+): string {
   const utcDate = new Date(timestamp);
   const zonedDate = toZonedTime(utcDate, timezone);
   return DateTimeService.formatDateTimeForDisplay(zonedDate, timeFormat, true);
@@ -107,7 +121,15 @@ function ErrorLogTable({ logs, timezone, timeFormat }: ErrorLogTableProps) {
           </Button>
           <Collapse in={isExpanded}>
             <Paper p="xs" mt="xs" withBorder>
-              <Code block style={{ maxHeight: '200px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              <Code
+                block
+                style={{
+                  maxHeight: '200px',
+                  overflow: 'auto',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-all',
+                }}
+              >
                 {log.detail || 'No details available'}
               </Code>
             </Paper>
@@ -141,9 +163,7 @@ interface ErrorLogsMobileListProps {
   timeFormat: TimeFormat;
 }
 
-
 // ToDo: Melhorar codigo depois
-
 
 function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileListProps) {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
@@ -193,13 +213,23 @@ function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileList
               size="xs"
               fullWidth
               onClick={() => toggleRow(index)}
-              rightSection={isExpanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
+              rightSection={
+                isExpanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
+              }
             >
               {isExpanded ? 'Hide Details' : 'Show Details'}
             </Button>
             <Collapse in={isExpanded}>
               <Paper p="xs" mt="xs" withBorder>
-                <Code block style={{ maxHeight: '200px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                <Code
+                  block
+                  style={{
+                    maxHeight: '200px',
+                    overflow: 'auto',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-all',
+                  }}
+                >
                   {log.detail || 'No details available'}
                 </Code>
               </Paper>
@@ -212,14 +242,17 @@ function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileList
 }
 
 export function SettingsPage() {
-  const { settings: { userTimezone, userTimeFormat }, errorLogs } = useCustomLocalStorage();
+  const {
+    settings: { userTimezone, userTimeFormat },
+    errorLogs,
+  } = useCustomLocalStorage();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const [logsModalOpened, { open: openLogsModal, close: closeLogsModal }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const sortedLogs = useMemo(() => {
-    return [...errorLogs.value].sort((a, b) =>
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    return [...errorLogs.value].sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }, [errorLogs.value]);
 
@@ -245,8 +278,8 @@ export function SettingsPage() {
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to clear all error logs? This action cannot be undone and you will not be able to recover
-          the logs.
+          Are you sure you want to clear all error logs? This action cannot be undone and you will
+          not be able to recover the logs.
         </Text>
       ),
       labels: { confirm: 'Yes, clear logs', cancel: 'Cancel' },
@@ -346,16 +379,12 @@ export function SettingsPage() {
             Error Logs
           </Title>
           <Text c="dimmed" size="sm" mb="md">
-            Frontend error logs are stored in your browser's local storage. The system keeps up to {MAX_ERROR_ENTRIES}{' '}
-            error entries. When this limit is reached, the oldest entries are automatically removed to make room for new
-            ones, so storage space is not a concern.
+            Frontend error logs are stored in your browser's local storage. The system keeps up to{' '}
+            {MAX_ERROR_ENTRIES} error entries. When this limit is reached, the oldest entries are
+            automatically removed to make room for new ones, so storage space is not a concern.
           </Text>
           <Group gap="sm">
-            <Button
-              leftSection={<IconEye size={16} />}
-              variant="default"
-              onClick={openLogsModal}
-            >
+            <Button leftSection={<IconEye size={16} />} variant="default" onClick={openLogsModal}>
               View Logs ({errorLogs.value.length})
             </Button>
             <Button

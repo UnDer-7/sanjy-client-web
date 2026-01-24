@@ -46,17 +46,40 @@ compile:
 # ==================================================================================== #
 ## ===== CODING STYLE =====
 # ==================================================================================== #
+## ----- Geral -----
 ## fmt: Format all source code files using Spotless
 .PHONY: fmt
-fmt:
-	@echo ">>> Formatting all source code files…"
-	./mvnw -B -ntp clean spotless:apply
+fmt: fmt/backend fmt/frontend
 
 ## fmt/check: Check code formatting without applying changes
 .PHONY: fmt/check
-fmt/check:
+fmt/check: fmt/backend/check fmt/backend/check
+
+## ----- Backend -----
+## fmt/backend: Format all source code files using Spotless
+.PHONY: fmt/backend
+fmt/backend:
+	@echo ">>> Formatting all source code files…"
+	./mvnw -B -ntp clean spotless:apply
+
+## fmt/backend/check: Check code formatting without applying changes
+.PHONY: fmt/backend/check
+fmt/backend/check:
 	@echo ">>> Checking code formatting…"
 	./mvnw -B -ntp clean spotless:check
+
+## ----- Frontend -----
+## fmt/frontend: Format frontend source code using Prettier
+.PHONY: fmt/frontend
+fmt/frontend:
+	@echo ">>> Formatting frontend source code…"
+	cd src/main/frontend && npm run format
+
+## fmt/frontend/check: Check frontend code formatting without applying changes
+.PHONY: fmt/frontend/check
+fmt/frontend/check:
+	@echo ">>> Checking frontend code formatting…"
+	cd src/main/frontend && npm run format:check
 
 ## lint: Verify code compliance with Checkstyle standards
 .PHONY: lint
