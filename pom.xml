@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.7</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
+        <!-- lookup parent from repository -->
     </parent>
 
     <groupId>br.com.gorillaroxo</groupId>
@@ -43,6 +43,10 @@
 
         <spring-ai.version>1.0.3</spring-ai.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
+
+        <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
+        <spotless-palantirJavaFormat.version>2.82.0</spotless-palantirJavaFormat.version>
+        <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
 
         <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
     </properties>
@@ -203,10 +207,10 @@
                 <executions>
                     <execution>
                         <id>install-frontend-dependencies</id>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <workingDirectory>src/main/frontend</workingDirectory>
                             <executable>npm</executable>
@@ -217,10 +221,10 @@
                     </execution>
                     <execution>
                         <id>build-and-include-frontend</id>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <workingDirectory>src/main/frontend</workingDirectory>
                             <executable>npm</executable>
@@ -272,6 +276,115 @@
                     </buildArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <!-- Documentation: https://github.com/diffplug/spotless/tree/main/plugin-maven#table-of-contents -->
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>.dockerignore</include>
+                                <include>.env</include>
+                                <include>.gitattributes</include>
+                                <include>.gitignore</include>
+                                <include>.sdkmanrc</include>
+                                <include>Dockerfile_graalvm</include>
+                                <include>Dockerfile_jvm</include>
+                                <include>lombok.config</include>
+                            </includes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <tabs>false</tabs>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                        </format>
+
+                        <format>
+                            <!-- Makefile must be indented with a single tab character, not spaces -->
+                            <includes>
+                                <include>Makefile</include>
+                            </includes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <tabs>true</tabs>
+                                <spaces>false</spaces>
+                                <spacesPerTab>1</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
+
+                    <java>
+                        <palantirJavaFormat>
+                            <version>${spotless-palantirJavaFormat.version}</version>
+                            <style>PALANTIR</style>
+                            <!-- or PALANTIR | AOSP | GOOGLE (optional) -->
+                            <formatJavadoc>true</formatJavadoc>
+                            <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
+                        </palantirJavaFormat>
+                        <removeUnusedImports/>
+                    </java>
+
+                    <pom>
+                        <sortPom>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                        </sortPom>
+                    </pom>
+
+                    <markdown>
+                        <includes>
+                            <include>**/*.md</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/node_modules/**</exclude>
+                        </excludes>
+                        <flexmark/>
+                    </markdown>
+
+                    <sql>
+                        <includes>
+                            <include>**/*.sql</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/node_modules/**</exclude>
+                        </excludes>
+                        <dbeaver>
+                            <configFile>.spotless.dbeaver.properties</configFile>
+                        </dbeaver>
+                    </sql>
+
+                    <!-- Jackson formating removes comments and prettier requires a NodeJS installation. See better options in the future -->
+                    <!--                    <yaml>-->
+                    <!--                        <includes>-->
+                    <!--                            <include>**/*.yaml</include>-->
+                    <!--                            <include>**/*.yml</include>-->
+                    <!--                        </includes>-->
+
+                    <!--                        <jackson>-->
+                    <!--                            <version>2.20.1</version>-->
+                    <!--                            &lt;!&ndash; optional: The version of 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml' to be used &ndash;&gt;-->
+                    <!--                            <features>-->
+                    <!--                                &lt;!&ndash; optional: Customize the set of features (based on com.fasterxml.jackson.databind.SerializationFeature) &ndash;&gt;-->
+                    <!--                                <INDENT_OUTPUT>true</INDENT_OUTPUT>-->
+                    <!--                                &lt;!&ndash; true by default &ndash;&gt;-->
+                    <!--                                <ORDER_MAP_ENTRIES_BY_KEYS>false</ORDER_MAP_ENTRIES_BY_KEYS>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                            </features>-->
+                    <!--                            <yamlFeatures>-->
+                    <!--                                <WRITE_DOC_START_MARKER>true</WRITE_DOC_START_MARKER>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                                <MINIMIZE_QUOTES>false</MINIMIZE_QUOTES>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                            </yamlFeatures>-->
+                    <!--                        </jackson>-->
+                    <!--                    </yaml>-->
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

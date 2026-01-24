@@ -18,10 +18,10 @@ public class FeignRetryer implements Retryer {
     @Override
     public void continueOrPropagate(final RetryableException e) {
         log.info(
-            LogField.Placeholders.THREE.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client retry attempt"),
-            StructuredArguments.kv(LogField.FEIGN_RETRY_ENDPOINT.label(), e.getMessage()),
-            StructuredArguments.kv(LogField.FEIGN_RETRY_COUNT.label(), attempt));
+                LogField.Placeholders.THREE.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client retry attempt"),
+                StructuredArguments.kv(LogField.FEIGN_RETRY_ENDPOINT.label(), e.getMessage()),
+                StructuredArguments.kv(LogField.FEIGN_RETRY_COUNT.label(), attempt));
 
         if (attempt == httpRetryConfigProp.maxAttempt()) {
             throw e;
@@ -32,15 +32,15 @@ public class FeignRetryer implements Retryer {
         try {
             final long interval = calculateRetryInterval();
             log.info(
-                LogField.Placeholders.TWO.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client waiting next retry attempt"),
-                StructuredArguments.kv(LogField.FEIGN_RETRY_INTERVAL.label(), interval));
+                    LogField.Placeholders.TWO.placeholder,
+                    StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client waiting next retry attempt"),
+                    StructuredArguments.kv(LogField.FEIGN_RETRY_INTERVAL.label(), interval));
             Thread.sleep(interval);
         } catch (final InterruptedException interruptedException) {
             log.warn(
-                LogField.Placeholders.ONE.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Fail to wait interval"),
-                interruptedException);
+                    LogField.Placeholders.ONE.placeholder,
+                    StructuredArguments.kv(LogField.MSG.label(), "Fail to wait interval"),
+                    interruptedException);
             Thread.currentThread().interrupt();
         }
     }

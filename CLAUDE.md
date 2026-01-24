@@ -19,19 +19,17 @@ Sanjy Client Web is a modern full-stack application for diet and meal tracking. 
 2. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS fetch and consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns. This is MANDATORY before writing any Mantine component code.
 
 3. **Browser Validation**: You have access to Google Chrome for debugging the application. Use it to validate your implementation by checking:
+
    - Visual rendering of components
    - Console errors and warnings
    - Network requests and responses
    - Application behavior and user interactions
-
 4. **Dependency Installation**: You MAY install new libraries in `package.json` if necessary for implementing features. Use `npm install <package>` in the frontend directory.
-
 5. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
    - Run `mvn clean install` from the project root
    - If the build fails, analyze errors, fix them, and run `mvn clean install` again
    - Repeat until the build succeeds with `BUILD SUCCESS`
    - Only consider the task complete when the build passes successfully
-
 6. **Use Custom DateTimePickerSanjy Component**: When adding date-time pickers in the frontend, ALWAYS use the `DateTimePickerSanjy` component from `src/components/DateTimePickerSanjy.tsx`. NEVER use the Mantine `DateTimePicker` directly. The custom component automatically applies the user's preferred date and time format settings from local storage.
 
 ## Architecture
@@ -46,7 +44,6 @@ The project is a single-module Maven application with two main parts:
    - **Vite** for build tooling and development server
    - PostCSS with Mantine preset for styling
    - Built artifacts are bundled into Spring Boot's static resources for production
-
 2. **Backend** (`src/main/java/`) - Spring Boot BFF (Backend for Frontend):
    - **Spring Boot 3.5.6** REST API (port 8080 in production, 8081 in development)
    - OpenFeign clients for communicating with sanjy-server backend
@@ -93,10 +90,10 @@ The BFF implements correlation ID tracking across all requests:
 - `application.yml` in `src/main/resources`
 - Type-safe configuration via `SanjyClientConfigProp` record with validation
 - Key configuration properties:
-  - `sanjy-client.external-apis.sanjy-server.url` - Backend service URL
-  - `sanjy-client.application.channel` - Client channel identifier
-  - `sanjy-client.logging.*` - Logging configuration
-  - `spring.ai.openai.*` - OpenAI API credentials
+- `sanjy-client.external-apis.sanjy-server.url` - Backend service URL
+- `sanjy-client.application.channel` - Client channel identifier
+- `sanjy-client.logging.*` - Logging configuration
+- `spring.ai.openai.*` - OpenAI API credentials
 
 **Frontend Configuration:**
 - Environment variables via `.env` files in the frontend directory
@@ -171,6 +168,7 @@ mvn clean compile -q
 **Note:** The `node_modules/` folder is NOT deleted by `mvn clean` to speed up builds. If you need to clean dependencies, manually delete it or run `npm ci` in the frontend directory.
 
 **Backend Only (for development):**
+
 ```bash
 # Run the Spring Boot BFF (serves the bundled React app in production)
 ./mvnw spring-boot:run
@@ -180,6 +178,7 @@ http://localhost:8081/api
 ```
 
 **Frontend Only (for development with HMR):**
+
 ```bash
 # Navigate to frontend directory
 cd src/main/frontend
@@ -205,6 +204,7 @@ http://localhost:5173
 ### Running Tests
 
 **Backend Tests:**
+
 ```bash
 # Run all backend tests
 mvn test
@@ -214,6 +214,7 @@ mvn test -PnativeTest
 ```
 
 **Frontend Tests:**
+
 ```bash
 cd src/main/frontend
 
@@ -305,6 +306,7 @@ docker run --rm -p 8081:8081 sanjy-client:0.0.1-SNAPSHOT
 ### Frontend Structure (React SPA)
 
 **Directory Structure:**
+
 ```
 src/main/frontend/
 ├── src/

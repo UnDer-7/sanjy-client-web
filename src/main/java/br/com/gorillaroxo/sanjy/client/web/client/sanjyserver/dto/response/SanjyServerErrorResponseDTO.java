@@ -4,13 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record SanjyServerErrorResponseDTO(
-    String code,
-    String timestamp,
-    String message,
-    String customMessage,
-    int httpStatusCode
-) {
+        String code, String timestamp, String message, String customMessage, int httpStatusCode) {
 
     public static final String ERROR_CODE_DIET_PLAN_NOT_FOUND = "003";
-
 }

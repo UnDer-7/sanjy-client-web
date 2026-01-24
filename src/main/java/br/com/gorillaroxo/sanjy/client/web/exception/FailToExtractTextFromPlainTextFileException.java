@@ -36,5 +36,4 @@ public class FailToExtractTextFromPlainTextFileException extends BusinessExcepti
     protected Logger getLogger() {
         return log;
     }
-
 }

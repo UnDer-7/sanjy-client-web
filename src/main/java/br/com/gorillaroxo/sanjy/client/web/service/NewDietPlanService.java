@@ -21,24 +21,30 @@ public class NewDietPlanService {
 
     public DietPlanControllerResponseDTO execute(final DietPlanControllerRequestDTO requestBody) {
         log.info(
-            LogField.Placeholders.FOUR.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Request to create diet plan"),
-            StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), requestBody.name()),
-            StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), requestBody.goal()),
-            StructuredArguments.kv(LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(), requestBody.mealTypes().size()));
+                LogField.Placeholders.FOUR.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Request to create diet plan"),
+                StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), requestBody.name()),
+                StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), requestBody.goal()),
+                StructuredArguments.kv(
+                        LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(),
+                        requestBody.mealTypes().size()));
 
         final var dto = dietPlanMapper.toDTO(requestBody);
         final DietPlanResponseDTO response = dietPlanFeignClient.newDietPlan(dto);
 
         log.info(
-            LogField.Placeholders.SEVEN.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Successfully created diet plan"),
-            StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), response.id()),
-            StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), response.name()),
-            StructuredArguments.kv(LogField.DIET_PLAN_IS_ACTIVE.label(), response.isActive()),
-            StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), response.goal()),
-            StructuredArguments.kv(LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(), response.mealTypes().size()),
-            StructuredArguments.kv(LogField.DIET_PLAN_CREATED_AT.label(), response.metadata().createdAt()));
+                LogField.Placeholders.SEVEN.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Successfully created diet plan"),
+                StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), response.id()),
+                StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), response.name()),
+                StructuredArguments.kv(LogField.DIET_PLAN_IS_ACTIVE.label(), response.isActive()),
+                StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), response.goal()),
+                StructuredArguments.kv(
+                        LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(),
+                        response.mealTypes().size()),
+                StructuredArguments.kv(
+                        LogField.DIET_PLAN_CREATED_AT.label(),
+                        response.metadata().createdAt()));
 
         return dietPlanMapper.toController(response);
     }

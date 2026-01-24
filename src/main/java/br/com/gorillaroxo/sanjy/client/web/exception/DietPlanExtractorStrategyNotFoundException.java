@@ -36,5 +36,4 @@ public class DietPlanExtractorStrategyNotFoundException extends BusinessExceptio
     protected Logger getLogger() {
         return log;
     }
-
 }

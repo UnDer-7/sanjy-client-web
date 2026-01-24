@@ -1,10 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.util;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 public final class RequestConstants {
 
     private RequestConstants() {
@@ -32,7 +27,6 @@ public final class RequestConstants {
         private Headers() {
             throw new IllegalStateException("Utility class");
         }
-
     }
 
     public static final class DateTimeFormats {
@@ -43,8 +37,7 @@ public final class RequestConstants {
         public static final String DATE_TIME_FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssXXX'['VV']'";
 
         /**
-         * Format for HTML datetime-local input (ISO 8601 without timezone)
-         * Used for user input in their local timezone
+         * Format for HTML datetime-local input (ISO 8601 without timezone) Used for user input in their local timezone
          */
         public static final String DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm";
 

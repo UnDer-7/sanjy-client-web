@@ -15,6 +15,8 @@ public class GetLatestProjectVersionService {
     private final SanjyClientWebConfigProp configProp;
 
     public String clientWeb() {
-        return gitHubReleaseFeignClient.getLatestRelease(configProp.application().name()).tagName();
+        return gitHubReleaseFeignClient
+                .getLatestRelease(configProp.application().name())
+                .tagName();
     }
 }

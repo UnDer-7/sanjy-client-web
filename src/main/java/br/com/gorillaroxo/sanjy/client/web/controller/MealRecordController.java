@@ -32,14 +32,14 @@ public class MealRecordController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MealRecordControllerResponseDTO create(@RequestBody @Valid @NotNull MealRecordControllerRequestDTO requestDTO) {
+    public MealRecordControllerResponseDTO create(
+            @RequestBody @Valid @NotNull MealRecordControllerRequestDTO requestDTO) {
         return newMealRecordService.execute(requestDTO);
     }
 
     @GetMapping
     public SearchMealRecordControllerResponseDTO search(
-        @Parameter(hidden = true) @NotNull @Valid final SearchMealRecordParamControllerRequest pageRequest) {
+            @Parameter(hidden = true) @NotNull @Valid final SearchMealRecordParamControllerRequest pageRequest) {
         return searchMealRecordService.execute(pageRequest);
     }
-
 }

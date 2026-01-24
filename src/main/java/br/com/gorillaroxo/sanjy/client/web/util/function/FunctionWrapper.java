@@ -5,7 +5,7 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface FunctionWrapper<T, R, E extends Exception> {
 
-    static <T, R>Function<T, R> wrap(final FunctionWrapper<T, R, Exception> function) {
+    static <T, R> Function<T, R> wrap(final FunctionWrapper<T, R, Exception> function) {
         return arg -> {
             try {
                 return function.accept(arg);

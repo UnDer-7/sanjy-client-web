@@ -36,5 +36,4 @@ public class FileMaxUploadSizeException extends BusinessException {
     protected Logger getLogger() {
         return log;
     }
-
 }

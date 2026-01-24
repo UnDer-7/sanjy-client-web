@@ -1,18 +1,17 @@
 package br.com.gorillaroxo.sanjy.client.web.exception;
 
 import br.com.gorillaroxo.sanjy.client.web.util.ExceptionCode;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 
 @Slf4j
 public class UnhandledClientHttpException extends BusinessException {
@@ -23,7 +22,8 @@ public class UnhandledClientHttpException extends BusinessException {
     @Getter
     private final RequestInformation requestInformation;
 
-    public UnhandledClientHttpException(final String customMessage, final Throwable originalCause, final RequestInformation requestInformation) {
+    public UnhandledClientHttpException(
+            final String customMessage, final Throwable originalCause, final RequestInformation requestInformation) {
         super(CODE, STATUS, customMessage, originalCause);
         this.requestInformation = requestInformation;
     }
@@ -71,9 +71,15 @@ public class UnhandledClientHttpException extends BusinessException {
         private final String responseBody;
 
         @Builder
-        public RequestInformation(final String feignMethodKey, final String requestMethod, final String requestUrl, final Integer httpStatusCode,
-            final Map<String, Collection<String>> requestHeaders, final String requestBody, final Map<String, Collection<String>> responseHeaders,
-            final String responseBody) {
+        public RequestInformation(
+                final String feignMethodKey,
+                final String requestMethod,
+                final String requestUrl,
+                final Integer httpStatusCode,
+                final Map<String, Collection<String>> requestHeaders,
+                final String requestBody,
+                final Map<String, Collection<String>> responseHeaders,
+                final String responseBody) {
             this.feignMethodKey = feignMethodKey;
             this.requestMethod = requestMethod;
             this.requestUrl = requestUrl;
@@ -107,6 +113,5 @@ public class UnhandledClientHttpException extends BusinessException {
         public Optional<String> getResponseBody() {
             return Optional.ofNullable(responseBody).filter(Predicate.not(String::isBlank));
         }
-
     }
 }

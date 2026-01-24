@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Set;
-
 @Slf4j
 @Validated
 @RestController
@@ -53,12 +51,12 @@ public class DietPlanController {
     @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public DietPlanControllerRequestDTO extractDietPlanFromFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            log.warn(LogField.Placeholders.ONE.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Empty file uploaded"));
+            log.warn(
+                    LogField.Placeholders.ONE.placeholder,
+                    StructuredArguments.kv(LogField.MSG.label(), "Empty file uploaded"));
             throw new InvalidValuesException("Please select a file to upload");
         }
 
         return processDietPlanFileService.process(file);
     }
-
 }

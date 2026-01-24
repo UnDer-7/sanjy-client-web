@@ -8,5 +8,4 @@ public interface FeignErrorHandler {
     BusinessException handle(Response response, String responseBodyJson);
 
     boolean canHandle(Response response, String responseBodyJson);
-
 }

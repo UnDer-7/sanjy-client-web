@@ -1,13 +1,12 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
+import java.time.ZoneOffset;
+import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import java.time.ZoneOffset;
-import java.util.TimeZone;
 
 /**
  * Initializes the application timezone to UTC before the ApplicationContext is fully created.

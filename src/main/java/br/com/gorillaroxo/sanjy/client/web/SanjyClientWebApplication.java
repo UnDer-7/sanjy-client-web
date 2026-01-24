@@ -17,5 +17,4 @@ public class SanjyClientWebApplication {
         app.addInitializers(new TimezoneInitializer());
         app.run(args);
     }
-
 }

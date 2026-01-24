@@ -3,14 +3,13 @@ package br.com.gorillaroxo.sanjy.client.web.controller.dto.request;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import jakarta.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -21,11 +20,13 @@ import java.time.ZonedDateTime;
 public class SearchMealRecordParamControllerRequest extends PageRequestControllerDTO {
 
     @NotNull
-    @JsonPropertyDescription("Filter meals consumed after this date/time, in UTC timezone (ISO 8601 format). Example: " + RequestConstants.Examples.DATE_TIME)
+    @JsonPropertyDescription("Filter meals consumed after this date/time, in UTC timezone (ISO 8601 format). Example: "
+            + RequestConstants.Examples.DATE_TIME)
     private ZonedDateTime consumedAtAfter;
 
     @NotNull
-    @JsonPropertyDescription("Filter meals consumed before this date/time, in UTC timezone (ISO 8601 format). Example: " + RequestConstants.Examples.DATE_TIME)
+    @JsonPropertyDescription("Filter meals consumed before this date/time, in UTC timezone (ISO 8601 format). Example: "
+            + RequestConstants.Examples.DATE_TIME)
     private ZonedDateTime consumedAtBefore;
 
     @JsonPropertyDescription("""
@@ -33,5 +34,4 @@ public class SearchMealRecordParamControllerRequest extends PageRequestControlle
                 If not specified, returns both types
                 """)
     private Boolean isFreeMeal;
-
 }

@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 
 /**
- * Configuration for the Diet Plan Converter ChatClient.
- * Creates an Optional ChatClient that will be empty if no AI provider is configured.
+ * Configuration for the Diet Plan Converter ChatClient. Creates an Optional ChatClient that will be empty if no AI
+ * provider is configured.
  */
 @Slf4j
 @Configuration
@@ -38,12 +38,11 @@ public class DietPlanConverterChatClientConfig {
     @Nullable
     @Bean("dietPlanConverterChatClient")
     public ChatClient dietPlanConverterChatClient() {
-        return chatModelWrapper.getChatClientBuilder()
-                .map(builder -> builder
-                        .defaultSystem(SYSTEM_MESSAGE)
+        return chatModelWrapper
+                .getChatClientBuilder()
+                .map(builder -> builder.defaultSystem(SYSTEM_MESSAGE)
                         .defaultAdvisors(new SimpleLoggerAdvisor())
                         .build())
                 .orElse(null);
     }
-
 }

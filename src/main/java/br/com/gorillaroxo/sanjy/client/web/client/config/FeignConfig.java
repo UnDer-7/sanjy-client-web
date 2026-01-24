@@ -4,12 +4,11 @@ import br.com.gorillaroxo.sanjy.client.web.client.config.handler.FeignErrorHandl
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Set;
 
 @Slf4j
 @Configuration

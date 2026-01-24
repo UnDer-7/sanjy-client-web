@@ -8,9 +8,7 @@ import br.com.gorillaroxo.sanjy.client.web.util.Constants;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(
-    componentModel = Constants.MAPSTRUCT_COMPONENT_MODEL,
-    unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(componentModel = Constants.MAPSTRUCT_COMPONENT_MODEL, unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface DietPlanMapper {
 
     DietPlanRequestDTO toDTO(DietPlanControllerRequestDTO requestDto);

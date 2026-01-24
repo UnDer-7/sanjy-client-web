@@ -13,17 +13,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
-    componentModel = Constants.MAPSTRUCT_COMPONENT_MODEL,
-    unmappedTargetPolicy = ReportingPolicy.ERROR,
-    uses = DateTimeMapper.class
-)
+        componentModel = Constants.MAPSTRUCT_COMPONENT_MODEL,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        uses = DateTimeMapper.class)
 public interface MealRecordMapper {
 
     MealRecordRequestDTO toDto(MealRecordControllerRequestDTO requestDTO);
 
     MealRecordControllerResponseDTO toResponse(MealRecordResponseDTO responseDTO);
 
-    PagedControllerResponseDTO<MealRecordControllerResponseDTO> toResponse(PagedResponseDTO<MealRecordResponseDTO> responseDTO);
+    PagedControllerResponseDTO<MealRecordControllerResponseDTO> toResponse(
+            PagedResponseDTO<MealRecordResponseDTO> responseDTO);
 
     MealRecordStatisticsControllerResponseDTO toResponse(MealRecordStatisticsResponseDTO responseDTO);
 }

@@ -5,13 +5,13 @@ import java.util.function.Consumer;
 @FunctionalInterface
 public interface ConsumerWrapper<T, E extends Exception> {
 
-    static <T>Consumer<T> wrap(final ConsumerWrapper<T, Exception> func) {
+    static <T> Consumer<T> wrap(final ConsumerWrapper<T, Exception> func) {
         return arg -> {
-          try {
-              func.accept(arg);
-          } catch (final Exception e) {
-              throw new ExceptionWrapper(e);
-          }
+            try {
+                func.accept(arg);
+            } catch (final Exception e) {
+                throw new ExceptionWrapper(e);
+            }
         };
     }
 

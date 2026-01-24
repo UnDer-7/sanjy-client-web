@@ -36,5 +36,4 @@ public class DeserializationException extends BusinessException {
     protected Logger getLogger() {
         return log;
     }
-
 }

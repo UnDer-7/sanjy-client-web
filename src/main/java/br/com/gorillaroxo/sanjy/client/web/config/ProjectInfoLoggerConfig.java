@@ -3,6 +3,9 @@ package br.com.gorillaroxo.sanjy.client.web.config;
 import br.com.gorillaroxo.sanjy.client.web.service.GetLatestProjectVersionService;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.ThreadUtils;
+import java.time.ZoneId;
+import java.util.Optional;
+import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
@@ -11,10 +14,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-
-import java.time.ZoneId;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 @Slf4j
 @Configuration

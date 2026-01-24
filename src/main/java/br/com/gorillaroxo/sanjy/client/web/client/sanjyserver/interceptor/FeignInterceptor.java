@@ -20,6 +20,8 @@ public class FeignInterceptor implements RequestInterceptor {
         final String correlationId = distributedTracingUtil.getCorrelationId();
 
         template.header(RequestConstants.Headers.X_CORRELATION_ID, correlationId);
-        template.header(RequestConstants.Headers.X_CHANNEL, sanjyClientWebConfigProp.application().channel());
+        template.header(
+                RequestConstants.Headers.X_CHANNEL,
+                sanjyClientWebConfigProp.application().channel());
     }
 }

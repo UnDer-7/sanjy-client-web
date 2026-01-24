@@ -2,6 +2,8 @@ package br.com.gorillaroxo.sanjy.client.web.service.extractor;
 
 import br.com.gorillaroxo.sanjy.client.web.exception.FailToExtractTextFromPdfFileException;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
@@ -11,9 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,11 +21,11 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
     @Override
     public String extract(final MultipartFile file) {
         log.info(
-            LogField.Placeholders.FOUR.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Extracting text String from PDF file"),
-            StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
-            StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
-            StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()));
+                LogField.Placeholders.FOUR.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Extracting text String from PDF file"),
+                StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
+                StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
+                StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()));
 
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper stripper = new PDFTextStripper();
@@ -34,22 +33,22 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
             final String text = stripper.getText(document);
 
             log.info(
-                LogField.Placeholders.FOUR.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Successfully extract text String from PDF file"),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()));
+                    LogField.Placeholders.FOUR.placeholder,
+                    StructuredArguments.kv(LogField.MSG.label(), "Successfully extract text String from PDF file"),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()));
 
             return text;
         } catch (final IOException e) {
             log.warn(
-                LogField.Placeholders.FIVE.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Fail to extract text from PDF file"),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
-                StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()),
-                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
-                e);
+                    LogField.Placeholders.FIVE.placeholder,
+                    StructuredArguments.kv(LogField.MSG.label(), "Fail to extract text from PDF file"),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
+                    StructuredArguments.kv(LogField.DIET_PLAN_FILE_SIZE_BYTES.label(), file.getSize()),
+                    StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
+                    e);
 
             throw new FailToExtractTextFromPdfFileException(e);
         }
@@ -59,5 +58,4 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
     public List<MediaType> mediaTypeAccepted() {
         return List.of(MediaType.APPLICATION_PDF);
     }
-
 }

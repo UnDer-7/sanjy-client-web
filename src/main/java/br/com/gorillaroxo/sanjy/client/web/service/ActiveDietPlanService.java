@@ -20,23 +20,25 @@ public class ActiveDietPlanService {
 
     public DietPlanControllerResponseDTO execute() {
         log.info(
-            LogField.Placeholders.ONE.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Request to get active diet plan"));
+                LogField.Placeholders.ONE.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Request to get active diet plan"));
 
         final DietPlanResponseDTO dietPlan = dietPlanClient.activeDietPlan();
 
         log.info(
-            LogField.Placeholders.SEVEN.placeholder,
-            StructuredArguments.kv(LogField.MSG.label(), "Successfully got active diet plan"),
-            StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), dietPlan.id()),
-            StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), dietPlan.name()),
-            StructuredArguments.kv(LogField.DIET_PLAN_IS_ACTIVE.label(), dietPlan.isActive()),
-            StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), dietPlan.goal()),
-            StructuredArguments.kv(LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(), dietPlan.mealTypes().size()),
-            StructuredArguments.kv(LogField.DIET_PLAN_CREATED_AT.label(), dietPlan.metadata().createdAt()));
+                LogField.Placeholders.SEVEN.placeholder,
+                StructuredArguments.kv(LogField.MSG.label(), "Successfully got active diet plan"),
+                StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), dietPlan.id()),
+                StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), dietPlan.name()),
+                StructuredArguments.kv(LogField.DIET_PLAN_IS_ACTIVE.label(), dietPlan.isActive()),
+                StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), dietPlan.goal()),
+                StructuredArguments.kv(
+                        LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(),
+                        dietPlan.mealTypes().size()),
+                StructuredArguments.kv(
+                        LogField.DIET_PLAN_CREATED_AT.label(),
+                        dietPlan.metadata().createdAt()));
 
         return dietPlanMapper.toController(dietPlan);
     }
-
 }
-

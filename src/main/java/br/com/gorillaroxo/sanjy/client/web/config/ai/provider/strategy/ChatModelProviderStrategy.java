@@ -10,5 +10,4 @@ public interface ChatModelProviderStrategy {
     ChatModelWrapper build(SanjyClientWebConfigProp.AiProp aiProp);
 
     String providerName(SanjyClientWebConfigProp.AiProp aiProp);
-
 }

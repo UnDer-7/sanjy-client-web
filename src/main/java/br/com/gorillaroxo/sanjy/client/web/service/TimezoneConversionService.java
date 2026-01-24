@@ -2,26 +2,24 @@ package br.com.gorillaroxo.sanjy.client.web.service;
 
 import br.com.gorillaroxo.sanjy.client.web.exception.TimezoneInvalidException;
 import br.com.gorillaroxo.sanjy.client.web.exception.TimezoneNotProvidedException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
- * Service to handle timezone conversions between user timezone and UTC.
- * The sanjy-server expects all datetime fields to be in UTC.
+ * Service to handle timezone conversions between user timezone and UTC. The sanjy-server expects all datetime fields to
+ * be in UTC.
  */
 @Slf4j
 @Service
 public class TimezoneConversionService {
 
     /**
-     * Convert a LocalDateTime from user's timezone to UTC Instant.
-     * This is used when the user submits a datetime (e.g., meal consumed time) in their local timezone,
-     * and we need to convert it to UTC before sending to the backend.
+     * Convert a LocalDateTime from user's timezone to UTC Instant. This is used when the user submits a datetime (e.g.,
+     * meal consumed time) in their local timezone, and we need to convert it to UTC before sending to the backend.
      *
      * @param localDateTime the datetime in user's timezone
      * @param userTimezone the user's timezone (required)
@@ -45,15 +43,15 @@ public class TimezoneConversionService {
         // Convert to Instant (UTC)
         Instant utcInstant = zonedDateTime.toInstant();
 
-        log.debug("Converted LocalDateTime {} in timezone {} to UTC Instant {}",
-                localDateTime, userTimezone, utcInstant);
+        log.debug(
+                "Converted LocalDateTime {} in timezone {} to UTC Instant {}", localDateTime, userTimezone, utcInstant);
 
         return utcInstant;
     }
 
     /**
-     * Convert a UTC Instant to LocalDateTime in user's timezone.
-     * This is used when displaying datetimes from the backend to the user.
+     * Convert a UTC Instant to LocalDateTime in user's timezone. This is used when displaying datetimes from the
+     * backend to the user.
      *
      * @param instant the UTC instant
      * @param userTimezone the user's timezone (required)
@@ -77,15 +75,13 @@ public class TimezoneConversionService {
         // Extract LocalDateTime
         LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
 
-        log.debug("Converted UTC Instant {} to LocalDateTime {} in timezone {}",
-                instant, localDateTime, userTimezone);
+        log.debug("Converted UTC Instant {} to LocalDateTime {} in timezone {}", instant, localDateTime, userTimezone);
 
         return localDateTime;
     }
 
     /**
-     * Parse timezone string to ZoneId.
-     * Throws appropriate exceptions if timezone is missing or invalid.
+     * Parse timezone string to ZoneId. Throws appropriate exceptions if timezone is missing or invalid.
      *
      * @param userTimezone the timezone string from request
      * @return the parsed ZoneId
@@ -103,5 +99,4 @@ public class TimezoneConversionService {
             throw new TimezoneInvalidException("Invalid timezone: " + userTimezone, e);
         }
     }
-
 }

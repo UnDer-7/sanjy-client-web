@@ -6,17 +6,16 @@ import lombok.Builder;
 
 @Builder
 public record StandardOptionSimplifiedControllerResponseDTO(
-    @JsonPropertyDescription("Unique identifier of the Standard Option. Example: 12")
-    Long id,
+        @JsonPropertyDescription("Unique identifier of the Standard Option. Example: 12")
+        Long id,
 
-    @JsonPropertyDescription("Option number within the meal type (1, 2, 3, etc). Example: 2")
-    Long optionNumber,
+        @JsonPropertyDescription("Option number within the meal type (1, 2, 3, etc). Example: 2")
+        Long optionNumber,
 
-    @JsonPropertyDescription("Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar")
-    String description,
+        @JsonPropertyDescription(
+                "Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar")
+        String description,
 
-    @JsonPropertyDescription("Metadata information containing creation and last update timestamps, along with other contextual data")
-    MetadataResponseDto metadata
-) {
-
-}
+        @JsonPropertyDescription(
+                "Metadata information containing creation and last update timestamps, along with other contextual data")
+        MetadataResponseDto metadata) {}
