@@ -81,6 +81,8 @@ fmt/frontend/check:
 	@echo ">>> Checking frontend code formatting…"
 	cd src/main/frontend && npm run format:check
 
+## ----- Linting -----
+
 ## lint: Verify code compliance with Checkstyle standards
 .PHONY: lint
 lint:
