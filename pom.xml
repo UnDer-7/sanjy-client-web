@@ -185,6 +185,48 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.bytebuddy</groupId>
+                        <artifactId>byte-buddy</artifactId>
+                        <version>1.18.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>enhance</id>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <enableLazyInitialization>true</enableLazyInitialization>
+                            <enableDirtyTracking>true</enableDirtyTracking>
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>sanjy-client-web-${project.version}.graal</imageName>
+                    <buildArgs>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                    </buildArgs>
+                    <jvmArgs>
+                        <arg>-XX:MaxRAMPercentage=99.0</arg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -200,6 +242,7 @@
                     </filesets>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -236,6 +279,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -262,20 +306,88 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <imageName>${project.name}.graalvm</imageName>
-                    <jvmArgs>
-                        <arg>-XX:MaxRAMPercentage=99.0</arg>
-                    </jvmArgs>
-                    <buildArgs>
-                        <buildArg>--static</buildArg>
-                        <buildArg>--libc=musl</buildArg>
-                    </buildArgs>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.14</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <!-- Exclude exception classes from coverage -->
+                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/exception/**</exclude>
+                        <!-- Exclude Constants classes from coverage -->
+                        <exclude>**/*Constants.class</exclude>
+                        <!-- Exclude main application class from coverage -->
+                        <exclude>**/br/com/gorillaroxo/sanjy/server/infrastructure/SanJyApplication.class</exclude>
+                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/SanjyClientWebApplication.class</exclude>
+                        <!-- Exclude global exception handler from coverage -->
+                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/controller/config/GlobalExceptionHandlerConfig.class</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <fail>true</fail>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                    <message>Invalid Java version. It should, at least, be 25</message>
+                                </requireJavaVersion>
+
+                                <!-- Detects duplicate dependencies within the same POM -->
+                                <banDuplicatePomDependencyVersions/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <!-- Documentation: https://github.com/diffplug/spotless/tree/main/plugin-maven#table-of-contents -->
                 <groupId>com.diffplug.spotless</groupId>
@@ -384,6 +496,7 @@
                     <!--                    </yaml>-->
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -412,5 +525,33 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+            Native Test Profile
+            GraalVM Native Image does not support Mockito due to reflection/bytecode manipulation.
+            This profile excludes unit tests (*Test.java) which use Mockito.
+            Only integration tests (*IT.java) are executed in native mode.
+        -->
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
