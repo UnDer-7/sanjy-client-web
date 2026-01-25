@@ -16,15 +16,15 @@ public class FeignRetryer implements Retryer {
     private final SanjyClientWebConfigProp.HttpRetryProp httpRetryConfigProp;
 
     @Override
-    public void continueOrPropagate(final RetryableException e) {
+    public void continueOrPropagate(final RetryableException retryableException) {
         log.info(
-                LogField.Placeholders.THREE.placeholder,
+                LogField.Placeholders.THREE.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client retry attempt"),
-                StructuredArguments.kv(LogField.FEIGN_RETRY_ENDPOINT.label(), e.getMessage()),
+                StructuredArguments.kv(LogField.FEIGN_RETRY_ENDPOINT.label(), retryableException.getMessage()),
                 StructuredArguments.kv(LogField.FEIGN_RETRY_COUNT.label(), attempt));
 
         if (attempt == httpRetryConfigProp.maxAttempt()) {
-            throw e;
+            throw retryableException;
         }
 
         attempt++;
@@ -32,13 +32,13 @@ public class FeignRetryer implements Retryer {
         try {
             final long interval = calculateRetryInterval();
             log.info(
-                    LogField.Placeholders.TWO.placeholder,
+                    LogField.Placeholders.TWO.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Feign HTTP client waiting next retry attempt"),
                     StructuredArguments.kv(LogField.FEIGN_RETRY_INTERVAL.label(), interval));
             Thread.sleep(interval);
         } catch (final InterruptedException interruptedException) {
             log.warn(
-                    LogField.Placeholders.ONE.placeholder,
+                    LogField.Placeholders.ONE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Fail to wait interval"),
                     interruptedException);
             Thread.currentThread().interrupt();
@@ -46,6 +46,7 @@ public class FeignRetryer implements Retryer {
     }
 
     @Override
+    @SuppressWarnings({"checkstyle:NoClone", "checkstyle:SuperClone"})
     public Retryer clone() {
         return new FeignRetryer(httpRetryConfigProp);
     }

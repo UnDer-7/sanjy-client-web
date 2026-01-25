@@ -9,7 +9,7 @@ import java.util.Objects;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record DietPlanRequestDTO(
+public record DietPlanRequestDto(
         @JsonPropertyDescription("Name/identifier of the diet plan. Example: Plan N°02 - Cutting")
         String name,
 
@@ -35,14 +35,15 @@ public record DietPlanRequestDTO(
                 "Main goal of this diet plan. Example: Body fat reduction with muscle mass preservation")
         String goal,
 
-        @JsonPropertyDescription(
-                "Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products.")
+        @JsonPropertyDescription("""
+            Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products.
+            """)
         String nutritionistNotes,
 
         @JsonPropertyDescription("List of meal types associated with this diet plan.")
-        List<MealTypeRequestDTO> mealTypes) {
+        List<MealTypeRequestDto> mealTypes) {
 
-    public DietPlanRequestDTO {
+    public DietPlanRequestDto {
         mealTypes = Objects.requireNonNullElseGet(mealTypes, Collections::emptyList);
     }
 }

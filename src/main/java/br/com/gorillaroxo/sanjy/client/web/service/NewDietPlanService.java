@@ -1,9 +1,9 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.mapper.DietPlanMapper;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ public class NewDietPlanService {
     private final DietPlanFeignClient dietPlanFeignClient;
     private final DietPlanMapper dietPlanMapper;
 
-    public DietPlanControllerResponseDTO execute(final DietPlanControllerRequestDTO requestBody) {
+    public DietPlanControllerResponseDto execute(final DietPlanControllerRequestDto requestBody) {
         log.info(
-                LogField.Placeholders.FOUR.placeholder,
+                LogField.Placeholders.FOUR.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Request to create diet plan"),
                 StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), requestBody.name()),
                 StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), requestBody.goal()),
@@ -29,11 +29,11 @@ public class NewDietPlanService {
                         LogField.DIET_PLAN_MEAL_TYPE_SIZE.label(),
                         requestBody.mealTypes().size()));
 
-        final var dto = dietPlanMapper.toDTO(requestBody);
-        final DietPlanResponseDTO response = dietPlanFeignClient.newDietPlan(dto);
+        final var dto = dietPlanMapper.toDto(requestBody);
+        final DietPlanResponseDto response = dietPlanFeignClient.newDietPlan(dto);
 
         log.info(
-                LogField.Placeholders.SEVEN.placeholder,
+                LogField.Placeholders.SEVEN.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Successfully created diet plan"),
                 StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), response.id()),
                 StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), response.name()),

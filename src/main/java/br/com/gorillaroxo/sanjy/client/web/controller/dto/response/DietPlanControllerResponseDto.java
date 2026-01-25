@@ -1,22 +1,23 @@
-package br.com.gorillaroxo.sanjy.client.web.controller.dto.request;
+package br.com.gorillaroxo.sanjy.client.web.controller.dto.response;
 
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record DietPlanControllerRequestDTO(
-        @NotBlank
+public record DietPlanControllerResponseDto(
+        @Schema(
+                description = "Unique identifier of the Diet Plan",
+                example = "123",
+                requiredMode = Schema.RequiredMode.REQUIRED)
+        @JsonPropertyDescription("Unique identifier of the Diet Plan. Example: 123")
+        Long id,
+
         @Schema(
                 description = "Name/identifier of the diet plan",
                 example = "Plan N°02 - Cutting",
@@ -26,25 +27,18 @@ public record DietPlanControllerRequestDTO(
         String name,
 
         @Schema(
-                description =
-                        "Date when this diet plan starts (ISO 8601 format). If not provided, defaults to current date",
+                description = "Date when this diet plan starts",
                 example = RequestConstants.Examples.DATE,
                 format = RequestConstants.DateTimeFormats.DATE_FORMAT,
-                nullable = true,
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+                requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("Date when this diet plan starts. Example: " + RequestConstants.Examples.DATE)
         LocalDate startDate,
 
         @Schema(
-                description = """
-                    Date when this diet plan ends (ISO 8601 format). If not provided, defaults to current date + 2 months. \
-                    If provided, must be a future date
-                    """,
+                description = "Date when this diet plan ends",
                 example = RequestConstants.Examples.DATE,
                 format = RequestConstants.DateTimeFormats.DATE_FORMAT,
-                nullable = true,
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @Future
+                requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("Date when this diet plan ends. Example: " + RequestConstants.Examples.DATE)
         LocalDate endDate,
 
@@ -94,33 +88,32 @@ public record DietPlanControllerRequestDTO(
                 example = "Patient has lactose intolerance. Avoid dairy products.",
                 nullable = true,
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products.")
+        @JsonPropertyDescription("""
+            Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products
+            """)
         String nutritionistNotes,
 
-        @Valid
-        @NotNull
-        @NotEmpty
         @Schema(
                 description = "List of meal types associated with this diet plan",
                 requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription("List of meal types associated with this diet plan.")
-        List<MealTypeControllerRequestDTO> mealTypes) {
+        @JsonPropertyDescription("List of meal types associated with this diet plan")
+        Set<MealTypeControllerResponseDto> mealTypes,
 
-    public DietPlanControllerRequestDTO {
-        mealTypes = Objects.requireNonNullElseGet(mealTypes, Collections::emptyList);
-    }
+        @Schema(
+                description = "Indicates whether this diet plan is currently active",
+                example = "true",
+                requiredMode = Schema.RequiredMode.REQUIRED)
+        @JsonPropertyDescription("Indicates whether this diet plan is currently active. Example: true")
+        Boolean isActive,
 
-    public boolean isEmpty() {
-        return (name == null || name.isBlank())
-                && startDate == null
-                && endDate == null
-                && dailyCalories == null
-                && dailyProteinInG == null
-                && dailyCarbsInG == null
-                && dailyFatInG == null
-                && (goal == null || goal.isBlank())
-                && (nutritionistNotes == null || nutritionistNotes.isBlank())
-                && (mealTypes == null || mealTypes.isEmpty());
+        @Schema(description = """
+                    Metadata information containing creation and last update timestamps, along with other contextual data
+                    """, requiredMode = Schema.RequiredMode.REQUIRED)
+        @JsonPropertyDescription(
+                "Metadata information containing creation and last update timestamps, along with other contextual data")
+        MetadataControllerResponseDto metadata) {
+
+    public DietPlanControllerResponseDto {
+        mealTypes = Objects.requireNonNullElse(mealTypes, Collections.emptySet());
     }
 }

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 @Builder
-public record StandardOptionControllerResponseDTO(
+public record StandardOptionControllerResponseDto(
         @Schema(
                 description = "Unique identifier of the Standard Option",
                 example = "123",
@@ -24,8 +24,9 @@ public record StandardOptionControllerResponseDTO(
                 description = "Complete description of foods that compose this meal option",
                 example = "2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar",
                 requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription(
-                "Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar")
+        @JsonPropertyDescription("""
+            Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar
+            """)
         String description,
 
         @Schema(

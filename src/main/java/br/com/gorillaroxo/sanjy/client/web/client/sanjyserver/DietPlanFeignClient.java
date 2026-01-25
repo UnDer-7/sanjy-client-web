@@ -1,7 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.interceptor.FeignInterceptor;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanNotFoundException;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
@@ -25,7 +25,7 @@ public interface DietPlanFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @PostMapping
-    DietPlanResponseDTO newDietPlan(@RequestBody DietPlanRequestDTO dietPlan);
+    DietPlanResponseDto newDietPlan(@RequestBody DietPlanRequestDto dietPlan);
 
     /**
      * Retrieves the currently active diet plan with all meal types, standard options, nutritional targets (calories,
@@ -35,5 +35,5 @@ public interface DietPlanFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @GetMapping("/active")
-    DietPlanResponseDTO activeDietPlan();
+    DietPlanResponseDto activeDietPlan();
 }

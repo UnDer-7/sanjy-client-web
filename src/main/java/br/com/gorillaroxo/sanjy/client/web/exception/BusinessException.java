@@ -75,44 +75,14 @@ public abstract class BusinessException extends RuntimeException {
     public void executeLogging() {
         final var className = this.getClass().getSimpleName();
         final var defaultMsg = "An exception has occurred";
+        final var format = LogField.Placeholders.THREE.getPlaceholder();
+        final Object[] args = {
+            StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
+            StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
+            StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage())
+        };
 
-        switch (getLogLevel()) {
-            case TRACE ->
-                getLogger()
-                        .trace(
-                                LogField.Placeholders.THREE.placeholder,
-                                StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
-                                StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
-                                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage()));
-            case DEBUG ->
-                getLogger()
-                        .debug(
-                                LogField.Placeholders.THREE.placeholder,
-                                StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
-                                StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
-                                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage()));
-            case INFO ->
-                getLogger()
-                        .info(
-                                LogField.Placeholders.THREE.placeholder,
-                                StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
-                                StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
-                                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage()));
-            case WARN ->
-                getLogger()
-                        .warn(
-                                LogField.Placeholders.THREE.placeholder,
-                                StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
-                                StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
-                                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage()));
-            case ERROR ->
-                getLogger()
-                        .error(
-                                LogField.Placeholders.THREE.placeholder,
-                                StructuredArguments.kv(LogField.MSG.label(), defaultMsg),
-                                StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), className),
-                                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), super.getMessage()));
-        }
+        getLogLevel().log(getLogger(), format, args);
     }
 
     public Optional<String> getCustomMessage() {
@@ -154,10 +124,37 @@ public abstract class BusinessException extends RuntimeException {
     }
 
     protected enum LogLevel {
-        TRACE,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR
+        TRACE {
+            @Override
+            public void log(Logger logger, String format, Object... args) {
+                logger.trace(format, args);
+            }
+        },
+        DEBUG {
+            @Override
+            public void log(Logger logger, String format, Object... args) {
+                logger.debug(format, args);
+            }
+        },
+        INFO {
+            @Override
+            public void log(Logger logger, String format, Object... args) {
+                logger.info(format, args);
+            }
+        },
+        WARN {
+            @Override
+            public void log(Logger logger, String format, Object... args) {
+                logger.warn(format, args);
+            }
+        },
+        ERROR {
+            @Override
+            public void log(Logger logger, String format, Object... args) {
+                logger.error(format, args);
+            }
+        };
+
+        public abstract void log(Logger logger, String format, Object... args);
     }
 }

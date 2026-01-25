@@ -12,7 +12,7 @@ public final class LoggingHelper {
 
     public static String loggingAndReturnControllerPagePath(final String pageName) {
         log.info(
-                LogField.Placeholders.TWO.placeholder,
+                LogField.Placeholders.TWO.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Rendering a page"),
                 StructuredArguments.kv(LogField.PAGE_PATH.label(), pageName));
 

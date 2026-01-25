@@ -1,9 +1,9 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.SearchMealRecordParamControllerRequest;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.service.NewMealRecordService;
 import br.com.gorillaroxo.sanjy.client.web.service.SearchMealRecordService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,13 +32,13 @@ public class MealRecordController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MealRecordControllerResponseDTO create(
-            @RequestBody @Valid @NotNull MealRecordControllerRequestDTO requestDTO) {
-        return newMealRecordService.execute(requestDTO);
+    public MealRecordControllerResponseDto create(
+            @RequestBody @Valid @NotNull MealRecordControllerRequestDto mealRecordRequest) {
+        return newMealRecordService.execute(mealRecordRequest);
     }
 
     @GetMapping
-    public SearchMealRecordControllerResponseDTO search(
+    public SearchMealRecordControllerResponseDto search(
             @Parameter(hidden = true) @NotNull @Valid final SearchMealRecordParamControllerRequest pageRequest) {
         return searchMealRecordService.execute(pageRequest);
     }

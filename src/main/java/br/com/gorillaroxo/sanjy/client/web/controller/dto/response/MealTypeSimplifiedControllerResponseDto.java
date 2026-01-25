@@ -17,8 +17,10 @@ public record MealTypeSimplifiedControllerResponseDto(
         @JsonPropertyDescription("Scheduled time for this meal. Example: " + RequestConstants.Examples.TIME)
         LocalTime scheduledTime,
 
-        @JsonPropertyDescription(
-                "Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
+        @JsonPropertyDescription("""
+            Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). \
+            Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal
+            """)
         String observation,
 
         @JsonPropertyDescription(

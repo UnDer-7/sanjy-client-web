@@ -11,7 +11,7 @@ import lombok.Builder;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public record MealRecordControllerRequestDTO(
+public record MealRecordControllerRequestDto(
         @NotNull
         @Schema(
                 description = "ID of the meal type (breakfast, lunch, snack, dinner, etc...)",
@@ -41,9 +41,9 @@ public record MealRecordControllerRequestDTO(
 
         @NotNull
         @Schema(
-                description =
-                        "Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). "
-                                + "TRUE = free meal | FALSE = standard meal",
+                description = """
+                    Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). TRUE = free meal | FALSE = standard meal
+                    """,
                 example = "false",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("""
@@ -55,8 +55,9 @@ public record MealRecordControllerRequestDTO(
         @Schema(description = """
                     ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE
                     """, example = "5", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE")
+        @JsonPropertyDescription("""
+            ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE
+            """)
         Long standardOptionId,
 
         @Schema(
@@ -66,8 +67,9 @@ public record MealRecordControllerRequestDTO(
                 example = "Grilled chicken with vegetables",
                 nullable = true,
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "Text description of the free meal item. Required when isFreeMeal = TRUE, should be NULL when isFreeMeal = FALSE. Example: Grilled chicken with vegetables")
+        @JsonPropertyDescription("""
+            Text description of the free meal item. Required when isFreeMeal = TRUE, should be NULL when isFreeMeal = FALSE. Example: Grilled chicken with vegetables
+            """)
         String freeMealDescription,
 
         @NotNull
@@ -89,8 +91,9 @@ public record MealRecordControllerRequestDTO(
                 defaultValue = "serving",
                 nullable = true,
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "Unit of measurement for the quantity (serving, g, ml, units, etc...). Defaults to 'serving' if not provided")
+        @JsonPropertyDescription("""
+            Unit of measurement for the quantity (serving, g, ml, units, etc...). Defaults to 'serving' if not provided
+            """)
         String unit,
 
         @Schema(

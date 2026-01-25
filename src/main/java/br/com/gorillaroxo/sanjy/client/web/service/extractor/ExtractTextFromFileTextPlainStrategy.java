@@ -20,7 +20,7 @@ public class ExtractTextFromFileTextPlainStrategy implements ExtractTextFromFile
     @Override
     public String extract(final MultipartFile file) {
         log.info(
-                LogField.Placeholders.FOUR.placeholder,
+                LogField.Placeholders.FOUR.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Extracting text String from Plain Text file"),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
@@ -31,7 +31,7 @@ public class ExtractTextFromFileTextPlainStrategy implements ExtractTextFromFile
             final String text = new String(bytes, StandardCharsets.UTF_8);
 
             log.info(
-                    LogField.Placeholders.FOUR.placeholder,
+                    LogField.Placeholders.FOUR.getPlaceholder(),
                     StructuredArguments.kv(
                             LogField.MSG.label(), "Successfully extract text String from Plain Text file"),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
@@ -41,7 +41,7 @@ public class ExtractTextFromFileTextPlainStrategy implements ExtractTextFromFile
             return text;
         } catch (final IOException e) {
             log.warn(
-                    LogField.Placeholders.FIVE.placeholder,
+                    LogField.Placeholders.FIVE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Fail to extract text from Plain Text file"),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),

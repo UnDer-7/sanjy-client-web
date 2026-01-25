@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record StandardOptionControllerRequestDTO(
+public record StandardOptionControllerRequestDto(
         @Schema(description = """
                     Option number within the meal type. Must follow a complete sequence starting from 1 with no gaps. \
                     The sequence can be sent in any order (backend will sort), but all numbers must be present. \
@@ -20,6 +20,7 @@ public record StandardOptionControllerRequestDTO(
                 example = "2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @NotBlank
-        @JsonPropertyDescription(
-                "Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar")
+        @JsonPropertyDescription("""
+            Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar
+            """)
         String description) {}

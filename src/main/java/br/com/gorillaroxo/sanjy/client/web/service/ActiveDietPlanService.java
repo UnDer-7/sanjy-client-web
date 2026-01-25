@@ -1,8 +1,8 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.mapper.DietPlanMapper;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +18,15 @@ public class ActiveDietPlanService {
     private final DietPlanFeignClient dietPlanClient;
     private final DietPlanMapper dietPlanMapper;
 
-    public DietPlanControllerResponseDTO execute() {
+    public DietPlanControllerResponseDto execute() {
         log.info(
-                LogField.Placeholders.ONE.placeholder,
+                LogField.Placeholders.ONE.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Request to get active diet plan"));
 
-        final DietPlanResponseDTO dietPlan = dietPlanClient.activeDietPlan();
+        final DietPlanResponseDto dietPlan = dietPlanClient.activeDietPlan();
 
         log.info(
-                LogField.Placeholders.SEVEN.placeholder,
+                LogField.Placeholders.SEVEN.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Successfully got active diet plan"),
                 StructuredArguments.kv(LogField.DIET_PLAN_ID.label(), dietPlan.id()),
                 StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), dietPlan.name()),

@@ -18,10 +18,10 @@ public class DistributedTracingUtil {
         if (correlationId == null || correlationId.isBlank()) {
             final String newCorrelationId = UUID.randomUUID().toString();
             log.warn(
-                    LogField.Placeholders.TWO.placeholder,
-                    StructuredArguments.kv(
-                            LogField.MSG.label(),
-                            "Could not get correlation id from MDC Context, correlation id is null or blank, creating new correlation id"),
+                    LogField.Placeholders.TWO.getPlaceholder(),
+                    StructuredArguments.kv(LogField.MSG.label(), """
+                        Could not get correlation id from MDC Context, correlation id is null or blank, creating new correlation id
+                        """),
                     StructuredArguments.kv(LogField.CORRELATION_ID.label(), newCorrelationId));
             MDC.put(LogField.CORRELATION_ID.label(), newCorrelationId);
             return newCorrelationId;

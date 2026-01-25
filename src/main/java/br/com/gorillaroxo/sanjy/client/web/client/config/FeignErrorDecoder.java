@@ -48,7 +48,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
         final Function<Object, String> wrapInString = value -> "( " + value + " )";
 
         log.warn(
-                LogField.Placeholders.NINE.placeholder,
+                LogField.Placeholders.NINE.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "An HTTP call returned an error"),
                 StructuredArguments.kv(LogField.FEIGN_METHOD_KEY.label(), methodKey),
                 StructuredArguments.kv(LogField.REQUEST_METHOD.label(), httpMethod),
@@ -92,7 +92,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
                     .orElse(null);
         } catch (final Exception e) {
             log.warn(
-                    LogField.Placeholders.ONE.placeholder,
+                    LogField.Placeholders.ONE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Error while reading response body from request"),
                     e);
             return null;
@@ -108,7 +108,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
                     .orElse(null);
         } catch (final Exception e) {
             log.warn(
-                    LogField.Placeholders.ONE.placeholder,
+                    LogField.Placeholders.ONE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Error while reading request body from request"),
                     e);
             return null;

@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanExtractorStrategyNotFoundException;
 import br.com.gorillaroxo.sanjy.client.web.service.converter.DietPlanConverter;
 import br.com.gorillaroxo.sanjy.client.web.service.extractor.ExtractTextFromFileStrategy;
@@ -22,9 +22,9 @@ public class ProcessDietPlanFileService {
     private final Set<ExtractTextFromFileStrategy> extractors;
     private final DietPlanConverter dietPlanConverter;
 
-    public DietPlanControllerRequestDTO process(final MultipartFile file) {
+    public DietPlanControllerRequestDto process(final MultipartFile file) {
         log.info(
-                LogField.Placeholders.FOUR.placeholder,
+                LogField.Placeholders.FOUR.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Request to process Diet Plan File"),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
@@ -45,10 +45,10 @@ public class ProcessDietPlanFileService {
                 })
                 .extract(file);
 
-        final DietPlanControllerRequestDTO dietPlan = dietPlanConverter.convert(dietPlanTxt);
+        final DietPlanControllerRequestDto dietPlan = dietPlanConverter.convert(dietPlanTxt);
 
         log.info(
-                LogField.Placeholders.EIGHT.placeholder,
+                LogField.Placeholders.EIGHT.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Successfully finished processing Diet Plan file"),
                 StructuredArguments.kv(LogField.DIET_PLAN_NAME.label(), dietPlan.name()),
                 StructuredArguments.kv(LogField.DIET_PLAN_GOAL.label(), dietPlan.goal()),

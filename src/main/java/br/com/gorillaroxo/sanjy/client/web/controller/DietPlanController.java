@@ -1,7 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.exception.InvalidValuesException;
 import br.com.gorillaroxo.sanjy.client.web.service.ActiveDietPlanService;
 import br.com.gorillaroxo.sanjy.client.web.service.NewDietPlanService;
@@ -39,20 +39,20 @@ public class DietPlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DietPlanControllerResponseDTO create(@RequestBody @Valid @NonNull DietPlanControllerRequestDTO request) {
+    public DietPlanControllerResponseDto create(@RequestBody @Valid @NonNull DietPlanControllerRequestDto request) {
         return newDietPlanService.execute(request);
     }
 
     @GetMapping
-    public DietPlanControllerResponseDTO get() {
+    public DietPlanControllerResponseDto get() {
         return activeDietPlanService.execute();
     }
 
     @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public DietPlanControllerRequestDTO extractDietPlanFromFile(@RequestParam("file") MultipartFile file) {
+    public DietPlanControllerRequestDto extractDietPlanFromFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             log.warn(
-                    LogField.Placeholders.ONE.placeholder,
+                    LogField.Placeholders.ONE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Empty file uploaded"));
             throw new InvalidValuesException("Please select a file to upload");
         }

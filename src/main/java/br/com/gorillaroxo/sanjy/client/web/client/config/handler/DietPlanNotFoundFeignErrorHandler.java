@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.client.config.handler;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.exception.BusinessException;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanNotFoundException;
@@ -27,7 +27,7 @@ public class DietPlanNotFoundFeignErrorHandler implements FeignErrorHandler {
     @Override
     public BusinessException handle(final Response response, final String responseBodyJson) {
         log.warn(
-                LogField.Placeholders.ONE.placeholder,
+                LogField.Placeholders.ONE.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Diet Plan Not Found"));
 
         return new DietPlanNotFoundException();
@@ -57,9 +57,9 @@ public class DietPlanNotFoundFeignErrorHandler implements FeignErrorHandler {
             return false;
         }
 
-        return jsonUtil.deserializeSafely(responseBodyJson, SanjyServerErrorResponseDTO.class)
-                .map(SanjyServerErrorResponseDTO::code)
-                .filter(SanjyServerErrorResponseDTO.ERROR_CODE_DIET_PLAN_NOT_FOUND::equals)
+        return jsonUtil.deserializeSafely(responseBodyJson, SanjyServerErrorResponseDto.class)
+                .map(SanjyServerErrorResponseDto::code)
+                .filter(SanjyServerErrorResponseDto.ERROR_CODE_DIET_PLAN_NOT_FOUND::equals)
                 .isPresent();
     }
 }

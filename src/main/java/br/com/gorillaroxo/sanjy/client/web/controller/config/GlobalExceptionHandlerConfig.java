@@ -55,7 +55,7 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
                 """;
 
             log.warn(
-                    LogField.Placeholders.FIVE.placeholder,
+                    LogField.Placeholders.FIVE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), warnMsg),
                     StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), exception.getMessage()),
                     StructuredArguments.kv(
@@ -71,7 +71,7 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
         }
 
         log.warn(
-                LogField.Placeholders.TWO.placeholder,
+                LogField.Placeholders.TWO.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "An unexpected exception occurred"),
                 StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), exception.getMessage()),
                 exception);
@@ -193,12 +193,12 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
         return logExceptionAndBuild(invalidValuesException);
     }
 
-    // ToDo: Fix max upload error
+    // TODO(#1): Fix max upload error
     //    @ExceptionHandler(MaxUploadSizeExceededException.class)
     //    public ResponseEntity<Object> handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException
     // exception) {
     //        log.warn(
-    //            LogField.Placeholders.FIVE.placeholder,
+    //            LogField.Placeholders.FIVE.getPlaceholder(),
     //            StructuredArguments.kv(LogField.MSG.label(), "Max upload size exceeded exception"),
     //            StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), exception.getMessage()),
     //            StructuredArguments.kv(LogField.EXCEPTION_CLASS.label(), exception.getClass().getSimpleName()),

@@ -10,7 +10,7 @@ import java.util.Objects;
 import lombok.Builder;
 
 @Builder
-public record MealTypeControllerResponseDTO(
+public record MealTypeControllerResponseDto(
         @Schema(
                 description = "Unique identifier of the meal type",
                 example = "123",
@@ -42,8 +42,9 @@ public record MealTypeControllerResponseDTO(
                 example = "30 g proteína | 20 g carbo | 5 g gordura | 250 kcal",
                 nullable = true,
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
+        @JsonPropertyDescription("""
+            Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal
+            """)
         String observation,
 
         @Schema(
@@ -57,7 +58,7 @@ public record MealTypeControllerResponseDTO(
                 description = "Set of standard food options for this meal type",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("Set of standard food options for this meal type")
-        List<StandardOptionControllerResponseDTO> standardOptions,
+        List<StandardOptionControllerResponseDto> standardOptions,
 
         @Schema(description = """
                     Metadata information containing creation and last update timestamps, along with other contextual data
@@ -66,7 +67,7 @@ public record MealTypeControllerResponseDTO(
                 "Metadata information containing creation and last update timestamps, along with other contextual data")
         MetadataControllerResponseDto metadata) {
 
-    public MealTypeControllerResponseDTO {
+    public MealTypeControllerResponseDto {
         standardOptions = Objects.requireNonNullElse(standardOptions, Collections.emptyList());
     }
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record DietPlanResponseDTO(
+public record DietPlanResponseDto(
         @JsonPropertyDescription("Unique identifier of the Diet Plan. Example: 123")
         Long id,
 
@@ -38,12 +38,13 @@ public record DietPlanResponseDTO(
                 "Main goal of this diet plan. Example: Body fat reduction with muscle mass preservation")
         String goal,
 
-        @JsonPropertyDescription(
-                "Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products")
+        @JsonPropertyDescription("""
+            Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products
+            """)
         String nutritionistNotes,
 
         @JsonPropertyDescription("List of meal types associated with this diet plan")
-        Set<MealTypeResponseDTO> mealTypes,
+        Set<MealTypeResponseDto> mealTypes,
 
         @JsonPropertyDescription("Indicates whether this diet plan is currently active. Example: true")
         Boolean isActive,
@@ -52,7 +53,7 @@ public record DietPlanResponseDTO(
                 "Metadata information containing creation and last update timestamps, along with other contextual data")
         MetadataResponseDto metadata) {
 
-    public DietPlanResponseDTO {
+    public DietPlanResponseDto {
         mealTypes = Objects.requireNonNullElse(mealTypes, Collections.emptySet());
     }
 }

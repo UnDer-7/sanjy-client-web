@@ -39,7 +39,7 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
                     final SanjyClientWebConfigProp.ApplicationProp application = prop.application();
 
                     log.info(
-                            LogField.Placeholders.SIX.placeholder,
+                            LogField.Placeholders.SIX.getPlaceholder(),
                             StructuredArguments.kv(LogField.MSG.label(), "Project information"),
                             StructuredArguments.kv(LogField.PROJECT_NAME.label(), application.name()),
                             StructuredArguments.kv(LogField.PROJECT_CURRENT_VERSION.label(), application.version()),
@@ -64,7 +64,7 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
                     .orElse(unknown);
         } catch (final Exception e) {
             log.warn(
-                    LogField.Placeholders.TWO.placeholder,
+                    LogField.Placeholders.TWO.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Error fetching latest version from GitHub"),
                     StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
                     e);

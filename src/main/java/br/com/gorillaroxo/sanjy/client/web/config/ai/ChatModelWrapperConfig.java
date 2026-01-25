@@ -28,7 +28,7 @@ public class ChatModelWrapperConfig {
 
         if (strategiesFound.isEmpty()) {
             log.info(
-                    LogField.Placeholders.ONE.placeholder,
+                    LogField.Placeholders.ONE.getPlaceholder(),
                     StructuredArguments.kv(
                             LogField.MSG.label(), "No AI Provider was configured. AI Features will be disabled"));
 

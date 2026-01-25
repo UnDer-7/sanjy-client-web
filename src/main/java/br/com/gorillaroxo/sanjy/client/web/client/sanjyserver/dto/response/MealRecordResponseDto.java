@@ -6,7 +6,7 @@ import java.time.Instant;
 import lombok.Builder;
 
 @Builder
-public record MealRecordResponseDTO(
+public record MealRecordResponseDto(
         @JsonPropertyDescription("Unique identifier of the meal record. Example: 1")
         Long id,
 
@@ -15,8 +15,9 @@ public record MealRecordResponseDTO(
                         + RequestConstants.Examples.DATE_TIME)
         Instant consumedAt,
 
-        @JsonPropertyDescription(
-                "Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity")
+        @JsonPropertyDescription("""
+            Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
+            """)
         MealTypeSimplifiedResponseDto mealType,
 
         @JsonPropertyDescription("""
@@ -27,7 +28,7 @@ public record MealRecordResponseDTO(
         @JsonPropertyDescription("""
                     The selected diet plan option that was consumed. This field contains the standard option chosen from the diet plan. \
                     NULL when isFreeMeal = TRUE (free meals don't follow the plan)
-                    """) StandardOptionSimplifiedResponseDTO standardOption,
+                    """) StandardOptionSimplifiedResponseDto standardOption,
 
         @JsonPropertyDescription("""
             Text description of the free meal item consumed.

@@ -43,7 +43,7 @@ public class TimezoneInitializer implements ApplicationContextInitializer<Config
         TimeZone.setDefault(utcTimeZone);
 
         log.info(
-                LogField.Placeholders.TWO.placeholder,
+                LogField.Placeholders.TWO.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Application timezone initialized"),
                 StructuredArguments.kv(LogField.TIMEZONE_ID.label(), utcTimeZone.getID()));
     }

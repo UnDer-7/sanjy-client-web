@@ -7,7 +7,7 @@ import java.util.Objects;
 import lombok.Builder;
 
 @Builder
-public record PagedResponseDTO<T>(
+public record PagedResponseDto<T>(
         @JsonPropertyDescription("Total number of pages available. Example: 5")
         Integer totalPages,
 
@@ -22,7 +22,7 @@ public record PagedResponseDTO<T>(
 
         @JsonPropertyDescription("List of items in the current page")
         List<T> content) {
-    public PagedResponseDTO {
+    public PagedResponseDto {
         content = Objects.requireNonNullElse(content, Collections.emptyList());
     }
 }

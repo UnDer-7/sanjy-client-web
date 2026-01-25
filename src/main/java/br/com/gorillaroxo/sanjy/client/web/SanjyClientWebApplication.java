@@ -12,9 +12,13 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients(basePackages = "br.com.gorillaroxo.sanjy.client.web.client")
 public class SanjyClientWebApplication {
 
+    private SanjyClientWebApplication() {
+    }
+
     public static void main(String[] args) {
         final var app = new SpringApplication(SanjyClientWebApplication.class);
         app.addInitializers(new TimezoneInitializer());
         app.run(args);
     }
+
 }

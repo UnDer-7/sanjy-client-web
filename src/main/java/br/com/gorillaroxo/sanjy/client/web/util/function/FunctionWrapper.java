@@ -15,5 +15,5 @@ public interface FunctionWrapper<T, R, E extends Exception> {
         };
     }
 
-    R accept(T t) throws E;
+    R accept(T element) throws E;
 }

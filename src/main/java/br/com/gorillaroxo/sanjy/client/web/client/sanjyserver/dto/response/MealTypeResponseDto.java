@@ -9,7 +9,7 @@ import java.util.Objects;
 import lombok.Builder;
 
 @Builder
-public record MealTypeResponseDTO(
+public record MealTypeResponseDto(
         @JsonPropertyDescription("Unique identifier of the meal type. Example: 2266")
         Long id,
 
@@ -19,21 +19,23 @@ public record MealTypeResponseDTO(
         @JsonPropertyDescription("Scheduled time for this meal. Example: " + RequestConstants.Examples.TIME)
         LocalTime scheduledTime,
 
-        @JsonPropertyDescription(
-                "Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
+        @JsonPropertyDescription("""
+            Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). \
+            Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal
+            """)
         String observation,
 
         @JsonPropertyDescription("Identifier of the diet plan this meal type belongs to. Example: 30")
         Long dietPlanId,
 
         @JsonPropertyDescription("Set of standard food options for this meal type")
-        List<StandardOptionResponseDTO> standardOptions,
+        List<StandardOptionResponseDto> standardOptions,
 
         @JsonPropertyDescription(
                 "Metadata information containing creation and last update timestamps, along with other contextual data")
         MetadataResponseDto metadata) {
 
-    public MealTypeResponseDTO {
+    public MealTypeResponseDto {
         standardOptions = Objects.requireNonNullElse(standardOptions, Collections.emptyList());
     }
 }

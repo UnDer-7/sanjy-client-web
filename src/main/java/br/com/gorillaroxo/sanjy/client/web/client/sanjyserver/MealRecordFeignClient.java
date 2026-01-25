@@ -1,10 +1,10 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.interceptor.FeignInterceptor;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
@@ -32,7 +32,7 @@ public interface MealRecordFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @PostMapping
-    MealRecordResponseDTO newMealRecord(@RequestBody MealRecordRequestDTO requestDTO);
+    MealRecordResponseDto newMealRecord(@RequestBody MealRecordRequestDto mealRecordRequest);
 
     /**
      * Retrieves all meals consumed today, ordered by consumption time. Includes both standard meals (following the diet
@@ -41,7 +41,7 @@ public interface MealRecordFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @GetMapping("/today")
-    List<MealRecordResponseDTO> getTodayMealRecords(
+    List<MealRecordResponseDto> getTodayMealRecords(
             @RequestParam(required = false, name = RequestConstants.Query.TIMEZONE) ZoneId timezone);
 
     /**
@@ -51,8 +51,8 @@ public interface MealRecordFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @GetMapping
-    PagedResponseDTO<MealRecordResponseDTO> searchMealRecords(
-            @SpringQueryMap SearchMealRecordParamRequestDTO paramRequestDTO);
+    PagedResponseDto<MealRecordResponseDto> searchMealRecords(
+            @SpringQueryMap SearchMealRecordParamRequestDto searchParams);
 
     /**
      * Retrieves aggregated statistics for meal records within a specified date range. Returns metrics such as total
@@ -62,9 +62,9 @@ public interface MealRecordFeignClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     @GetMapping("/statistics")
-    MealRecordStatisticsResponseDTO getMealRecordStatisticsByDateRange(
+    MealRecordStatisticsResponseDto getMealRecordStatisticsByDateRange(
             @RequestParam(name = RequestConstants.Query.CONSUMED_AT_AFTER, required = false)
-                    final Instant consumedAtAfter,
+                    Instant consumedAtAfter,
             @RequestParam(name = RequestConstants.Query.CONSUMED_AT_BEFORE, required = false)
-                    final Instant consumedAtBefore);
+                    Instant consumedAtBefore);
 }

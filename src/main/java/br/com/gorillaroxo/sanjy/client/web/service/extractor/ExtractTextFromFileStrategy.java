@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ExtractTextFromFileStrategy {
 
-    String extract(final MultipartFile file);
+    String extract(MultipartFile file);
 
     List<MediaType> mediaTypeAccepted();
 

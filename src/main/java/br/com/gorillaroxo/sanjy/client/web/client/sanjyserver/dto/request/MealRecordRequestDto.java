@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public record MealRecordRequestDTO(
+public record MealRecordRequestDto(
         @JsonPropertyDescription("ID of the meal type (breakfast, lunch, snack, dinner, etc...). Example: 1")
         Long mealTypeId,
 
@@ -25,19 +25,22 @@ public record MealRecordRequestDTO(
         TRUE = free meal | FALSE = standard meal
         """) Boolean isFreeMeal,
 
-        @JsonPropertyDescription(
-                "ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE")
+        @JsonPropertyDescription("""
+            ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE
+            """)
         Long standardOptionId,
 
-        @JsonPropertyDescription(
-                "Text description of the free meal item. Required when isFreeMeal = TRUE, should be NULL when isFreeMeal = FALSE. Example: Grilled chicken with vegetables")
+        @JsonPropertyDescription("""
+            Text description of the free meal item. Required when isFreeMeal = TRUE, should be NULL when isFreeMeal = FALSE. Example: Grilled chicken with vegetables
+            """)
         String freeMealDescription,
 
         @JsonPropertyDescription("Quantity of the item consumed. Defaults to 1.0 if not provided. Example: 1")
         Double quantity,
 
-        @JsonPropertyDescription(
-                "Unit of measurement for the quantity (serving, g, ml, units, etc...). Defaults to 'serving' if not provided")
+        @JsonPropertyDescription("""
+            Unit of measurement for the quantity (serving, g, ml, units, etc...). Defaults to 'serving' if not provided
+            """)
         String unit,
 
         @JsonPropertyDescription(

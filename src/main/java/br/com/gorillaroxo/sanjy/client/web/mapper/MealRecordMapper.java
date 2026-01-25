@@ -1,13 +1,13 @@
 package br.com.gorillaroxo.sanjy.client.web.mapper;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordStatisticsControllerResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.PagedControllerResponseDTO;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordStatisticsControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.PagedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.util.Constants;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -18,12 +18,12 @@ import org.mapstruct.ReportingPolicy;
         uses = DateTimeMapper.class)
 public interface MealRecordMapper {
 
-    MealRecordRequestDTO toDto(MealRecordControllerRequestDTO requestDTO);
+    MealRecordRequestDto toDto(MealRecordControllerRequestDto request);
 
-    MealRecordControllerResponseDTO toResponse(MealRecordResponseDTO responseDTO);
+    MealRecordControllerResponseDto toResponse(MealRecordResponseDto response);
 
-    PagedControllerResponseDTO<MealRecordControllerResponseDTO> toResponse(
-            PagedResponseDTO<MealRecordResponseDTO> responseDTO);
+    PagedControllerResponseDto<MealRecordControllerResponseDto> toResponse(
+            PagedResponseDto<MealRecordResponseDto> pagedResponse);
 
-    MealRecordStatisticsControllerResponseDTO toResponse(MealRecordStatisticsResponseDTO responseDTO);
+    MealRecordStatisticsControllerResponseDto toResponse(MealRecordStatisticsResponseDto statisticsResponse);
 }

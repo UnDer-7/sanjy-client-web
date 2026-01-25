@@ -21,7 +21,7 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
     @Override
     public String extract(final MultipartFile file) {
         log.info(
-                LogField.Placeholders.FOUR.placeholder,
+                LogField.Placeholders.FOUR.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Extracting text String from PDF file"),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                 StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
@@ -33,7 +33,7 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
             final String text = stripper.getText(document);
 
             log.info(
-                    LogField.Placeholders.FOUR.placeholder,
+                    LogField.Placeholders.FOUR.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Successfully extract text String from PDF file"),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),
@@ -42,7 +42,7 @@ public class ExtractTextFromFilePdfStrategy implements ExtractTextFromFileStrate
             return text;
         } catch (final IOException e) {
             log.warn(
-                    LogField.Placeholders.FIVE.placeholder,
+                    LogField.Placeholders.FIVE.getPlaceholder(),
                     StructuredArguments.kv(LogField.MSG.label(), "Fail to extract text from PDF file"),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_NAME.label(), file.getOriginalFilename()),
                     StructuredArguments.kv(LogField.DIET_PLAN_FILE_CONTENT_TYPE.label(), file.getContentType()),

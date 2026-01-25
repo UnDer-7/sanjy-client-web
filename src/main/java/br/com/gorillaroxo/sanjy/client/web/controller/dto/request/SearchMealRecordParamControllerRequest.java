@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class SearchMealRecordParamControllerRequest extends PageRequestControllerDTO {
+public class SearchMealRecordParamControllerRequest extends PageRequestControllerDto {
 
     @NotNull
     @JsonPropertyDescription("Filter meals consumed after this date/time, in UTC timezone (ISO 8601 format). Example: "

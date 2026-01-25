@@ -29,7 +29,7 @@ class ChatModelProviderAnthropic implements ChatModelProviderStrategy {
         final SanjyClientWebConfigProp.AiGenericConfigProp config = aiProp.anthropic();
 
         log.info(
-                LogField.Placeholders.SIX.placeholder,
+                LogField.Placeholders.SIX.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Anthropic selected as AI Provider"),
                 StructuredArguments.kv(LogField.AI_MODEL.label(), config.model()),
                 StructuredArguments.kv(LogField.AI_MAX_TOKENS.label(), config.maxTokens()),

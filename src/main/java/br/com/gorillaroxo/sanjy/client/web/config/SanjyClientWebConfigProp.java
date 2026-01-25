@@ -34,6 +34,9 @@ public record SanjyClientWebConfigProp(
     @Getter
     @Accessors(fluent = true)
     public static class AiGenericConfigProp {
+
+        private static final Pattern ENV_VAR_PLACEHOLDER_PATTERN = Pattern.compile("^\\$\\{.*}$");
+
         private final String apiKey;
         private final String model;
         private final Integer maxTokens;
@@ -57,21 +60,19 @@ public record SanjyClientWebConfigProp(
             this.topP = safelyConvertNumbers("SANJY_CLIENT_WEB_AI_MAX_STOP_TOP_P", topP, Double::parseDouble);
         }
 
-        private static final Pattern ENV_VAR_PLACEHOLDER_PATTERN = Pattern.compile("^\\$\\{.*}$");
-
         private static <T> T safelyConvertNumbers(
                 final String envName, final String value, Function<String, T> converter) {
             return Optional.ofNullable(value)
                     .filter(Predicate.not(String::isBlank))
                     .filter(Predicate.not(
-                            v -> ENV_VAR_PLACEHOLDER_PATTERN.matcher(v).matches()))
+                            val -> ENV_VAR_PLACEHOLDER_PATTERN.matcher(val).matches()))
                     .map(valuePresent -> {
                         try {
                             Double.parseDouble(valuePresent);
-                        } catch (final NumberFormatException _) {
-                            throw new InvalidValuesException(
-                                    "Invalid configuration: Environment Variable '%s' must be a valid number, but received '%s'"
-                                            .formatted(envName, valuePresent));
+                        } catch (final NumberFormatException ignored) {
+                            throw new InvalidValuesException("""
+                                Invalid configuration: Environment Variable '%s' must be a valid number, but received '%s'
+                                """.formatted(envName, valuePresent));
                         }
                         return converter.apply(valuePresent);
                     })

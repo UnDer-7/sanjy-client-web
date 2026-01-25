@@ -7,7 +7,7 @@ import java.time.Instant;
 import lombok.Builder;
 
 @Builder
-public record MealRecordControllerResponseDTO(
+public record MealRecordControllerResponseDto(
         @Schema(
                 description = "Unique identifier of the meal record",
                 example = "123",
@@ -26,17 +26,19 @@ public record MealRecordControllerResponseDTO(
         Instant consumedAt,
 
         @Schema(
-                description =
-                        "Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity",
+                description = """
+                    Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
+                    """,
                 requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription(
-                "Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity")
+        @JsonPropertyDescription("""
+            Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
+            """)
         MealTypeSimplifiedControllerResponseDto mealType,
 
         @Schema(
-                description =
-                        "Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). "
-                                + "TRUE = free meal | FALSE = standard meal",
+                description = """
+                    Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). TRUE = free meal | FALSE = standard meal
+                    """,
                 example = "false",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("""
@@ -55,7 +57,7 @@ public record MealRecordControllerResponseDTO(
                     Returns only the ID of the related standard option entity. \
                     NULL when isFreeMeal = TRUE (free meals don't follow the plan)
                     """)
-        StandardOptionSimplifiedControllerResponseDTO standardOption,
+        StandardOptionSimplifiedControllerResponseDto standardOption,
 
         @Schema(
                 description = "Text description of the free meal item consumed. "
@@ -81,7 +83,8 @@ public record MealRecordControllerResponseDTO(
                 description = "Unit of measurement for the quantity (serving, g, ml, units, etc.)",
                 example = "serving",
                 requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription("Unit of measurement for the quantity (serving, g, ml, units, etc.). Example: serving")
+        @JsonPropertyDescription(
+                "Unit of measurement for the quantity (serving, g, ml, units, etc.). Example: serving")
         String unit,
 
         @Schema(

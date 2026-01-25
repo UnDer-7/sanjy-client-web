@@ -1,7 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.util;
 
-import static net.logstash.logback.argument.StructuredArguments.kv;
-
 import br.com.gorillaroxo.sanjy.client.web.exception.DeserializationException;
 import br.com.gorillaroxo.sanjy.client.web.exception.SerializationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -103,23 +102,23 @@ public class JsonUtil {
         }
     }
 
-    private void failDeserializationLogging(final Throwable e, final String json, final Class<?> clazz) {
+    private void failDeserializationLogging(final Throwable throwable, final String json, final Class<?> clazz) {
         log.warn(
-                LogField.Placeholders.FOUR.placeholder,
-                kv(LogField.MSG.label(), "Fail to deserialize JSON"),
-                kv(LogField.JSON_DESERIALIZATION_SOURCE.label(), json),
-                kv(LogField.CLASS_DESERIALIZATION_TARGET.label(), clazz.getSimpleName()),
-                kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
-                e);
+                LogField.Placeholders.FOUR.getPlaceholder(),
+                StructuredArguments.kv(LogField.MSG.label(), "Fail to deserialize JSON"),
+                StructuredArguments.kv(LogField.JSON_DESERIALIZATION_SOURCE.label(), json),
+                StructuredArguments.kv(LogField.CLASS_DESERIALIZATION_TARGET.label(), clazz.getSimpleName()),
+                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), throwable.getMessage()),
+                throwable);
     }
 
-    private void failSerializationLogging(final Throwable e, final Object object) {
+    private void failSerializationLogging(final Throwable throwable, final Object object) {
         log.warn(
-                LogField.Placeholders.THREE.placeholder,
-                kv(LogField.MSG.label(), "Fail to serialize Class"),
-                kv(LogField.CLASS_NAME.label(), object.getClass().getSimpleName()),
-                kv(LogField.CLASS_SERIALIZATION_SOURCE.label(), object.toString()),
-                kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
-                e);
+                LogField.Placeholders.THREE.getPlaceholder(),
+                StructuredArguments.kv(LogField.MSG.label(), "Fail to serialize Class"),
+                StructuredArguments.kv(LogField.CLASS_NAME.label(), object.getClass().getSimpleName()),
+                StructuredArguments.kv(LogField.CLASS_SERIALIZATION_SOURCE.label(), object.toString()),
+                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), throwable.getMessage()),
+                throwable);
     }
 }

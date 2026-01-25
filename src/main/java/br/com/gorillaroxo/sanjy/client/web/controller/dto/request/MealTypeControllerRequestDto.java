@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record MealTypeControllerRequestDTO(
+public record MealTypeControllerRequestDto(
         @NotBlank
         @Schema(
                 description = "Meal type name. Must be unique within the diet plan's meal types list "
@@ -39,8 +39,9 @@ public record MealTypeControllerRequestDTO(
                 example = "30 g proteína | 20 g carbo | 5 g gordura | 250 kcal",
                 nullable = true,
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @JsonPropertyDescription(
-                "Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
+        @JsonPropertyDescription("""
+            Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal
+            """)
         String observation,
 
         @Valid
@@ -50,9 +51,9 @@ public record MealTypeControllerRequestDTO(
                 description = "List of standard food options for this meal type",
                 requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("Set of standard food options for this meal type")
-        List<StandardOptionControllerRequestDTO> standardOptions) {
+        List<StandardOptionControllerRequestDto> standardOptions) {
 
-    public MealTypeControllerRequestDTO {
+    public MealTypeControllerRequestDto {
         standardOptions = Objects.requireNonNullElseGet(standardOptions, Collections::emptyList);
     }
 }
