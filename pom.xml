@@ -47,8 +47,6 @@
         <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
         <spotless-palantirJavaFormat.version>2.82.0</spotless-palantirJavaFormat.version>
         <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
-
-        <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -342,8 +340,16 @@
                 <version>0.8.14</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
