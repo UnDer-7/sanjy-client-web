@@ -47,6 +47,19 @@
         <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
         <spotless-palantirJavaFormat.version>2.82.0</spotless-palantirJavaFormat.version>
         <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
+
+        <!-- SonarCloud Configuration -->
+        <sonar.projectKey>UnDer-7_sanjy-client-web</sonar.projectKey>
+        <sonar.organization>under-7</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.source>25</sonar.java.source>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <!-- Exclude frontend from Sonar analysis (backend only) -->
+        <sonar.exclusions>src/main/frontend/**,src/main/resources/static/**</sonar.exclusions>
+        <sonar.coverage.exclusions>**/exception/**,
+            **/*Constants.java,
+            **/SanjyClientWebApplication.java,
+            **/GlobalExceptionHandlerConfig.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -280,33 +293,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>0.2.0</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
@@ -335,6 +321,39 @@
             </plugin>
 
             <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.3.0.6276</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
@@ -356,14 +375,13 @@
                 <configuration>
                     <excludes>
                         <!-- Exclude exception classes from coverage -->
-                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/exception/**</exclude>
+                        <exclude>**/exception/**/*.class</exclude>
                         <!-- Exclude Constants classes from coverage -->
                         <exclude>**/*Constants.class</exclude>
                         <!-- Exclude main application class from coverage -->
-                        <exclude>**/br/com/gorillaroxo/sanjy/server/infrastructure/SanJyApplication.class</exclude>
-                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/SanjyClientWebApplication.class</exclude>
+                        <exclude>**/SanjyClientWebApplication.class</exclude>
                         <!-- Exclude global exception handler from coverage -->
-                        <exclude>**/br/com/gorillaroxo/sanjy/client/web/controller/config/GlobalExceptionHandlerConfig.class</exclude>
+                        <exclude>**/GlobalExceptionHandlerConfig.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -528,7 +546,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
         </plugins>
     </build>
 
