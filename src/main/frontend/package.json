@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "snyk:test": "snyk test",
+    "snyk:monitor": "snyk monitor"
   },
   "dependencies": {
     "@mantine/core": "^8.3.10",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "snyk": "^1.1297.0",
     "@types/node": "^24.10.1",
     "@types/ramda": "^0.31.1",
     "@types/react": "^19.2.5",

@@ -45,30 +45,67 @@ compile:
 # ==================================================================================== #
 ## ===== QUALITY =====
 # ==================================================================================== #
-## snyk/test: Scan for vulnerabilities in dependencies and code (requires SNYK_TOKEN env var)
+## ----- Geral -----
+## snyk/test: Scan all dependencies for vulnerabilities (backend + frontend, requires SNYK_TOKEN env var)
 .PHONY: snyk/test
-snyk/test:
-	@echo ">>> Running Snyk vulnerability scan..."
+snyk/test: snyk/test/backend snyk/test/frontend
+	@echo ">>> Full Snyk scan completed!"
+
+## snyk/monitor: Upload all project snapshots to Snyk (backend + frontend, requires SNYK_TOKEN env var)
+.PHONY: snyk/monitor
+snyk/monitor: snyk/monitor/backend snyk/monitor/frontend
+	@echo ">>> All project snapshots uploaded successfully!"
+	@echo ">>> View results in your Snyk dashboard"
+
+## ----- Backend -----
+## snyk/test/backend: Scan backend (Maven) dependencies for vulnerabilities
+.PHONY: snyk/test/backend
+snyk/test/backend:
+	@echo ">>> Running Snyk vulnerability scan on backend..."
 	@if [ -z "$$SNYK_TOKEN" ]; then \
 		echo "ERROR: SNYK_TOKEN environment variable is not set"; \
 		echo "Please set it with: export SNYK_TOKEN=your_token_here"; \
 		exit 1; \
 	fi
 	./mvnw -B -ntp snyk:test
-	@echo ">>> Snyk scan completed!"
+	@echo ">>> Backend Snyk scan completed!"
 
-## snyk/monitor: Upload project snapshot to Snyk for continuous monitoring (requires SNYK_TOKEN env var)
-.PHONY: snyk/monitor
-snyk/monitor:
-	@echo ">>> Uploading project snapshot to Snyk..."
+## snyk/monitor/backend: Upload backend snapshot to Snyk for continuous monitoring
+.PHONY: snyk/monitor/backend
+snyk/monitor/backend:
+	@echo ">>> Uploading backend snapshot to Snyk..."
 	@if [ -z "$$SNYK_TOKEN" ]; then \
 		echo "ERROR: SNYK_TOKEN environment variable is not set"; \
 		echo "Please set it with: export SNYK_TOKEN=your_token_here"; \
 		exit 1; \
 	fi
 	./mvnw -B -ntp snyk:monitor
-	@echo ">>> Project snapshot uploaded successfully!"
-	@echo ">>> View results in your Snyk dashboard"
+	@echo ">>> Backend snapshot uploaded!"
+
+## ----- Frontend -----
+## snyk/test/frontend: Scan frontend (npm) dependencies for vulnerabilities
+.PHONY: snyk/test/frontend
+snyk/test/frontend:
+	@echo ">>> Running Snyk vulnerability scan on frontend..."
+	@if [ -z "$$SNYK_TOKEN" ]; then \
+		echo "ERROR: SNYK_TOKEN environment variable is not set"; \
+		echo "Please set it with: export SNYK_TOKEN=your_token_here"; \
+		exit 1; \
+	fi
+	cd src/main/frontend && npm run snyk:test
+	@echo ">>> Frontend Snyk scan completed!"
+
+## snyk/monitor/frontend: Upload frontend snapshot to Snyk for continuous monitoring
+.PHONY: snyk/monitor/frontend
+snyk/monitor/frontend:
+	@echo ">>> Uploading frontend snapshot to Snyk..."
+	@if [ -z "$$SNYK_TOKEN" ]; then \
+		echo "ERROR: SNYK_TOKEN environment variable is not set"; \
+		echo "Please set it with: export SNYK_TOKEN=your_token_here"; \
+		exit 1; \
+	fi
+	cd src/main/frontend && npm run snyk:monitor
+	@echo ">>> Frontend snapshot uploaded!"
 
 ## sonar: Publish analysis results to SonarCloud (run 'make test' first, requires SONAR_TOKEN env var)
 .PHONY: sonar
