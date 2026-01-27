@@ -206,6 +206,7 @@
     </dependencies>
 
     <build>
+        <finalName>sanjy-client-web-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>io.snyk</groupId>
@@ -236,6 +237,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>br.com.gorillaroxo.sanjy.client.web.SanjyClientWebApplication</mainClass>
+                </configuration>
             </plugin>
 
             <plugin>
