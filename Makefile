@@ -42,6 +42,44 @@ compile:
 
 
 
+
+# ==================================================================================== #
+## ===== BUILD =====
+# ==================================================================================== #
+## ----- JVM -----
+## build/jvm: Build the project to be run on a JVM environment
+.PHONY: build/jvm
+build/jvm:
+	@START=$$(date +%s); \
+	echo 'Installing all modules...'; \
+	./mvnw -B -ntp clean install -DskipTests; \
+	echo 'Building for JVM...'; \
+	./mvnw -B -ntp clean package -Dmaven.test.skip -T1C -DargLine="Xms2g -Xmx2g" --batch-mode -q; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo "JVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## ----- GRAALVM -----
+## build/graalvm: Build an executable to be run without JVM
+.PHONY: build/graalvm
+build/graalvm:
+	@START=$$(date +%s) && \
+	echo 'Loading environment variables from .env...' && \
+	set -a && \
+	. $(CURDIR)/.env && \
+	set +a && \
+	echo 'Installing all modules...' && \
+	./mvnw -B -ntp clean install -DskipTests && \
+	echo 'Building GraalVM native image...' && \
+	./mvnw -B -ntp -Pnative -Dmaven.test.skip clean native:compile && \
+	END=$$(date +%s) && \
+	ELAPSED=$$((END-START)) && \
+	echo "GraalVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+
+
+
+
 # ==================================================================================== #
 ## ===== QUALITY =====
 # ==================================================================================== #

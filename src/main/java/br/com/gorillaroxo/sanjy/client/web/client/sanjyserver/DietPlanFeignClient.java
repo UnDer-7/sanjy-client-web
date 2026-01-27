@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        value = "br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient",
+        value = "DietPlanFeignClient",
         url = "${sanjy-client-web.external-http-clients.sanjy-server.url}",
         path = "/v1/diet-plan",
         configuration = FeignInterceptor.class)

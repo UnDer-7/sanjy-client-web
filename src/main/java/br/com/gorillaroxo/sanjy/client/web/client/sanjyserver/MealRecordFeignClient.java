@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
-        value = "br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient",
+        value = "MealRecordFeignClient",
         url = "${sanjy-client-web.external-http-clients.sanjy-server.url}",
         path = "/v1/meal-record",
         configuration = FeignInterceptor.class)
