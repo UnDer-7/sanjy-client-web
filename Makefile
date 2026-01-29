@@ -68,10 +68,8 @@ build/graalvm:
 	set -a && \
 	. $(CURDIR)/.env && \
 	set +a && \
-	echo 'Installing all modules...' && \
-	./mvnw -B -ntp clean install -DskipTests && \
 	echo 'Building GraalVM native image...' && \
-	./mvnw -B -ntp -Pnative -Dmaven.test.skip clean native:compile && \
+	./mvnw -B -ntp clean package -Dmaven.test.skip -Pnative native:compile && \
 	END=$$(date +%s) && \
 	ELAPSED=$$((END-START)) && \
 	echo "GraalVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"

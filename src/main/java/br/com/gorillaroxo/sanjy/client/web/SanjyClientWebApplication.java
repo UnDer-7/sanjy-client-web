@@ -11,6 +11,7 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.SearchMealReco
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.StandardOptionControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapperControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeSimplifiedControllerResponseDto;
@@ -43,7 +44,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
     MealRecordControllerRequestDto.class,
     SearchMealRecordControllerResponseDto.class,
     SearchMealRecordParamControllerRequest.class,
-    PageRequestControllerDto.class
+    PageRequestControllerDto.class,
+    ErrorResponseDto.class
 })
 public class SanjyClientWebApplication {
 
