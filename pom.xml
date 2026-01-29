@@ -182,11 +182,12 @@
         </dependency>
         <!-- ####################### -->
 
-        <!-- PDF Processing -->
+        <!-- PDF Text Extraction (iText - GraalVM Native Image supported) -->
         <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>9.1.0</version>
+            <type>pom</type>
         </dependency>
         <!-- ####################### -->
 
