@@ -79,6 +79,37 @@ build/graalvm:
 
 
 # ==================================================================================== #
+## ===== VERSION =====
+# ==================================================================================== #
+## version: Display current project version
+.PHONY: version
+version:
+	@echo "$(POM_VERSION)"
+
+## version/set: Set new project version (usage; make version/set 1.0.23)
+.PHONY: version/set
+version/set:
+	@if [ -z "$(filter-out version/set,$(MAKECMDGOALS))" ]; then \
+		echo "ERROR: Version number is required"; \
+		echo "Usage: make version/set 1.0.23"; \
+		exit 1; \
+	fi
+	@echo ">>> Setting project version to $(filter-out version/set,$(MAKECMDGOALS))..."
+	@echo ">>> Updating pom.xml..."
+	@./mvnw -B -ntp versions:set -DnewVersion=$(filter-out version/set,$(MAKECMDGOALS)) -DgenerateBackupPoms=false
+	@echo ">>> Updating package.json..."
+	@cd src/main/frontend && npm version $(filter-out version/set,$(MAKECMDGOALS)) --no-git-tag-version --allow-same-version
+	@echo ">>> Project version updated to $(filter-out version/set,$(MAKECMDGOALS)) (pom.xml + package.json)"
+
+# Prevent make from treating version number as a target
+%:
+	@:
+
+
+
+
+
+# ==================================================================================== #
 ## ===== QUALITY =====
 # ==================================================================================== #
 ## ----- Geral -----

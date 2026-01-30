@@ -12,7 +12,7 @@
 
     <groupId>br.com.gorillaroxo</groupId>
     <artifactId>sanjy-client-web</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
     <name>sanjy-client-web</name>
     <description>Web client for the Sanjy diet and meal management application</description>
