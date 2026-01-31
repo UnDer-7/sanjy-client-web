@@ -46,33 +46,114 @@ compile:
 # ==================================================================================== #
 ## ===== BUILD =====
 # ==================================================================================== #
-## ----- JVM -----
-## build/jvm: Build the project to be run on a JVM environment
-.PHONY: build/jvm
-build/jvm:
+## ----- Frontend -----
+## build/frontend: Build the frontend (React/Vite)
+.PHONY: build/frontend
+build/frontend:
 	@START=$$(date +%s); \
-	echo 'Installing all modules...'; \
-	./mvnw -B -ntp clean install -DskipTests; \
-	echo 'Building for JVM...'; \
+	echo '>>> Building frontend...'; \
+	cd src/main/frontend && npm ci && npm run build; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Frontend build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## ----- Backend -----
+## build/backend/jvm: Build the backend for JVM environment (without frontend)
+.PHONY: build/backend/jvm
+build/backend/jvm:
+	@START=$$(date +%s); \
+	echo '>>> Building backend for JVM...'; \
 	./mvnw -B -ntp clean package -Dmaven.test.skip -T1C -DargLine="Xms2g -Xmx2g" --batch-mode -q; \
 	END=$$(date +%s); \
 	ELAPSED=$$((END-START)); \
-	echo "JVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+	echo ">>> Backend JVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
 
-## ----- GRAALVM -----
-## build/graalvm: Build an executable to be run without JVM
-.PHONY: build/graalvm
-build/graalvm:
+## build/backend/graalvm: Build the backend as GraalVM native image (without frontend)
+.PHONY: build/backend/graalvm
+build/backend/graalvm:
 	@START=$$(date +%s) && \
-	echo 'Loading environment variables from .env...' && \
+	echo '>>> Loading environment variables from .env...' && \
 	set -a && \
 	. $(CURDIR)/.env && \
 	set +a && \
-	echo 'Building GraalVM native image...' && \
+	echo '>>> Building backend GraalVM native image...' && \
 	./mvnw -B -ntp clean package -Dmaven.test.skip -Pnative native:compile && \
 	END=$$(date +%s) && \
 	ELAPSED=$$((END-START)) && \
-	echo "GraalVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+	echo ">>> Backend GraalVM build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## ----- Full -----
+## build/jvm: Build frontend + backend for JVM
+.PHONY: build/jvm
+build/jvm: build/frontend build/backend/jvm
+	@echo '>>> Full JVM build completed!'
+
+## build/graalvm: Build frontend + backend as GraalVM native image
+.PHONY: build/graalvm
+build/graalvm: build/frontend build/backend/graalvm
+	@echo '>>> Full GraalVM build completed!'
+
+## ----- Docker JVM -----
+## build/docker/jvm: Build a Docker image with JVM (full build from scratch)
+.PHONY: build/docker/jvm
+build/docker/jvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for JVM (full mode)...'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=full --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-jvm' -f Dockerfile_jvm .; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker JVM image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## build/docker/local/jvm: Build a Docker image with JVM using pre-built artifacts (fast)
+.PHONY: build/docker/local/jvm
+build/docker/local/jvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for JVM (local mode - using pre-built JAR)...'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=local --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-jvm' -f Dockerfile_jvm .; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker JVM image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## build/docker/force/jvm: Build a Docker image with JVM without caching layers (For debugging)
+.PHONY: build/docker/force/jvm
+build/docker/force/jvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for JVM without caching layers'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=full --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-jvm' -f Dockerfile_jvm . --progress=plain --no-cache; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker JVM force image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## ----- Docker GraalVM -----
+## build/docker/graalvm: Build a Docker image with GraalVM (full build from scratch)
+.PHONY: build/docker/graalvm
+build/docker/graalvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for GraalVM (full mode)...'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=full --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-graalvm' -f Dockerfile_graalvm .; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker GraalVM image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## build/docker/local/graalvm: Build a Docker image with GraalVM using pre-built artifacts (fast)
+.PHONY: build/docker/local/graalvm
+build/docker/local/graalvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for GraalVM (local mode - using pre-built native binary)...'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=local --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-graalvm' -f Dockerfile_graalvm .; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker GraalVM image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
+
+## build/docker/force/graalvm: Build a Docker image with GraalVM without caching layers (For debugging)
+.PHONY: build/docker/force/graalvm
+build/docker/force/graalvm:
+	@START=$$(date +%s); \
+	echo '>>> Building docker image for GraalVM without caching layers'; \
+	DOCKER_BUILDKIT=1 docker build --build-arg BUILD_MODE=full --tag '$(REGISTRY_HOST)/$(PROJECT_NAME):$(POM_VERSION)-graalvm' -f Dockerfile_graalvm . --progress=plain --no-cache; \
+	END=$$(date +%s); \
+	ELAPSED=$$((END-START)); \
+	echo ">>> Docker GraalVM force image build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"
 
 
 

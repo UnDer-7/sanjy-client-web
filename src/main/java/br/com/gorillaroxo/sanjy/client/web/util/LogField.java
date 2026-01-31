@@ -61,7 +61,8 @@ public enum LogField {
     AI_MAX_TOKENS,
     AI_TEMPERTURE,
     AI_STOP_SEQUENCES,
-    AI_TOP_P;
+    AI_TOP_P,
+    CONFIG_PROP;
 
     public String label() {
         return this.name().toLowerCase();

@@ -45,7 +45,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
     SearchMealRecordControllerResponseDto.class,
     SearchMealRecordParamControllerRequest.class,
     PageRequestControllerDto.class,
-    ErrorResponseDto.class
+    ErrorResponseDto.class,
+    SanjyClientWebConfigProp.class,
 })
 public class SanjyClientWebApplication {
 

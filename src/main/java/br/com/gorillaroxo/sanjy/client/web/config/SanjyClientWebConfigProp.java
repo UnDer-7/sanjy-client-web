@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.exception.InvalidValuesException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -31,7 +32,7 @@ public record SanjyClientWebConfigProp(
             @NotNull @Valid AiGenericConfigProp openAI,
             @NotNull @Valid AiGenericConfigProp anthropic) {}
 
-    @Getter
+    @Getter(onMethod_ = @__(@JsonProperty))
     @Accessors(fluent = true)
     public static class AiGenericConfigProp {
 

@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.service.GetLatestProjectVersionService;
+import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.ThreadUtils;
 import java.time.ZoneId;
@@ -28,10 +29,21 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
     private final TaskExecutor taskExecutor;
 
     private final SanjyClientWebConfigProp prop;
+    private final JsonUtil jsonUtil;
     private final GetLatestProjectVersionService getLatestProjectVersionService;
 
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent ignored) {
+        jsonUtil.serializeSafely(prop)
+            .ifPresentOrElse(
+                propJson -> log.debug(
+                    LogField.Placeholders.TWO.getPlaceholder(),
+                    StructuredArguments.kv(LogField.MSG.label(), "Project environment configuration values 24"),
+                    StructuredArguments.kv(LogField.CONFIG_PROP.label(), propJson)),
+                () -> log.debug(
+                    LogField.Placeholders.ONE.getPlaceholder(),
+                    StructuredArguments.kv(LogField.MSG.label(), "Could not log project environment configuration values")));
+
         ThreadUtils.runAsyncWithMdc(
                 () -> {
                     final String runtimeMode = detectRuntimeMode();
