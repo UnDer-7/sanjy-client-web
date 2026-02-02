@@ -44,6 +44,25 @@ compile:
 
 
 # ==================================================================================== #
+## ===== TEST =====
+# ==================================================================================== #
+## test: Run all tests (unit tests ending with *Test.java + integration tests ending with *IT.java) in JVM mode
+.PHONY: test
+test:
+	echo ">>> Running all tests (unit + integration)…" && \
+	./mvnw -B -ntp clean compile verify
+
+## test/native: Run integration tests only (*IT.java) in GraalVM native mode. Unit tests (*Test.java) are excluded because Mockito is incompatible with GraalVM Native Image
+.PHONY: test/native
+test/native:
+	echo ">>> Running integration tests only (unit tests excluded due to Mockito incompatibility)…" && \
+	./mvnw -B -ntp -PnativeTest clean compile test
+
+
+
+
+
+# ==================================================================================== #
 ## ===== BUILD =====
 # ==================================================================================== #
 ## ----- Frontend -----
