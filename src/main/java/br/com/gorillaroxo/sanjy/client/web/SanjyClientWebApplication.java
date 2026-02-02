@@ -1,6 +1,9 @@
 package br.com.gorillaroxo.sanjy.client.web;
 
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.TimezoneInitializer;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
@@ -19,15 +22,14 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataContr
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.StandardOptionControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.StandardOptionSimplifiedControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostnameValidator;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableConfigurationProperties(SanjyClientWebConfigProp.class)
-@EnableFeignClients(basePackages = "br.com.gorillaroxo.sanjy.client.web.client")
 @RegisterReflectionForBinding({
     BooleanWrapperControllerResponseDto.class,
     MealTypeControllerResponseDto.class,
@@ -47,6 +49,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
     PageRequestControllerDto.class,
     ErrorResponseDto.class,
     SanjyClientWebConfigProp.class,
+    NoUnderscoreInHostnameValidator.class,
+    SanjyServerErrorResponseDto.class,
+    DietPlanRequestDto.class,
+    DietPlanResponseDto.class,
 })
 public class SanjyClientWebApplication {
 

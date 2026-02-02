@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.DietPlanFeignClient;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.client.DietPlanRestClient;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NewDietPlanService {
 
-    private final DietPlanFeignClient dietPlanFeignClient;
+    private final DietPlanRestClient dietPlanRestClient;
     private final DietPlanMapper dietPlanMapper;
 
     public DietPlanControllerResponseDto execute(final DietPlanControllerRequestDto requestBody) {
@@ -30,7 +30,7 @@ public class NewDietPlanService {
                         requestBody.mealTypes().size()));
 
         final var dto = dietPlanMapper.toDto(requestBody);
-        final DietPlanResponseDto response = dietPlanFeignClient.newDietPlan(dto);
+        final DietPlanResponseDto response = dietPlanRestClient.newDietPlan(dto);
 
         log.info(
                 LogField.Placeholders.SEVEN.getPlaceholder(),

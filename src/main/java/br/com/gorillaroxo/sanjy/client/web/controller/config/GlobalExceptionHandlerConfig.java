@@ -302,7 +302,7 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
             MDC.put(LogField.ERROR_CODE.label(), exception.getExceptionCode().getUserCode());
             MDC.put(LogField.ERROR_TIMESTAMP.label(), exception.getTimestamp().toString());
             MDC.put(LogField.ERROR_MESSAGE.label(), exception.getExceptionCode().getUserMessage());
-            MDC.put(LogField.HTTP_STATUS_CODE.label(), Integer.toString(exception.getHttpStatusCode()));
+            MDC.put(LogField.RESPONSE_HTTP_STATUS_CODE.label(), Integer.toString(exception.getHttpStatusCode()));
             MDC.put(
                     LogField.CUSTOM_EXCEPTION_STACK_TRACE.label(),
                     Arrays.stream(exception.getStackTrace())

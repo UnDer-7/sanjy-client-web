@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.client.MealRecordRestClient;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SearchMealRecordService {
 
-    private final MealRecordFeignClient mealRecordFeignClient;
+    private final MealRecordRestClient mealRecordRestClient;
     private final MealRecordMapper mealRecordMapper;
 
     @Qualifier("applicationTaskExecutor")
@@ -44,7 +44,7 @@ public class SearchMealRecordService {
                                             LogField.MSG.label(), "Searching meal records asynchronously..."),
                                     StructuredArguments.kv(LogField.SEARCH_PARAMS.label(), "( " + pageRequest + " )"));
 
-                            return mealRecordFeignClient.searchMealRecords(SearchMealRecordParamRequestDto.builder()
+                            return mealRecordRestClient.searchMealRecords(SearchMealRecordParamRequestDto.builder()
                                     .pageNumber(pageRequest.getPageNumber())
                                     .pageSize(pageRequest.getPageSize())
                                     .consumedAtAfter(consumedAtAfter)
@@ -63,7 +63,7 @@ public class SearchMealRecordService {
                                             LogField.MSG.label(),
                                             "Searching meal records statistics asynchronously..."));
 
-                            return mealRecordFeignClient.getMealRecordStatisticsByDateRange(
+                            return mealRecordRestClient.getMealRecordStatisticsByDateRange(
                                     consumedAtAfter, consumedAtBefore);
                         },
                         taskExecutor);
