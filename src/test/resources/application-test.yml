@@ -1,0 +1,86 @@
+server:
+  tomcat:
+    max-swallow-size: -1
+  shutdown: "graceful"
+
+sanjy-client-web:
+  logging:
+    level: "INFO"
+    file-path: "/tmp/sanjy-client-web-logging"
+    appender: "CONSOLE-UNSTRUCTURED"
+  application:
+    name: ${spring.application.name}
+    version: "1.0.0"
+    description: "desc test"
+    contact:
+      name: ToDo-put-name #ToDo: Put real name
+      url: https://google.com #ToDo: Put real site
+      email: admin@admin.com #ToDo: Put real email
+    documentation:
+      url: https://google.com #ToDo: Put real site
+      description: ToDo-put-documentation-description #ToDo: Put real doc
+    channel: "WEB_TEST"
+  external-http-clients:
+    sanjy-server:
+      url: ${wiremock.server.baseUrl}/sanjy-server
+    github:
+      url: ${wiremock.server.baseUrl}/github
+  upload:
+    max-file-size-in-mb: 50
+  ai:
+    openai:
+      api-key: ''
+      model: ''
+      max-tokens: ''
+      temperature: ''
+      stop-sequences: ''
+      top-p: ''
+    anthropic:
+      api-key: ''
+      model: ''
+      max-tokens: ''
+      temperature: ''
+      stop-sequences: ''
+      top-p: ''
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+  application:
+    name: sanjy-client-web-test
+
+  main:
+    banner-mode: off
+
+  threads:
+    virtual:
+      enabled: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+    resolve-schema-properties: true
+    enabled: true
+  override-with-generic-response: false
+  swagger-ui:
+    path: "/swagger"
+    enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              # ChatClient Logging
+              advisor: "INFO"

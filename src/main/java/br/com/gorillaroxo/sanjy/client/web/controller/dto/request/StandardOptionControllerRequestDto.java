@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder(toBuilder = true)
 public record StandardOptionControllerRequestDto(
         @Schema(description = """
                     Option number within the meal type. Must follow a complete sequence starting from 1 with no gaps. \

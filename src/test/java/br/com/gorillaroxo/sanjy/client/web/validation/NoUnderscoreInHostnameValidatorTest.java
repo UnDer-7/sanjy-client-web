@@ -3,6 +3,8 @@ package br.com.gorillaroxo.sanjy.client.web.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
+
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class NoUnderscoreInHostnameValidatorTest {
 
@@ -29,6 +32,7 @@ class NoUnderscoreInHostnameValidatorTest {
         @ValueSource(strings = {"   ", "\t", "\n"})
         @DisplayName("Should return true for null, empty or blank URLs")
         void shouldReturnTrueForNullEmptyOrBlankUrls(String url) {
+            log.info("Unit Test validation test");
             assertThat(validator.isValid(url, null)).isTrue();
         }
 

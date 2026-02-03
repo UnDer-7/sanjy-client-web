@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 
-@Builder
+@Builder(toBuilder = true)
 public record MealTypeResponseDto(
         @JsonPropertyDescription("Unique identifier of the meal type. Example: 2266")
         Long id,

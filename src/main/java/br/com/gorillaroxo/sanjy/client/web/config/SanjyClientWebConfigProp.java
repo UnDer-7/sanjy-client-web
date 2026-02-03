@@ -83,7 +83,6 @@ public record SanjyClientWebConfigProp(
     }
 
     public record ExternalApisProp(
-            @NotNull @Valid HttpRetryProp httpRetry,
             @Valid GenericApiProp sanjyServer,
             @Valid GenericApiProp github) {}
 
@@ -112,8 +111,4 @@ public record SanjyClientWebConfigProp(
 
     public record UploadProp(@NotNull Integer maxFileSizeInMb) {}
 
-    public record HttpRetryProp(
-            @NotNull Integer maxAttempt,
-            @NotNull Integer interval,
-            @NotNull Integer backoffMultiplier) {}
 }

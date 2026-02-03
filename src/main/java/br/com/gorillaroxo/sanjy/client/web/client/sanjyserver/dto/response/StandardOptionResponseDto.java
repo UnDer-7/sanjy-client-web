@@ -3,7 +3,7 @@ package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Builder;
 
-@Builder
+@Builder(toBuilder = true)
 public record StandardOptionResponseDto(
         @JsonPropertyDescription("Unique identifier of the Standard Option. Example: 12")
         Long id,

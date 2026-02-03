@@ -12,14 +12,14 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 public class GitHubReleaseRestClient {
 
-    private static final String CLIENT_URL = "/repos/UnDer-7";
+    public static final String CLIENT_URL = "/repos/UnDer-7";
 
     @Qualifier("gitHubRestClient")
     private final RestClient restClient;
 
     public GitHubReleaseResponseDto getLatestRelease(final String repo) {
         return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path("/{repo}/releases/latest").build(repo))
+            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/{repo}/releases/latest").build(repo))
             .retrieve()
             .body(GitHubReleaseResponseDto.class);
     }
