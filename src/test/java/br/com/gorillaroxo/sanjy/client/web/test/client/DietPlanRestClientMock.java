@@ -39,7 +39,7 @@ public class DietPlanRestClientMock {
         dispatcher.reset();
     }
 
-    public static class NewDietPlan {
+    public class NewDietPlan {
 
         private static final String PATH = BASE_PATH;
         private final MockWebServerDispatcher dispatcher;
@@ -52,10 +52,9 @@ public class DietPlanRestClientMock {
          * Stubs a successful POST response (HTTP 201 CREATED) for creating a new diet plan.
          *
          * @param xCorrelationId The expected X-Correlation-ID header value
-         * @param responseBody The JSON response body
          */
-        public void success(String xCorrelationId, String responseBody) {
-            generic(HttpStatus.CREATED, xCorrelationId, responseBody);
+        public void success(final String xCorrelationId) {
+            generic(HttpStatus.CREATED, xCorrelationId, jsonUtil.serialize(DtoBuilders.buildDietPlanResponseDto().build()));
         }
 
         /**

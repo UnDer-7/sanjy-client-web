@@ -1,6 +1,8 @@
 package br.com.gorillaroxo.sanjy.client.web.test.mockwebserver;
 
 import java.io.IOException;
+
+import lombok.Getter;
 import mockwebserver3.Dispatcher;
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
@@ -22,8 +24,12 @@ import org.springframework.http.MediaType;
  */
 public final class MockWebServerManager {
 
+    @Getter
     private static final MockWebServer instance;
+
+    @Getter
     private static final String baseUrl;
+
     private static MockWebServerDispatcher currentDispatcher;
 
     static {
@@ -41,14 +47,6 @@ public final class MockWebServerManager {
     }
 
     private MockWebServerManager() {}
-
-    public static MockWebServer getInstance() {
-        return instance;
-    }
-
-    public static String getBaseUrl() {
-        return baseUrl;
-    }
 
     public static void setDispatcher(MockWebServerDispatcher dispatcher) {
         currentDispatcher = dispatcher;

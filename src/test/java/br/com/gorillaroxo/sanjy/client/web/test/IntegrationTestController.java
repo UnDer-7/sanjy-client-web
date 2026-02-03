@@ -32,9 +32,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(classes = SanjyClientWebApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTestController {
 
-    protected static MockWebServer mockWebServer;
-    protected static MockWebServerDispatcher dispatcher;
-    protected static DietPlanRestClientMock dietPlanRestClientMock;
+    private MockWebServerDispatcher dispatcher;
+
+    protected DietPlanRestClientMock dietPlanRestClientMock;
 
     @Autowired
     protected WebTestClient webTestClient;
@@ -47,12 +47,17 @@ public abstract class IntegrationTestController {
         registry.add("mockwebserver.url", MockWebServerManager::getBaseUrl);
     }
 
+    /**
+     * Initializes MockWebServer and mock clients.
+     * This method is non-static because we use {@code @TestInstance(Lifecycle.PER_CLASS)},
+     * which allows access to Spring-injected beans like {@link JsonUtil}.
+     */
     @BeforeAll
-    static void initMockWebServer() {
-        mockWebServer = MockWebServerManager.getInstance();
+    void initMockWebServer() {
+        final MockWebServer mockWebServer = MockWebServerManager.getInstance();
         dispatcher = new MockWebServerDispatcher();
         MockWebServerManager.setDispatcher(dispatcher);
-        dietPlanRestClientMock = new DietPlanRestClientMock(mockWebServer, dispatcher, );
+        dietPlanRestClientMock = new DietPlanRestClientMock(mockWebServer, dispatcher, jsonUtil);
     }
 
     @BeforeEach

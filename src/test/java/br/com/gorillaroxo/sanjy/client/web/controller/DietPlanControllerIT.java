@@ -18,10 +18,9 @@ class DietPlanControllerIT extends IntegrationTestController {
     void should_create_diet_plan() {
         final var uuid = UUID.randomUUID().toString();
         final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
-        final var responseBody = DtoBuilders.buildDietPlanResponseDto().build();
 
         log.info("INTEGRATION TEST create diet plan");
-        dietPlanRestClientMock.newDietPlan().success(uuid, jsonUtil.serialize(responseBody));
+        dietPlanRestClientMock.newDietPlan().success(uuid);
 
         webTestClient
                 .post()
