@@ -4,7 +4,9 @@ import br.com.gorillaroxo.sanjy.client.web.client.github.dto.response.GitHubRele
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.StandardOptionResponseDto;
+import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -72,5 +74,14 @@ public final class DtoBuilders {
             .url("https://google.com")
             .id(222L)
             .tagName("v1.0.0");
+    }
+
+    public static SanjyServerErrorResponseDto.SanjyServerErrorResponseDtoBuilder buildSanjyServerErrorResponseDietPlanNotFoundDto() {
+        return SanjyServerErrorResponseDto.builder()
+            .code(SanjyServerErrorResponseDto.ERROR_CODE_DIET_PLAN_NOT_FOUND)
+            .timestamp(LocalDate.now().toString())
+            .message("Diet Plan not found")
+            .customMessage(null)
+            .httpStatusCode(HttpStatus.NOT_FOUND.value());
     }
 }
