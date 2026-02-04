@@ -76,7 +76,7 @@ public final class DtoBuilders {
     }
 
     public static SanjyServerErrorResponseDto.SanjyServerErrorResponseDtoBuilder
-    buildSanjyServerErrorResponseDtoDietPlanNotFound() {
+            buildSanjyServerErrorResponseDtoDietPlanNotFound() {
         return SanjyServerErrorResponseDto.builder()
                 .code(SanjyServerErrorResponseDto.ERROR_CODE_DIET_PLAN_NOT_FOUND)
                 .timestamp(LocalDate.now().toString())
@@ -86,22 +86,22 @@ public final class DtoBuilders {
     }
 
     public static SanjyServerErrorResponseDto.SanjyServerErrorResponseDtoBuilder
-    buildSanjyServerErrorResponseDtoGeneric500() {
+            buildSanjyServerErrorResponseDtoGeneric500() {
         return SanjyServerErrorResponseDto.builder()
-            .code(SanjyServerErrorResponseDto.UNEXPECTED_ERROR)
-            .timestamp(LocalDate.now().toString())
-            .message("An unexpected error occurred")
-            .customMessage(null)
-            .httpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                .code(SanjyServerErrorResponseDto.UNEXPECTED_ERROR)
+                .timestamp(LocalDate.now().toString())
+                .message("An unexpected error occurred")
+                .customMessage(null)
+                .httpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     public static SanjyServerErrorResponseDto.SanjyServerErrorResponseDtoBuilder
-    buildSanjyServerErrorResponseDtoGeneric400() {
+            buildSanjyServerErrorResponseDtoGeneric400() {
         return SanjyServerErrorResponseDto.builder()
-            .code(SanjyServerErrorResponseDto.INVALID_VALUES)
-            .timestamp(LocalDate.now().toString())
-            .message("Invalid values")
-            .customMessage(null)
-            .httpStatusCode(HttpStatus.BAD_REQUEST.value());
+                .code(SanjyServerErrorResponseDto.INVALID_VALUES)
+                .timestamp(LocalDate.now().toString())
+                .message("Invalid values")
+                .customMessage(null)
+                .httpStatusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

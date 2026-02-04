@@ -149,7 +149,8 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
 
             dietPlanRestClientMock.newDietPlan().genericBadRequest(uuid);
 

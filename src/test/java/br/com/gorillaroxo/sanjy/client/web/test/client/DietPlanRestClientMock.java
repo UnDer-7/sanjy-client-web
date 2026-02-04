@@ -57,13 +57,15 @@ public class DietPlanRestClientMock {
         }
 
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
-            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            final var responseDto =
+                    DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
             generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
 
         public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
-            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            final var responseDto =
+                    DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
@@ -112,19 +114,22 @@ public class DietPlanRestClientMock {
         }
 
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
-            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            final var responseDto =
+                    DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
             generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
 
         public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
-            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            final var responseDto =
+                    DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
 
         public SanjyServerErrorResponseDto dietPlanNotFound(final String xCorrelationId) {
-            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoDietPlanNotFound().build();
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoDietPlanNotFound()
+                    .build();
             generic(HttpStatus.NOT_FOUND, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
@@ -137,23 +142,23 @@ public class DietPlanRestClientMock {
 
                 if (correlationId == null || !correlationId.equals(xCorrelationId)) {
                     return new MockResponse.Builder()
-                        .code(400)
-                        .body("Expected X-Correlation-ID: " + xCorrelationId + ", but got: " + correlationId)
-                        .build();
+                            .code(400)
+                            .body("Expected X-Correlation-ID: " + xCorrelationId + ", but got: " + correlationId)
+                            .build();
                 }
 
                 if (channel == null || channel.isEmpty()) {
                     return new MockResponse.Builder()
-                        .code(400)
-                        .body("Missing required header: " + RequestConstants.Headers.X_CHANNEL)
-                        .build();
+                            .code(400)
+                            .body("Missing required header: " + RequestConstants.Headers.X_CHANNEL)
+                            .build();
                 }
 
                 return new MockResponse.Builder()
-                    .code(httpStatus.value())
-                    .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(responseBody)
-                    .build();
+                        .code(httpStatus.value())
+                        .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .body(responseBody)
+                        .build();
             });
         }
     }
