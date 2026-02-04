@@ -267,4 +267,150 @@ class DietPlanControllerIT extends IntegrationTestController {
                     });
         }
     }
+
+    @Nested
+    @DisplayName("GET /api/v1/diet-plan")
+    class GetActiveDietPlan {
+
+        @Test
+        @DisplayName("Should get active diet plan successfully and return correct response structure")
+        void should_get_active_diet_plan_successfully() {
+            final var uuid = UUID.randomUUID().toString();
+
+            dietPlanRestClientMock.activeDietPlan().success(uuid);
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(DietPlanControllerResponseDto.class)
+                    .value(actualDietPlan -> {
+                        assertThat(actualDietPlan.id()).isEqualTo(DtoBuilders.DIET_PLAN_ID);
+                        assertThat(actualDietPlan.name()).isNotEmpty();
+                        assertThat(actualDietPlan.isActive()).isTrue();
+                        assertThat(actualDietPlan.mealTypes())
+                                .isNotNull()
+                                .isNotEmpty();
+
+                        final MealTypeControllerResponseDto actualMealType =
+                                actualDietPlan.mealTypes().stream().findFirst().orElseThrow();
+                        assertThat(actualMealType.id()).isEqualTo(DtoBuilders.MEAL_TYPE_ID);
+                        assertThat(actualMealType.standardOptions())
+                                .isNotNull()
+                                .isNotEmpty();
+
+                        assertThat(actualDietPlan.metadata()).isNotNull();
+                        assertThat(actualDietPlan.metadata().createdAt()).isNotNull();
+                        assertThat(actualDietPlan.metadata().updatedAt()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 400 when X-Correlation-ID header is missing")
+        void should_return_bad_request_when_correlation_id_header_is_missing() {
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase(RequestConstants.Headers.X_CORRELATION_ID);
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 404 when diet plan is not found")
+        void should_return_not_found_when_diet_plan_not_found() {
+            final var uuid = UUID.randomUUID().toString();
+
+            dietPlanRestClientMock.activeDietPlan().dietPlanNotFound(uuid);
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isNotFound()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.DIET_PLAN_NOT_FOUND;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 500 when sanjy-server returns 4xx error")
+        void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
+            final var uuid = UUID.randomUUID().toString();
+
+            dietPlanRestClientMock.activeDietPlan().genericBadRequest(uuid);
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .is5xxServerError()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 500 when sanjy-server returns 5xx error")
+        void should_return_internal_server_error_when_sanjy_server_returns_server_error() {
+            final var uuid = UUID.randomUUID().toString();
+
+            dietPlanRestClientMock.activeDietPlan().genericInternalServerError(uuid);
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .is5xxServerError()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+    }
 }
