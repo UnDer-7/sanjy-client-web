@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.test.client;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
@@ -26,10 +27,10 @@ public class DietPlanRestClientMock {
     private final MockWebServerDispatcher dispatcher;
     private final NewDietPlan newDietPlan;
     private final ActiveDietPlan activeDietPlan;
-    final JsonUtil jsonUtil;
+    private final JsonUtil jsonUtil;
 
     public DietPlanRestClientMock(
-            MockWebServer mockWebServer, MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
+            final MockWebServer mockWebServer, final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
         this.dispatcher = dispatcher;
         this.newDietPlan = new NewDietPlan(dispatcher);
         this.activeDietPlan = new ActiveDietPlan(dispatcher);
@@ -45,34 +46,33 @@ public class DietPlanRestClientMock {
         private static final String PATH = BASE_PATH;
         private final MockWebServerDispatcher dispatcher;
 
-        NewDietPlan(MockWebServerDispatcher dispatcher) {
+        NewDietPlan(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
         }
 
-        /**
-         * Stubs a successful POST response (HTTP 201 CREATED) for creating a new diet plan.
-         *
-         * @param xCorrelationId The expected X-Correlation-ID header value
-         */
         public DietPlanResponseDto success(final String xCorrelationId) {
-            final DietPlanResponseDto responseDto =
-                    DtoBuilders.buildDietPlanResponseDto().build();
+            final var responseDto = DtoBuilders.buildDietPlanResponseDto().build();
             generic(HttpStatus.CREATED, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
 
-        /**
-         * Stubs a generic POST response for creating a new diet plan.
-         *
-         * @param httpStatus The HTTP status to return
-         * @param xCorrelationId The expected X-Correlation-ID header value
-         * @param responseBody The JSON response body
-         */
-        public void generic(HttpStatus httpStatus, String xCorrelationId, String responseBody) {
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
             dispatcher.register(PATH, request -> {
                 // Verify expected headers
-                String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
-                String channel = request.getHeaders().get(RequestConstants.Headers.X_CHANNEL);
+                final String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
+                final String channel = request.getHeaders().get(RequestConstants.Headers.X_CHANNEL);
 
                 if (correlationId == null || !correlationId.equals(xCorrelationId)) {
                     return new MockResponse.Builder()
@@ -102,41 +102,59 @@ public class DietPlanRestClientMock {
         private static final String PATH = BASE_PATH + "/active";
         private final MockWebServerDispatcher dispatcher;
 
-        ActiveDietPlan(MockWebServerDispatcher dispatcher) {
+        ActiveDietPlan(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
         }
 
-        /**
-         * Stubs a successful GET response (HTTP 200 OK) for retrieving the active diet plan.
-         *
-         * @param responseBody The JSON response body
-         */
-        public void success(String responseBody) {
-            generic(HttpStatus.OK, responseBody);
+        public void success(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildDietPlanResponseDto().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
         }
 
-        /**
-         * Stubs a generic GET response for retrieving the active diet plan.
-         *
-         * @param httpStatus The HTTP status to return
-         * @param responseBody The JSON response body
-         */
-        public void generic(HttpStatus httpStatus, String responseBody) {
-            dispatcher.register(PATH, request -> new MockResponse.Builder()
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto dietPlanNotFound(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildSanjyServerErrorResponseDtoDietPlanNotFound().build();
+            generic(HttpStatus.NOT_FOUND, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
+            dispatcher.register(PATH, request -> {
+                // Verify expected headers
+                final String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
+                final String channel = request.getHeaders().get(RequestConstants.Headers.X_CHANNEL);
+
+                if (correlationId == null || !correlationId.equals(xCorrelationId)) {
+                    return new MockResponse.Builder()
+                        .code(400)
+                        .body("Expected X-Correlation-ID: " + xCorrelationId + ", but got: " + correlationId)
+                        .build();
+                }
+
+                if (channel == null || channel.isEmpty()) {
+                    return new MockResponse.Builder()
+                        .code(400)
+                        .body("Missing required header: " + RequestConstants.Headers.X_CHANNEL)
+                        .build();
+                }
+
+                return new MockResponse.Builder()
                     .code(httpStatus.value())
                     .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .body(responseBody)
-                    .build());
-        }
-
-        /** Stubs a 404 NOT_FOUND response for when no active diet plan exists. */
-        public void notFound() {
-            dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .code(HttpStatus.NOT_FOUND.value())
-                    .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(jsonUtil.serialize(DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto()
-                            .build()))
-                    .build());
+                    .build();
+            });
         }
     }
 }

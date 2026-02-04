@@ -149,13 +149,9 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody =
-                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
-            final var serverErrorResponse =
-                    jsonUtil.serialize(DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto()
-                            .build());
+            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
 
-            dietPlanRestClientMock.newDietPlan().generic(HttpStatus.BAD_REQUEST, uuid, serverErrorResponse);
+            dietPlanRestClientMock.newDietPlan().genericBadRequest(uuid);
 
             webTestClient
                     .post()
@@ -186,9 +182,8 @@ class DietPlanControllerIT extends IntegrationTestController {
             final var uuid = UUID.randomUUID().toString();
             final var requestBody =
                     DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
-            final var serverErrorResponse = "{\"error\": \"Internal Server Error\"}";
 
-            dietPlanRestClientMock.newDietPlan().generic(HttpStatus.INTERNAL_SERVER_ERROR, uuid, serverErrorResponse);
+            dietPlanRestClientMock.newDietPlan().genericInternalServerError(uuid);
 
             webTestClient
                     .post()
