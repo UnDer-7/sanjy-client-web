@@ -1,8 +1,15 @@
 package br.com.gorillaroxo.sanjy.client.web;
 
+import br.com.gorillaroxo.sanjy.client.web.client.github.dto.response.GitHubReleaseResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPlanRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.PageRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.TimezoneInitializer;
@@ -53,6 +60,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
     SanjyServerErrorResponseDto.class,
     DietPlanRequestDto.class,
     DietPlanResponseDto.class,
+    MealRecordResponseDto.class,
+    MealRecordRequestDto.class,
+    PagedResponseDto.class,
+    PageRequestDto.class,
+    SearchMealRecordParamRequestDto.class,
+    MealRecordStatisticsResponseDto.class,
+    GitHubReleaseResponseDto.class
 })
 public class SanjyClientWebApplication {
 

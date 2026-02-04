@@ -10,6 +10,7 @@ import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpExceptio
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,7 @@ public class MealRecordRestClient {
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
-    public DietPlanResponseDto getTodayMealRecords(final ZoneId timezone) {
+    public List<MealRecordResponseDto> getTodayMealRecords(final ZoneId timezone) {
         return restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -58,7 +59,7 @@ public class MealRecordRestClient {
                         .queryParam(RequestConstants.Query.TIMEZONE, timezone)
                         .build())
                 .retrieve()
-                .body(DietPlanResponseDto.class);
+                .body(new ParameterizedTypeReference<List<MealRecordResponseDto>>() {});
     }
 
     /**
