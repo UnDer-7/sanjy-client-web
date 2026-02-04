@@ -1,13 +1,11 @@
 package br.com.gorillaroxo.sanjy.client.web.validation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -16,8 +14,8 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Constraint(validatedBy = NoUnderscoreInHostnameValidator.class)
-@Target({FIELD, PARAMETER})
-@Retention(RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface NoUnderscoreInHostname {
 
     String message() default

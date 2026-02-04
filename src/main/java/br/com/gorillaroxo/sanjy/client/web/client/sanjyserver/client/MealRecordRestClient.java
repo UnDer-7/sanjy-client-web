@@ -23,10 +23,10 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 public class MealRecordRestClient {
 
+    private static final String CLIENT_URL = "/v1/meal-record";
+
     @Qualifier("sanjyServerRestClient")
     private final RestClient restClient;
-
-    private static final String CLIENT_URL = "/v1/meal-record";
 
     /**
      * Records a meal consumption with timestamp, meal type, and quantity. Can register either a standard meal
