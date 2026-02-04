@@ -1,5 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.test.client;
 
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
@@ -47,6 +49,20 @@ public class MealRecordRestClientMock {
             this.dispatcher = dispatcher;
         }
 
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
             dispatcher.register(PATH, request -> {
                 final String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
@@ -82,6 +98,20 @@ public class MealRecordRestClientMock {
 
         GetTodayMealRecords(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
+        }
+
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -121,6 +151,20 @@ public class MealRecordRestClientMock {
             this.dispatcher = dispatcher;
         }
 
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
             dispatcher.register(PATH, request -> {
                 final String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
@@ -156,6 +200,20 @@ public class MealRecordRestClientMock {
 
         MealRecordStatistics(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
+        }
+
+        public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
+            generic(HttpStatus.INTERNAL_SERVER_ERROR, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public SanjyServerErrorResponseDto genericBadRequest(final String xCorrelationId) {
+            final var responseDto =
+                DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
+            generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
