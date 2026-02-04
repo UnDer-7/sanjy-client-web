@@ -13,6 +13,7 @@ import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoControllerBuilders;
 import br.com.gorillaroxo.sanjy.client.web.util.ExceptionCode;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -205,6 +206,63 @@ class DietPlanControllerIT extends IntegrationTestController {
                         assertThat(actualErrorResponse.userMessage())
                                 .isNotEmpty()
                                 .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 400 when X-Correlation-ID header is missing")
+        void should_return_bad_request_when_correlation_id_header_is_missing() {
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+
+            webTestClient
+                    .post()
+                    .uri(RESOURCE_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase(RequestConstants.Headers.X_CORRELATION_ID);
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 400 when endDate is in the past")
+        void should_return_bad_request_when_end_date_is_in_the_past() {
+            final var uuid = UUID.randomUUID().toString();
+            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto()
+                    .endDate(LocalDate.now().minusDays(1))
+                    .build();
+
+            webTestClient
+                    .post()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase("endDate");
                         assertThat(actualErrorResponse.timestamp()).isNotNull();
                     });
         }
