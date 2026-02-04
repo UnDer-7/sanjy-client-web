@@ -464,11 +464,11 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should extract diet plan from pdf file successfully")
         void should_extract_diet_plan_from_pdf_file_successfully() throws IOException {
             final var uuid = UUID.randomUUID().toString();
-            final var fileContent = new ClassPathResource("files/diet-plan-sample.pdf")
-                .getContentAsString(StandardCharsets.UTF_8);
+            final var fileBytes = new ClassPathResource("files/diet-plan-sample.pdf")
+                .getInputStream().readAllBytes();
 
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", fileContent.getBytes(StandardCharsets.UTF_8))
+            bodyBuilder.part("file", fileBytes)
                 .filename("diet-plan-sample.pdf")
                 .contentType(MediaType.APPLICATION_PDF);
 
