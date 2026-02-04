@@ -44,6 +44,10 @@ sanjy-client-web:
       top-p: ''
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: off
+
   servlet:
     multipart:
       max-file-size: 50MB
@@ -51,9 +55,6 @@ spring:
 
   application:
     name: sanjy-client-web-test
-
-  main:
-    banner-mode: off
 
   threads:
     virtual:

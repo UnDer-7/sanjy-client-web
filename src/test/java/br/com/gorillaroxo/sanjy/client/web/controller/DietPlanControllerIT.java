@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealTypeControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ErrorResponseDto;
@@ -13,6 +14,8 @@ import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoControllerBuilders;
 import br.com.gorillaroxo.sanjy.client.web.util.ExceptionCode;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +26,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.web.reactive.function.BodyInserters;
 
 @Slf4j
 class DietPlanControllerIT extends IntegrationTestController {
@@ -409,6 +415,168 @@ class DietPlanControllerIT extends IntegrationTestController {
                         assertThat(actualErrorResponse.userMessage())
                                 .isNotEmpty()
                                 .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/v1/diet-plan/extract")
+    class ExtractDietPlanFromFile {
+
+        private static final String EXTRACT_URL = RESOURCE_URL + "/extract";
+
+        @Test
+        @DisplayName("Should extract diet plan from text file successfully")
+        void should_extract_diet_plan_from_text_file_successfully() throws IOException {
+            final var uuid = UUID.randomUUID().toString();
+            final var fileContent = new ClassPathResource("files/diet-plan-sample.txt")
+                    .getContentAsString(StandardCharsets.UTF_8);
+
+            final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+            bodyBuilder.part("file", fileContent.getBytes(StandardCharsets.UTF_8))
+                    .filename("diet-plan.txt")
+                    .contentType(MediaType.TEXT_PLAIN);
+
+            webTestClient
+                    .post()
+                    .uri(EXTRACT_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(DietPlanControllerRequestDto.class)
+                    .value(actualDietPlan -> {
+                        assertThat(actualDietPlan.name()).isNotEmpty();
+                        assertThat(actualDietPlan.mealTypes())
+                                .isNotNull()
+                                .isNotEmpty()
+                                .hasSizeGreaterThanOrEqualTo(1);
+                        assertThat(actualDietPlan.mealTypes().getFirst().standardOptions())
+                                .isNotNull()
+                                .isNotEmpty();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should extract diet plan from pdf file successfully")
+        void should_extract_diet_plan_from_pdf_file_successfully() throws IOException {
+            final var uuid = UUID.randomUUID().toString();
+            final var fileContent = new ClassPathResource("files/diet-plan-sample.pdf")
+                .getContentAsString(StandardCharsets.UTF_8);
+
+            final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+            bodyBuilder.part("file", fileContent.getBytes(StandardCharsets.UTF_8))
+                .filename("diet-plan-sample.pdf")
+                .contentType(MediaType.APPLICATION_PDF);
+
+            webTestClient
+                .post()
+                .uri(EXTRACT_URL)
+                .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(DietPlanControllerRequestDto.class)
+                .value(actualDietPlan -> {
+                    assertThat(actualDietPlan.name()).isNotEmpty();
+                    assertThat(actualDietPlan.mealTypes())
+                        .isNotNull()
+                        .isNotEmpty()
+                        .hasSizeGreaterThanOrEqualTo(1);
+                    assertThat(actualDietPlan.mealTypes().getFirst().standardOptions())
+                        .isNotNull()
+                        .isNotEmpty();
+                });
+        }
+
+        @Test
+        @DisplayName("Should return 400 when file is empty")
+        void should_return_bad_request_when_file_is_empty() {
+            final var uuid = UUID.randomUUID().toString();
+
+            final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+            bodyBuilder.part("file", new byte[0])
+                    .filename("empty.txt")
+                    .contentType(MediaType.TEXT_PLAIN);
+
+            webTestClient
+                    .post()
+                    .uri(EXTRACT_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 400 when X-Correlation-ID header is missing")
+        void should_return_bad_request_when_correlation_id_header_is_missing() {
+            final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+            bodyBuilder.part("file", "some content".getBytes(StandardCharsets.UTF_8))
+                    .filename("diet-plan.txt")
+                    .contentType(MediaType.TEXT_PLAIN);
+
+            webTestClient
+                    .post()
+                    .uri(EXTRACT_URL)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase(RequestConstants.Headers.X_CORRELATION_ID);
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return error when file type is not supported")
+        void should_return_error_when_file_type_is_not_supported() {
+            final var uuid = UUID.randomUUID().toString();
+
+            final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+            bodyBuilder.part("file", "some content".getBytes(StandardCharsets.UTF_8))
+                    .filename("diet-plan.xml")
+                    .contentType(MediaType.APPLICATION_XML);
+
+            webTestClient
+                    .post()
+                    .uri(EXTRACT_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.DIET_PLAN_EXTRACTOR_STRATEGY_NOT_FOUND.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
                         assertThat(actualErrorResponse.timestamp()).isNotNull();
                     });
         }

@@ -1,6 +1,8 @@
 package br.com.gorillaroxo.sanjy.client.web.test;
 
 import br.com.gorillaroxo.sanjy.client.web.SanjyClientWebApplication;
+import br.com.gorillaroxo.sanjy.client.web.test.ai.FakeChatModel;
+import br.com.gorillaroxo.sanjy.client.web.test.ai.TestChatModelConfig;
 import br.com.gorillaroxo.sanjy.client.web.test.client.DietPlanRestClientMock;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerManager;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.lang.Nullable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -28,6 +32,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
  */
 @Slf4j
 @ActiveProfiles("test")
+@Import(TestChatModelConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = SanjyClientWebApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTestController {
@@ -41,6 +46,10 @@ public abstract class IntegrationTestController {
 
     @Autowired
     protected JsonUtil jsonUtil;
+
+    @Nullable
+    @Autowired(required = false)
+    protected FakeChatModel fakeChatModel;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -62,5 +71,8 @@ public abstract class IntegrationTestController {
     @BeforeEach
     void setUp() {
         dispatcher.reset();
+        if (fakeChatModel != null) {
+            fakeChatModel.reset();
+        }
     }
 }
