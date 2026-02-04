@@ -55,9 +55,7 @@ public class DietPlanConverter {
 
     private DietPlanControllerRequestDto aiExtractor(final String inputMessage) {
         if (chatClient.isEmpty()) {
-            log.warn(
-                    LogField.Placeholders.ONE.getPlaceholder(),
-                    StructuredArguments.kv(LogField.MSG.label(), """
+            log.warn(LogField.Placeholders.ONE.getPlaceholder(), StructuredArguments.kv(LogField.MSG.label(), """
                         AI conversion not available - no AI provider configured. Set some API Key Environment Variable to enable it.
                         """));
             throw new NoAiProviderAvailableException();

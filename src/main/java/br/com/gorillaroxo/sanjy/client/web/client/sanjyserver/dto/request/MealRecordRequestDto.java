@@ -27,21 +27,18 @@ public record MealRecordRequestDto(
 
         @JsonPropertyDescription("""
             ID of the chosen diet plan option. Required when isFreeMeal = FALSE, should be NULL when isFreeMeal = TRUE
-            """)
-        Long standardOptionId,
+            """) Long standardOptionId,
 
         @JsonPropertyDescription("""
             Text description of the free meal item. Required when isFreeMeal = TRUE, should be NULL when isFreeMeal = FALSE. Example: Grilled chicken with vegetables
-            """)
-        String freeMealDescription,
+            """) String freeMealDescription,
 
         @JsonPropertyDescription("Quantity of the item consumed. Defaults to 1.0 if not provided. Example: 1")
         Double quantity,
 
         @JsonPropertyDescription("""
             Unit of measurement for the quantity (serving, g, ml, units, etc...). Defaults to 'serving' if not provided
-            """)
-        String unit,
+            """) String unit,
 
         @JsonPropertyDescription(
                 "Optional field for additional observations or notes about the meal. Example: Extra spicy, no salt")

@@ -27,8 +27,8 @@ public class DietPlanNotFoundHandler {
     public void handler(final HttpRequest request, final ClientHttpResponse response) {
         if (canHandler(request, response)) {
             log.warn(
-                LogField.Placeholders.ONE.getPlaceholder(),
-                StructuredArguments.kv(LogField.MSG.label(), "Diet Plan Not Found"));
+                    LogField.Placeholders.ONE.getPlaceholder(),
+                    StructuredArguments.kv(LogField.MSG.label(), "Diet Plan Not Found"));
 
             throw new DietPlanNotFoundException();
         }
@@ -43,8 +43,8 @@ public class DietPlanNotFoundHandler {
         }
 
         return jsonUtil.deserializeSafely(BodyUtils.readBody(response), SanjyServerErrorResponseDto.class)
-            .map(SanjyServerErrorResponseDto::code)
-            .filter(SanjyServerErrorResponseDto.ERROR_CODE_DIET_PLAN_NOT_FOUND::equals)
-            .isPresent();
+                .map(SanjyServerErrorResponseDto::code)
+                .filter(SanjyServerErrorResponseDto.ERROR_CODE_DIET_PLAN_NOT_FOUND::equals)
+                .isPresent();
     }
 }

@@ -32,11 +32,12 @@ public class DietPlanRestClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     public DietPlanResponseDto newDietPlan(final DietPlanRequestDto body) {
-        return restClient.post()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).build())
-            .body(body)
-            .retrieve()
-            .body(DietPlanResponseDto.class);
+        return restClient
+                .post()
+                .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).build())
+                .body(body)
+                .retrieve()
+                .body(DietPlanResponseDto.class);
     }
 
     /**
@@ -47,10 +48,11 @@ public class DietPlanRestClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     public DietPlanResponseDto activeDietPlan() {
-        return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/active").build())
-            .retrieve()
-            .onStatus(HttpStatusCode::isError, dietPlanNotFoundHandler::handler)
-            .body(DietPlanResponseDto.class);
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/active").build())
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, dietPlanNotFoundHandler::handler)
+                .body(DietPlanResponseDto.class);
     }
 }

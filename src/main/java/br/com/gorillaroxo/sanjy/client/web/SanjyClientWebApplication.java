@@ -56,13 +56,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 })
 public class SanjyClientWebApplication {
 
-    private SanjyClientWebApplication() {
-    }
+    private SanjyClientWebApplication() {}
 
     public static void main(String[] args) {
         final var app = new SpringApplication(SanjyClientWebApplication.class);
         app.addInitializers(new TimezoneInitializer());
         app.run(args);
     }
-
 }

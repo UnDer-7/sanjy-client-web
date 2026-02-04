@@ -116,7 +116,8 @@ public class JsonUtil {
         log.warn(
                 LogField.Placeholders.THREE.getPlaceholder(),
                 StructuredArguments.kv(LogField.MSG.label(), "Fail to serialize Class"),
-                StructuredArguments.kv(LogField.CLASS_NAME.label(), object.getClass().getSimpleName()),
+                StructuredArguments.kv(
+                        LogField.CLASS_NAME.label(), object.getClass().getSimpleName()),
                 StructuredArguments.kv(LogField.CLASS_SERIALIZATION_SOURCE.label(), object.toString()),
                 StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), throwable.getMessage()),
                 throwable);

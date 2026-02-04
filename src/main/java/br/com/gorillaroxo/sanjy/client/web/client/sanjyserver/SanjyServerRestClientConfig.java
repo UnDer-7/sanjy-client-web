@@ -16,14 +16,16 @@ public class SanjyServerRestClientConfig {
 
     @Qualifier("globalRestClient")
     private final RestClient restClient;
+
     private final SanjyClientWebConfigProp configProp;
     private final SanjyServerRequiredHeadersInterceptor headersInterceptor;
 
     @Bean("sanjyServerRestClient")
     public RestClient restClient() {
-        return restClient.mutate()
-            .baseUrl(configProp.externalHttpClients().sanjyServer().url())
-            .requestInterceptors(interceptors -> interceptors.addFirst(headersInterceptor))
-            .build();
+        return restClient
+                .mutate()
+                .baseUrl(configProp.externalHttpClients().sanjyServer().url())
+                .requestInterceptors(interceptors -> interceptors.addFirst(headersInterceptor))
+                .build();
     }
 }

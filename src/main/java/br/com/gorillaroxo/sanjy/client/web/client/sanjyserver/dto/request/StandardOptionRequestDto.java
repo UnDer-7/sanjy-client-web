@@ -8,5 +8,4 @@ public record StandardOptionRequestDto(
 
         @JsonPropertyDescription("""
             Complete description of foods that compose this meal option. Example: 2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar
-            """)
-        String description) {}
+            """) String description) {}

@@ -1,7 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.test.mockwebserver;
 
 import java.io.IOException;
-
 import lombok.Getter;
 import mockwebserver3.Dispatcher;
 import mockwebserver3.MockResponse;
@@ -12,15 +11,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 /**
- * Singleton manager for MockWebServer instance.
- * Ensures the same server instance is shared across all tests in the same JVM,
- * avoiding port conflicts and providing a stable base URL for dynamic property injection.
+ * Singleton manager for MockWebServer instance. Ensures the same server instance is shared across all tests in the same
+ * JVM, avoiding port conflicts and providing a stable base URL for dynamic property injection.
  *
- * <p>The server is started eagerly in a static block to ensure the base URL is available
- * when {@code @DynamicPropertySource} methods are called during Spring context initialization.
+ * <p>The server is started eagerly in a static block to ensure the base URL is available when
+ * {@code @DynamicPropertySource} methods are called during Spring context initialization.
  *
- * <p>A default dispatcher is configured to handle GitHub API calls during application startup
- * (called by ProjectInfoLoggerConfig on ApplicationReadyEvent).
+ * <p>A default dispatcher is configured to handle GitHub API calls during application startup (called by
+ * ProjectInfoLoggerConfig on ApplicationReadyEvent).
  */
 public final class MockWebServerManager {
 
@@ -58,8 +56,8 @@ public final class MockWebServerManager {
     }
 
     /**
-     * Default dispatcher that handles requests during Spring context startup.
-     * Returns mock responses for GitHub API calls that happen before test methods configure mocks.
+     * Default dispatcher that handles requests during Spring context startup. Returns mock responses for GitHub API
+     * calls that happen before test methods configure mocks.
      */
     private static class DefaultStartupDispatcher extends Dispatcher {
         @NotNull
@@ -73,14 +71,14 @@ public final class MockWebServerManager {
                         .body("{\"tag_name\": \"v1.0.0-test\"}")
                         .build();
             }
-            return new MockResponse.Builder().code(404).body("No handler for: " + path).build();
+            return new MockResponse.Builder()
+                    .code(404)
+                    .body("No handler for: " + path)
+                    .build();
         }
     }
 
-    /**
-     * Dispatcher that delegates to the test's dispatcher but falls back to GitHub mock
-     * for startup requests.
-     */
+    /** Dispatcher that delegates to the test's dispatcher but falls back to GitHub mock for startup requests. */
     private static class DelegatingDispatcher extends Dispatcher {
         private final MockWebServerDispatcher delegate;
 

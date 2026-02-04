@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.exception.InvalidValuesException;
+import br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostname;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -15,7 +16,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostname;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -83,10 +83,10 @@ public record SanjyClientWebConfigProp(
     }
 
     public record ExternalApisProp(
-            @Valid GenericApiProp sanjyServer,
-            @Valid GenericApiProp github) {}
+            @Valid GenericApiProp sanjyServer, @Valid GenericApiProp github) {}
 
-    public record GenericApiProp(@NotNull @URL @NoUnderscoreInHostname String url) {}
+    public record GenericApiProp(
+            @NotNull @URL @NoUnderscoreInHostname String url) {}
 
     public record ApplicationProp(
             @NotBlank String name,
@@ -110,5 +110,4 @@ public record SanjyClientWebConfigProp(
             @NotBlank String appender) {}
 
     public record UploadProp(@NotNull Integer maxFileSizeInMb) {}
-
 }

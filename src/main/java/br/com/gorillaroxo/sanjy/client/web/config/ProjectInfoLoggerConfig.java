@@ -35,14 +35,17 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent ignored) {
         jsonUtil.serializeSafely(prop)
-            .ifPresentOrElse(
-                propJson -> log.debug(
-                    LogField.Placeholders.TWO.getPlaceholder(),
-                    StructuredArguments.kv(LogField.MSG.label(), "Project environment configuration values 24"),
-                    StructuredArguments.kv(LogField.CONFIG_PROP.label(), propJson)),
-                () -> log.debug(
-                    LogField.Placeholders.ONE.getPlaceholder(),
-                    StructuredArguments.kv(LogField.MSG.label(), "Could not log project environment configuration values")));
+                .ifPresentOrElse(
+                        propJson -> log.debug(
+                                LogField.Placeholders.TWO.getPlaceholder(),
+                                StructuredArguments.kv(
+                                        LogField.MSG.label(), "Project environment configuration values 24"),
+                                StructuredArguments.kv(LogField.CONFIG_PROP.label(), propJson)),
+                        () -> log.debug(
+                                LogField.Placeholders.ONE.getPlaceholder(),
+                                StructuredArguments.kv(
+                                        LogField.MSG.label(),
+                                        "Could not log project environment configuration values")));
 
         ThreadUtils.runAsyncWithMdc(
                 () -> {

@@ -2,12 +2,6 @@ package br.com.gorillaroxo.sanjy.client.web.exception;
 
 import br.com.gorillaroxo.sanjy.client.web.util.ExceptionCode;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
@@ -17,6 +11,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 
 @Slf4j
 public class UnhandledClientHttpException extends BusinessException {
@@ -28,7 +27,7 @@ public class UnhandledClientHttpException extends BusinessException {
     private final RequestInformation requestInformation;
 
     public UnhandledClientHttpException(
-        final String customMessage, final Throwable originalCause, final RequestInformation requestInformation) {
+            final String customMessage, final Throwable originalCause, final RequestInformation requestInformation) {
         super(CODE, STATUS, customMessage, originalCause);
         this.requestInformation = requestInformation;
     }
@@ -60,29 +59,33 @@ public class UnhandledClientHttpException extends BusinessException {
 
     public static class RequestInformation implements Serializable {
 
-        @Serial private static final long serialVersionUID = 1L;
+        @Serial
+        private static final long serialVersionUID = 1L;
 
         private final String requestMethod;
         private final String requestUrl;
-        @Getter private final Set<Map.Entry<String, List<String>>> requestHeaders;
+
+        @Getter
+        private final Set<Map.Entry<String, List<String>>> requestHeaders;
 
         private final Integer responseHttpStatusCode;
-        @Getter private final Set<Map.Entry<String, List<String>>> responseHeaders;
+
+        @Getter
+        private final Set<Map.Entry<String, List<String>>> responseHeaders;
+
         private final String responseBody;
 
         private final JsonUtil jsonUtil;
 
         @Builder
         public RequestInformation(
-            final String requestMethod,
-            final String requestUrl,
-            final Set<Map.Entry<String, List<String>>> requestHeaders,
-
-            final Integer responseHttpStatusCode,
-            final Set<Map.Entry<String, List<String>>> responseHeaders,
-            final String responseBody,
-
-            final JsonUtil jsonUtil) {
+                final String requestMethod,
+                final String requestUrl,
+                final Set<Map.Entry<String, List<String>>> requestHeaders,
+                final Integer responseHttpStatusCode,
+                final Set<Map.Entry<String, List<String>>> responseHeaders,
+                final String responseBody,
+                final JsonUtil jsonUtil) {
 
             // Request info
             this.requestMethod = requestMethod;
@@ -119,7 +122,5 @@ public class UnhandledClientHttpException extends BusinessException {
 
             return jsonUtil.deserializeSafely(responseBody, clazz);
         }
-
     }
-
 }

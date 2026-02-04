@@ -25,10 +25,10 @@ class GlobalRestClientConfig {
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public RestClient globalRestClient() {
         return RestClient.builder()
-            .requestFactory(new BufferingClientHttpRequestFactory(new JdkClientHttpRequestFactory()))
-            .requestInterceptors(interceptors -> interceptors.addLast(logRestClientInterceptor))
-            .defaultStatusHandler(HttpStatusCode::isError, defaultRestClientErrorHandler::handler)
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build();
+                .requestFactory(new BufferingClientHttpRequestFactory(new JdkClientHttpRequestFactory()))
+                .requestInterceptors(interceptors -> interceptors.addLast(logRestClientInterceptor))
+                .defaultStatusHandler(HttpStatusCode::isError, defaultRestClientErrorHandler::handler)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 }

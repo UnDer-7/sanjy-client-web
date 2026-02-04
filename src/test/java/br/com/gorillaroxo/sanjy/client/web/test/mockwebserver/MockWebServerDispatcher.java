@@ -10,9 +10,8 @@ import mockwebserver3.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A flexible dispatcher for MockWebServer that allows registering handlers for specific paths.
- * This enables WireMock-like stubbing behavior where responses are matched by URL path
- * rather than using a queue (FIFO) approach.
+ * A flexible dispatcher for MockWebServer that allows registering handlers for specific paths. This enables
+ * WireMock-like stubbing behavior where responses are matched by URL path rather than using a queue (FIFO) approach.
  */
 @Slf4j
 public class MockWebServerDispatcher extends Dispatcher {
@@ -40,9 +39,7 @@ public class MockWebServerDispatcher extends Dispatcher {
         log.debug("Unregistered mock handler for path: {}", path);
     }
 
-    /**
-     * Clears all registered handlers.
-     */
+    /** Clears all registered handlers. */
     public void reset() {
         handlers.clear();
         log.debug("Reset all mock handlers");
@@ -74,6 +71,9 @@ public class MockWebServerDispatcher extends Dispatcher {
         }
 
         log.warn("No handler registered for path: {}", path);
-        return new MockResponse.Builder().code(404).body("No handler registered for path: " + path).build();
+        return new MockResponse.Builder()
+                .code(404)
+                .body("No handler registered for path: " + path)
+                .build();
     }
 }

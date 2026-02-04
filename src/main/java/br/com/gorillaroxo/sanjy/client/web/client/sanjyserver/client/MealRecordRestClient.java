@@ -8,16 +8,15 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealR
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -36,11 +35,12 @@ public class MealRecordRestClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     public MealRecordResponseDto newMealRecord(final MealRecordRequestDto request) {
-        return restClient.post()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).build())
-            .body(request)
-            .retrieve()
-            .body(MealRecordResponseDto.class);
+        return restClient
+                .post()
+                .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).build())
+                .body(request)
+                .retrieve()
+                .body(MealRecordResponseDto.class);
     }
 
     /**
@@ -50,12 +50,15 @@ public class MealRecordRestClient {
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
     public DietPlanResponseDto getTodayMealRecords(final ZoneId timezone) {
-        return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/today")
-                .queryParam(RequestConstants.Query.TIMEZONE, timezone)
-                .build())
-            .retrieve()
-            .body(DietPlanResponseDto.class);
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(CLIENT_URL)
+                        .path("/today")
+                        .queryParam(RequestConstants.Query.TIMEZONE, timezone)
+                        .build())
+                .retrieve()
+                .body(DietPlanResponseDto.class);
     }
 
     /**
@@ -64,17 +67,27 @@ public class MealRecordRestClient {
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
-    public PagedResponseDto<MealRecordResponseDto> searchMealRecords(final SearchMealRecordParamRequestDto searchParams) {
-        return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL)
-                .queryParamIfPresent(RequestConstants.Query.CONSUMED_AT_AFTER, Optional.ofNullable(searchParams.getConsumedAtAfter()))
-                .queryParamIfPresent(RequestConstants.Query.CONSUMED_AT_BEFORE, Optional.ofNullable(searchParams.getConsumedAtBefore()))
-                .queryParamIfPresent(RequestConstants.Query.IS_FREE_MEAL, Optional.ofNullable(searchParams.getIsFreeMeal()))
-                .queryParamIfPresent(RequestConstants.Query.PAGE_NUMBER, Optional.ofNullable(searchParams.getPageNumber()))
-                .queryParamIfPresent(RequestConstants.Query.PAGE_SIZE, Optional.ofNullable(searchParams.getPageSize()))
-                .build())
-            .retrieve()
-            .body(new ParameterizedTypeReference<PagedResponseDto<MealRecordResponseDto>>() {});
+    public PagedResponseDto<MealRecordResponseDto> searchMealRecords(
+            final SearchMealRecordParamRequestDto searchParams) {
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(CLIENT_URL)
+                        .queryParamIfPresent(
+                                RequestConstants.Query.CONSUMED_AT_AFTER,
+                                Optional.ofNullable(searchParams.getConsumedAtAfter()))
+                        .queryParamIfPresent(
+                                RequestConstants.Query.CONSUMED_AT_BEFORE,
+                                Optional.ofNullable(searchParams.getConsumedAtBefore()))
+                        .queryParamIfPresent(
+                                RequestConstants.Query.IS_FREE_MEAL, Optional.ofNullable(searchParams.getIsFreeMeal()))
+                        .queryParamIfPresent(
+                                RequestConstants.Query.PAGE_NUMBER, Optional.ofNullable(searchParams.getPageNumber()))
+                        .queryParamIfPresent(
+                                RequestConstants.Query.PAGE_SIZE, Optional.ofNullable(searchParams.getPageSize()))
+                        .build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<PagedResponseDto<MealRecordResponseDto>>() {});
     }
 
     /**
@@ -84,13 +97,18 @@ public class MealRecordRestClient {
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
-    public MealRecordStatisticsResponseDto getMealRecordStatisticsByDateRange(final Instant consumedAtAfter, final Instant consumedAtBefore) {
-        return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path("/statistics")
-                .queryParamIfPresent(RequestConstants.Query.CONSUMED_AT_AFTER, Optional.ofNullable(consumedAtAfter))
-                .queryParamIfPresent(RequestConstants.Query.CONSUMED_AT_BEFORE, Optional.ofNullable(consumedAtBefore))
-                .build())
-            .retrieve()
-            .body(MealRecordStatisticsResponseDto.class);
+    public MealRecordStatisticsResponseDto getMealRecordStatisticsByDateRange(
+            final Instant consumedAtAfter, final Instant consumedAtBefore) {
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/statistics")
+                        .queryParamIfPresent(
+                                RequestConstants.Query.CONSUMED_AT_AFTER, Optional.ofNullable(consumedAtAfter))
+                        .queryParamIfPresent(
+                                RequestConstants.Query.CONSUMED_AT_BEFORE, Optional.ofNullable(consumedAtBefore))
+                        .build())
+                .retrieve()
+                .body(MealRecordStatisticsResponseDto.class);
     }
 }

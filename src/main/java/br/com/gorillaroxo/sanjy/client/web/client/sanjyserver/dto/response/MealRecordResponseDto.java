@@ -17,8 +17,7 @@ public record MealRecordResponseDto(
 
         @JsonPropertyDescription("""
             Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
-            """)
-        MealTypeSimplifiedResponseDto mealType,
+            """) MealTypeSimplifiedResponseDto mealType,
 
         @JsonPropertyDescription("""
             Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan).

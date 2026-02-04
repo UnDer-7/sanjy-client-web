@@ -40,8 +40,7 @@ public record DietPlanResponseDto(
 
         @JsonPropertyDescription("""
             Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products
-            """)
-        String nutritionistNotes,
+            """) String nutritionistNotes,
 
         @JsonPropertyDescription("List of meal types associated with this diet plan")
         Set<MealTypeResponseDto> mealTypes,

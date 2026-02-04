@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 /**
- * Mock client for DietPlanRestClient using MockWebServer.
- * Similar to WireMock's stubbing approach but using MockWebServer's Dispatcher pattern.
+ * Mock client for DietPlanRestClient using MockWebServer. Similar to WireMock's stubbing approach but using
+ * MockWebServer's Dispatcher pattern.
  */
 @Getter
 @Accessors(fluent = true)
@@ -28,7 +28,8 @@ public class DietPlanRestClientMock {
     private final ActiveDietPlan activeDietPlan;
     final JsonUtil jsonUtil;
 
-    public DietPlanRestClientMock(MockWebServer mockWebServer, MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
+    public DietPlanRestClientMock(
+            MockWebServer mockWebServer, MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
         this.dispatcher = dispatcher;
         this.newDietPlan = new NewDietPlan(dispatcher);
         this.activeDietPlan = new ActiveDietPlan(dispatcher);
@@ -54,7 +55,8 @@ public class DietPlanRestClientMock {
          * @param xCorrelationId The expected X-Correlation-ID header value
          */
         public DietPlanResponseDto success(final String xCorrelationId) {
-            final DietPlanResponseDto responseDto = DtoBuilders.buildDietPlanResponseDto().build();
+            final DietPlanResponseDto responseDto =
+                    DtoBuilders.buildDietPlanResponseDto().build();
             generic(HttpStatus.CREATED, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
         }
@@ -127,14 +129,13 @@ public class DietPlanRestClientMock {
                     .build());
         }
 
-        /**
-         * Stubs a 404 NOT_FOUND response for when no active diet plan exists.
-         */
+        /** Stubs a 404 NOT_FOUND response for when no active diet plan exists. */
         public void notFound() {
             dispatcher.register(PATH, request -> new MockResponse.Builder()
                     .code(HttpStatus.NOT_FOUND.value())
                     .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(jsonUtil.serialize(DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto().build()))
+                    .body(jsonUtil.serialize(DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto()
+                            .build()))
                     .build());
         }
     }

@@ -2,9 +2,8 @@ package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response;
 
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import lombok.Builder;
-
 import java.time.Instant;
+import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record MetadataResponseDto(

@@ -40,12 +40,9 @@ public record MealRecordControllerRequestDto(
         ZonedDateTime consumedAt,
 
         @NotNull
-        @Schema(
-                description = """
+        @Schema(description = """
                     Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). TRUE = free meal | FALSE = standard meal
-                    """,
-                example = "false",
-                requiredMode = Schema.RequiredMode.REQUIRED)
+                    """, example = "false", requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("""
         Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan).
         TRUE = free meal | FALSE = standard meal

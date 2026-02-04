@@ -3,7 +3,6 @@ package br.com.gorillaroxo.sanjy.client.web.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,7 +36,8 @@ class NoUnderscoreInHostnameValidatorTest {
         }
 
         @ParameterizedTest(name = "URL: {0}")
-        @MethodSource("br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostnameValidatorTest#validUrlsProvider")
+        @MethodSource(
+                "br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostnameValidatorTest#validUrlsProvider")
         @DisplayName("Should return true for URLs with valid hostnames (no underscores)")
         void shouldReturnTrueForValidHostnames(String url, String description) {
             assertThat(validator.isValid(url, null))
@@ -51,7 +51,8 @@ class NoUnderscoreInHostnameValidatorTest {
     class InvalidUrls {
 
         @ParameterizedTest(name = "URL: {0}")
-        @MethodSource("br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostnameValidatorTest#invalidUrlsProvider")
+        @MethodSource(
+                "br.com.gorillaroxo.sanjy.client.web.validation.NoUnderscoreInHostnameValidatorTest#invalidUrlsProvider")
         @DisplayName("Should return false for URLs with underscores in hostname")
         void shouldReturnFalseForHostnamesWithUnderscore(String url, String description) {
             assertThat(validator.isValid(url, null))

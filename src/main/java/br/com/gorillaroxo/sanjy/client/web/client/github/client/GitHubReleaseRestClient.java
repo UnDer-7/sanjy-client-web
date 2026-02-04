@@ -18,9 +18,13 @@ public class GitHubReleaseRestClient {
     private final RestClient restClient;
 
     public GitHubReleaseResponseDto getLatestRelease(final String repo) {
-        return restClient.get()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/{repo}/releases/latest").build(repo))
-            .retrieve()
-            .body(GitHubReleaseResponseDto.class);
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(CLIENT_URL)
+                        .path("/{repo}/releases/latest")
+                        .build(repo))
+                .retrieve()
+                .body(GitHubReleaseResponseDto.class);
     }
 }

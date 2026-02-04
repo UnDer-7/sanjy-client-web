@@ -22,8 +22,7 @@ public record MealTypeResponseDto(
         @JsonPropertyDescription("""
             Additional observations about the meal type, such as target macronutrients (protein, carbs, fat in grams) and total calories (kcal). \
             Example: 30 g proteína | 20 g carbo | 5 g gordura | 250 kcal
-            """)
-        String observation,
+            """) String observation,
 
         @JsonPropertyDescription("Identifier of the diet plan this meal type belongs to. Example: 30")
         Long dietPlanId,

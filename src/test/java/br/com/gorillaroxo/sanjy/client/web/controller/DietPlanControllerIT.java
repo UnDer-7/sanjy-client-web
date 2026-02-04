@@ -1,5 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealTypeControllerRequestDto;
@@ -23,8 +25,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @Slf4j
 class DietPlanControllerIT extends IntegrationTestController {
 
@@ -38,10 +38,13 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should create diet plan successfully and return correct response structure")
         void should_create_diet_plan_successfully() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
 
-            final DietPlanResponseDto expectedDietPlan = dietPlanRestClientMock.newDietPlan().success(uuid);
-            final MealTypeResponseDto expectedMealType = expectedDietPlan.mealTypes().stream().findFirst().orElseThrow();
+            final DietPlanResponseDto expectedDietPlan =
+                    dietPlanRestClientMock.newDietPlan().success(uuid);
+            final MealTypeResponseDto expectedMealType =
+                    expectedDietPlan.mealTypes().stream().findFirst().orElseThrow();
 
             webTestClient
                     .post()
@@ -60,17 +63,18 @@ class DietPlanControllerIT extends IntegrationTestController {
                         assertThat(actualDietPlan.dailyProteinInG()).isEqualTo(expectedDietPlan.dailyProteinInG());
                         assertThat(actualDietPlan.isActive()).isTrue();
                         assertThat(actualDietPlan.mealTypes())
-                            .isNotNull()
-                            .isNotEmpty()
-                            .hasSameSizeAs(expectedDietPlan.mealTypes());
+                                .isNotNull()
+                                .isNotEmpty()
+                                .hasSameSizeAs(expectedDietPlan.mealTypes());
 
-                        final MealTypeControllerResponseDto actualMealType = actualDietPlan.mealTypes().stream().findFirst().orElseThrow();
+                        final MealTypeControllerResponseDto actualMealType =
+                                actualDietPlan.mealTypes().stream().findFirst().orElseThrow();
                         assertThat(actualMealType.id()).isEqualTo(DtoBuilders.MEAL_TYPE_ID);
                         assertThat(actualMealType.name()).isEqualTo(expectedMealType.name());
                         assertThat(actualMealType.standardOptions())
-                            .isNotNull()
-                            .isNotEmpty()
-                            .hasSameSizeAs(expectedMealType.standardOptions());
+                                .isNotNull()
+                                .isNotEmpty()
+                                .hasSameSizeAs(expectedMealType.standardOptions());
 
                         assertThat(actualDietPlan.metadata()).isNotNull();
                         assertThat(actualDietPlan.metadata().createdAt()).isNotNull();
@@ -99,10 +103,13 @@ class DietPlanControllerIT extends IntegrationTestController {
                     .isBadRequest()
                     .expectBody(ErrorResponseDto.class)
                     .value(actualErrorResponse -> {
-                        assertThat(actualErrorResponse.userCode()).isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
                         assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
                         assertThat(actualErrorResponse.userMessage()).isNotEmpty();
-                        assertThat(actualErrorResponse.customMessage()).isNotEmpty().containsIgnoringCase("name");
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase("name");
                         assertThat(actualErrorResponse.timestamp()).isNotNull();
                     });
         }
@@ -125,23 +132,28 @@ class DietPlanControllerIT extends IntegrationTestController {
                     .exchange()
                     .expectStatus()
                     .isBadRequest()
-                .expectBody(ErrorResponseDto.class)
-                .value(actualErrorResponse -> {
-                    assertThat(actualErrorResponse.userCode()).isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
-                    assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-                    assertThat(actualErrorResponse.userMessage()).isNotEmpty();
-                    assertThat(actualErrorResponse.customMessage()).isNotEmpty().containsIgnoringCase("mealTypes");
-                    assertThat(actualErrorResponse.timestamp()).isNotNull();
-                });
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        assertThat(actualErrorResponse.userCode())
+                                .isEqualTo(ExceptionCode.INVALID_VALUES.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                        assertThat(actualErrorResponse.userMessage()).isNotEmpty();
+                        assertThat(actualErrorResponse.customMessage())
+                                .isNotEmpty()
+                                .containsIgnoringCase("mealTypes");
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
         }
 
         @Test
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
-            final var serverErrorResponse = jsonUtil.serialize(
-                    DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto().build());
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+            final var serverErrorResponse =
+                    jsonUtil.serialize(DtoBuilders.buildSanjyServerErrorResponseDietPlanNotFoundDto()
+                            .build());
 
             dietPlanRestClientMock.newDietPlan().generic(HttpStatus.BAD_REQUEST, uuid, serverErrorResponse);
 
@@ -154,22 +166,26 @@ class DietPlanControllerIT extends IntegrationTestController {
                     .exchange()
                     .expectStatus()
                     .is5xxServerError()
-                .expectBody(ErrorResponseDto.class)
-                .value(actualErrorResponse -> {
-                    final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
 
-                    assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
-                    assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                    assertThat(actualErrorResponse.userMessage()).isNotEmpty().isEqualTo(exceptionCode.getUserMessage());
-                    assertThat(actualErrorResponse.timestamp()).isNotNull();
-                });
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
         }
 
         @Test
         @DisplayName("Should return 500 when sanjy-server returns 5xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_server_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody = DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
             final var serverErrorResponse = "{\"error\": \"Internal Server Error\"}";
 
             dietPlanRestClientMock.newDietPlan().generic(HttpStatus.INTERNAL_SERVER_ERROR, uuid, serverErrorResponse);
@@ -183,15 +199,18 @@ class DietPlanControllerIT extends IntegrationTestController {
                     .exchange()
                     .expectStatus()
                     .is5xxServerError()
-                .expectBody(ErrorResponseDto.class)
-                .value(actualErrorResponse -> {
-                    final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.UNHANDLED_CLIENT_HTTP;
 
-                    assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
-                    assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                    assertThat(actualErrorResponse.userMessage()).isNotEmpty().isEqualTo(exceptionCode.getUserMessage());
-                    assertThat(actualErrorResponse.timestamp()).isNotNull();
-                });
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
         }
     }
 }

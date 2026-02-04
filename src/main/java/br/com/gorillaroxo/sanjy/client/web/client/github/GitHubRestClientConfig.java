@@ -15,12 +15,14 @@ public class GitHubRestClientConfig {
 
     @Qualifier("globalRestClient")
     private final RestClient restClient;
+
     private final SanjyClientWebConfigProp configProp;
 
     @Bean("gitHubRestClient")
     public RestClient restClient() {
-        return restClient.mutate()
-            .baseUrl(configProp.externalHttpClients().github().url())
-            .build();
+        return restClient
+                .mutate()
+                .baseUrl(configProp.externalHttpClients().github().url())
+                .build();
     }
 }

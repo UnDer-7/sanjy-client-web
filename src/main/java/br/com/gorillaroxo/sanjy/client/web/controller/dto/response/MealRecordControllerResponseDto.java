@@ -25,22 +25,16 @@ public record MealRecordControllerResponseDto(
                         + RequestConstants.Examples.DATE_TIME)
         Instant consumedAt,
 
-        @Schema(
-                description = """
+        @Schema(description = """
                     Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
-                    """,
-                requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription("""
+                    """, requiredMode = Schema.RequiredMode.REQUIRED) @JsonPropertyDescription("""
             Meal type information (breakfast, lunch, snack, dinner, etc...). Returns only the ID of the related meal type entity
             """)
         MealTypeSimplifiedControllerResponseDto mealType,
 
-        @Schema(
-                description = """
+        @Schema(description = """
                     Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan). TRUE = free meal | FALSE = standard meal
-                    """,
-                example = "false",
-                requiredMode = Schema.RequiredMode.REQUIRED)
+                    """, example = "false", requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonPropertyDescription("""
             Indicates if this is a free meal (off-plan) or a standard meal (following the diet plan).
             TRUE = free meal | FALSE = standard meal
@@ -83,8 +77,7 @@ public record MealRecordControllerResponseDto(
                 description = "Unit of measurement for the quantity (serving, g, ml, units, etc.)",
                 example = "serving",
                 requiredMode = Schema.RequiredMode.REQUIRED)
-        @JsonPropertyDescription(
-                "Unit of measurement for the quantity (serving, g, ml, units, etc.). Example: serving")
+        @JsonPropertyDescription("Unit of measurement for the quantity (serving, g, ml, units, etc.). Example: serving")
         String unit,
 
         @Schema(

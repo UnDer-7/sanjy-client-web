@@ -20,11 +20,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 /**
  * Base class for integration tests with MockWebServer.
  *
- * <p>This class sets up MockWebServer to mock external HTTP endpoints (sanjy-server, GitHub)
- * without using Mockito, making it compatible with both JVM and GraalVM Native Image tests.
+ * <p>This class sets up MockWebServer to mock external HTTP endpoints (sanjy-server, GitHub) without using Mockito,
+ * making it compatible with both JVM and GraalVM Native Image tests.
  *
- * <p>The GitHub API mock is pre-configured in {@link MockWebServerManager} to handle
- * the version check that occurs during application startup (ApplicationReadyEvent).
+ * <p>The GitHub API mock is pre-configured in {@link MockWebServerManager} to handle the version check that occurs
+ * during application startup (ApplicationReadyEvent).
  */
 @Slf4j
 @ActiveProfiles("test")
@@ -48,9 +48,8 @@ public abstract class IntegrationTestController {
     }
 
     /**
-     * Initializes MockWebServer and mock clients.
-     * This method is non-static because we use {@code @TestInstance(Lifecycle.PER_CLASS)},
-     * which allows access to Spring-injected beans like {@link JsonUtil}.
+     * Initializes MockWebServer and mock clients. This method is non-static because we use
+     * {@code @TestInstance(Lifecycle.PER_CLASS)}, which allows access to Spring-injected beans like {@link JsonUtil}.
      */
     @BeforeAll
     void initMockWebServer() {

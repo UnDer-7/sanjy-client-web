@@ -7,9 +7,8 @@ import java.util.regex.Pattern;
 import org.springframework.aot.hint.annotation.Reflective;
 
 /**
- * Validator that checks if a URL's hostname contains underscores.
- * Underscores in hostnames are not allowed per RFC 952/1123 and will cause
- * the JDK HttpClient to throw {@link IllegalArgumentException}.
+ * Validator that checks if a URL's hostname contains underscores. Underscores in hostnames are not allowed per RFC
+ * 952/1123 and will cause the JDK HttpClient to throw {@link IllegalArgumentException}.
  */
 @Reflective
 public class NoUnderscoreInHostnameValidator implements ConstraintValidator<NoUnderscoreInHostname, String> {
