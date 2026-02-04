@@ -1,6 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.test.client;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
@@ -53,8 +53,10 @@ public class DietPlanRestClientMock {
          *
          * @param xCorrelationId The expected X-Correlation-ID header value
          */
-        public void success(final String xCorrelationId) {
-            generic(HttpStatus.CREATED, xCorrelationId, jsonUtil.serialize(DtoBuilders.buildDietPlanResponseDto().build()));
+        public DietPlanResponseDto success(final String xCorrelationId) {
+            final DietPlanResponseDto responseDto = DtoBuilders.buildDietPlanResponseDto().build();
+            generic(HttpStatus.CREATED, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         /**
