@@ -3,6 +3,7 @@ package br.com.gorillaroxo.sanjy.client.web.controller;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.SearchMealRecordParamControllerRequest;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.service.NewMealRecordService;
 import br.com.gorillaroxo.sanjy.client.web.service.SearchMealRecordService;
@@ -32,7 +33,7 @@ public class MealRecordController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MealRecordControllerResponseDto create(
+    public MealRecordCreatedControllerResponseDto create(
             @RequestBody @Valid @NotNull MealRecordControllerRequestDto mealRecordRequest) {
         return newMealRecordService.execute(mealRecordRequest);
     }

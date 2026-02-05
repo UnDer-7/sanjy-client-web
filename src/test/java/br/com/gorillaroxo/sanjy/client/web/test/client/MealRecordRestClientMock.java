@@ -1,10 +1,15 @@
 package br.com.gorillaroxo.sanjy.client.web.test.client;
 
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordCreatedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import java.util.List;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
@@ -47,6 +52,12 @@ public class MealRecordRestClientMock {
 
         NewMealRecord(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
+        }
+
+        public MealRecordCreatedResponseDto success(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildMealRecordCreatedResponseDto().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
@@ -100,6 +111,18 @@ public class MealRecordRestClientMock {
             this.dispatcher = dispatcher;
         }
 
+        public List<MealRecordResponseDto> success(final String xCorrelationId) {
+            final var responseDto = List.of(DtoBuilders.buildMealRecordResponseDtoPlanned().build());
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public List<MealRecordResponseDto> successEmpty(final String xCorrelationId) {
+            final List<MealRecordResponseDto> responseDto = List.of();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
             final var responseDto =
                 DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
@@ -151,6 +174,18 @@ public class MealRecordRestClientMock {
             this.dispatcher = dispatcher;
         }
 
+        public PagedResponseDto<MealRecordResponseDto> success(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildPagedMealRecordResponseDto().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public PagedResponseDto<MealRecordResponseDto> successEmpty(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildPagedMealRecordResponseDtoEmpty().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {
             final var responseDto =
                 DtoBuilders.buildSanjyServerErrorResponseDtoGeneric500().build();
@@ -200,6 +235,18 @@ public class MealRecordRestClientMock {
 
         MealRecordStatistics(final MockWebServerDispatcher dispatcher) {
             this.dispatcher = dispatcher;
+        }
+
+        public MealRecordStatisticsResponseDto success(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildMealRecordStatisticsResponseDto().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
+        }
+
+        public MealRecordStatisticsResponseDto successEmpty(final String xCorrelationId) {
+            final var responseDto = DtoBuilders.buildMealRecordStatisticsResponseDtoEmpty().build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {

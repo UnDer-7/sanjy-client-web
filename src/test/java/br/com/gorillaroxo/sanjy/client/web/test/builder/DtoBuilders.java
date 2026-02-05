@@ -2,15 +2,25 @@ package br.com.gorillaroxo.sanjy.client.web.test.builder;
 
 import br.com.gorillaroxo.sanjy.client.web.client.github.dto.response.GitHubReleaseResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.IdOnlyResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordCreatedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeSimplifiedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.StandardOptionResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.StandardOptionSimplifiedResponseDto;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
+
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.IdOnlyControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
 import org.springframework.http.HttpStatus;
 
 public final class DtoBuilders {
@@ -22,6 +32,7 @@ public final class DtoBuilders {
     public static final long DIET_PLAN_ID = 1L;
     public static final long MEAL_TYPE_ID = 1L;
     public static final long STANDARD_OPTION_ID = 1L;
+    public static final long MEAL_RECORD_ID = 1L;
 
     public static DietPlanResponseDto.DietPlanResponseDtoBuilder buildDietPlanResponseDto() {
         return DietPlanResponseDto.builder()
@@ -103,5 +114,131 @@ public final class DtoBuilders {
                 .message("Invalid values")
                 .customMessage(null)
                 .httpStatusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    public static MealTypeSimplifiedResponseDto.MealTypeSimplifiedResponseDtoBuilder
+            buildMealTypeSimplifiedResponseDto() {
+        return MealTypeSimplifiedResponseDto.builder()
+                .id(MEAL_TYPE_ID)
+                .name("Pre-workout snack")
+                .scheduledTime(LocalTime.of(6, 20, 0))
+                .observation("25g protein | 40g carbs | 3g fat | 285 kcal")
+                .metadata(buildMetadataResponseDto().build());
+    }
+
+    public static MealTypeSimplifiedResponseDto.MealTypeSimplifiedResponseDtoBuilder
+            buildMealTypeSimplifiedResponseDtoMinimal() {
+        return MealTypeSimplifiedResponseDto.builder()
+                .id(MEAL_TYPE_ID)
+                .name("Breakfast")
+                .scheduledTime(LocalTime.now())
+                .observation("30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
+                .metadata(buildMetadataResponseDto().build());
+    }
+
+    public static StandardOptionSimplifiedResponseDto.StandardOptionSimplifiedResponseDtoBuilder
+            buildStandardOptionSimplifiedResponseDto() {
+        return StandardOptionSimplifiedResponseDto.builder()
+                .id(STANDARD_OPTION_ID)
+                .optionNumber(1L)
+                .description("Banana -- 1 unit (90g) | Whey protein isolate -- 30g | Oats -- 20g")
+                .metadata(buildMetadataResponseDto().build());
+    }
+
+    public static IdOnlyResponseDto.IdOnlyResponseDtoBuilder buildIdOnlyResponseDto() {
+        return IdOnlyResponseDto.builder()
+            .id(2L);
+    }
+
+    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDtoPlannedMeal() {
+        return buildMealRecordCreatedResponseDto()
+            .isFreeMeal(false)
+            .freeMealDescription(null)
+            .standardOption(buildIdOnlyResponseDto().id(DtoBuilders.STANDARD_OPTION_ID).build());
+    }
+
+    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDtoFreeMeal() {
+        return buildMealRecordCreatedResponseDto()
+            .isFreeMeal(true)
+            .freeMealDescription("BigMac")
+            .standardOption(null);
+    }
+
+    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDto() {
+        return MealRecordCreatedResponseDto.builder()
+            .id(MEAL_RECORD_ID)
+            .consumedAt(Instant.now())
+            .mealType(buildIdOnlyResponseDto().id(DtoBuilders.MEAL_TYPE_ID).build())
+            .isFreeMeal(true)
+            .standardOption(null)
+            .freeMealDescription("pacote de biscoito")
+            .quantity(1.0)
+            .unit("serving")
+            .notes(null)
+            .metadata(buildMetadataResponseDto().build());
+    }
+
+    public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDtoPlanned() {
+        return buildMealRecordResponseDto()
+            .isFreeMeal(false)
+            .standardOption(buildStandardOptionSimplifiedResponseDto().build())
+            .freeMealDescription(null);
+    }
+
+    public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDtoFreeMeal() {
+        return buildMealRecordResponseDto()
+            .isFreeMeal(true)
+            .standardOption(null)
+            .freeMealDescription("BigMac");
+    }
+
+    public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDto() {
+        return MealRecordResponseDto.builder()
+                .id(MEAL_RECORD_ID)
+                .consumedAt(Instant.now())
+                .mealType(buildMealTypeSimplifiedResponseDtoMinimal().build())
+                .isFreeMeal(true)
+                .standardOption(null)
+                .freeMealDescription("pacote de biscoito")
+                .quantity(1.0)
+                .unit("serving")
+                .notes(null)
+                .metadata(buildMetadataResponseDto().build());
+    }
+
+    public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto>
+            buildPagedMealRecordResponseDto() {
+        return PagedResponseDto.<MealRecordResponseDto>builder()
+                .totalPages(116)
+                .currentPage(0)
+                .pageSize(1)
+                .totalItems(116L)
+                .content(List.of(buildMealRecordResponseDto().build()));
+    }
+
+    public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto>
+            buildPagedMealRecordResponseDtoEmpty() {
+        return PagedResponseDto.<MealRecordResponseDto>builder()
+                .totalPages(0)
+                .currentPage(0)
+                .pageSize(5)
+                .totalItems(0L)
+                .content(List.of());
+    }
+
+    public static MealRecordStatisticsResponseDto.MealRecordStatisticsResponseDtoBuilder
+            buildMealRecordStatisticsResponseDto() {
+        return MealRecordStatisticsResponseDto.builder()
+                .freeMealQuantity(16L)
+                .plannedMealQuantity(116L)
+                .mealQuantity(132L);
+    }
+
+    public static MealRecordStatisticsResponseDto.MealRecordStatisticsResponseDtoBuilder
+            buildMealRecordStatisticsResponseDtoEmpty() {
+        return MealRecordStatisticsResponseDto.builder()
+                .freeMealQuantity(0L)
+                .plannedMealQuantity(0L)
+                .mealQuantity(0L);
     }
 }

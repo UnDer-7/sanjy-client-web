@@ -6,6 +6,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRe
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.PageRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordCreatedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
@@ -23,6 +24,7 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrappe
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.DietPlanControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeSimplifiedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataControllerResponseDto;
@@ -66,7 +68,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
     PageRequestDto.class,
     SearchMealRecordParamRequestDto.class,
     MealRecordStatisticsResponseDto.class,
-    GitHubReleaseResponseDto.class
+    GitHubReleaseResponseDto.class,
+    MealRecordCreatedControllerResponseDto.class,
+    MealRecordCreatedResponseDto.class
 })
 public class SanjyClientWebApplication {
 

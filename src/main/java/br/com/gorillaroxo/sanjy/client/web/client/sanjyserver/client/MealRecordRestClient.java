@@ -2,6 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.client;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.MealRecordRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordCreatedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
@@ -34,13 +35,13 @@ public class MealRecordRestClient {
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      */
-    public MealRecordResponseDto newMealRecord(final MealRecordRequestDto request) {
+    public MealRecordCreatedResponseDto newMealRecord(final MealRecordRequestDto request) {
         return restClient
                 .post()
                 .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).build())
                 .body(request)
                 .retrieve()
-                .body(MealRecordResponseDto.class);
+                .body(MealRecordCreatedResponseDto.class);
     }
 
     /**

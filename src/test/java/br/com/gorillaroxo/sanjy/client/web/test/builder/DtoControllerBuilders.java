@@ -1,8 +1,14 @@
 package br.com.gorillaroxo.sanjy.client.web.test.builder;
 
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealTypeControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.StandardOptionControllerRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.IdOnlyControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataControllerResponseDto;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -11,6 +17,39 @@ public final class DtoControllerBuilders {
 
     private DtoControllerBuilders() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static MealRecordCreatedControllerResponseDto.MealRecordCreatedControllerResponseDtoBuilder buildMealRecordCreatedControllerResponseDtoFreeMeal() {
+        return buildMealRecordCreatedControllerResponseDto()
+            .isFreeMeal(true)
+            .standardOption(null)
+            .freeMealDescription("BigMac");
+    }
+
+    public static MealRecordCreatedControllerResponseDto.MealRecordCreatedControllerResponseDtoBuilder buildMealRecordCreatedControllerResponseDtoPlannedMeal() {
+        return buildMealRecordCreatedControllerResponseDto()
+            .isFreeMeal(false)
+            .standardOption(buildIdOnlyControllerResponseDto().id(DtoBuilders.STANDARD_OPTION_ID).build())
+            .freeMealDescription(null);
+    }
+
+    public static MealRecordCreatedControllerResponseDto.MealRecordCreatedControllerResponseDtoBuilder buildMealRecordCreatedControllerResponseDto() {
+        return MealRecordCreatedControllerResponseDto.builder()
+            .id(DtoBuilders.MEAL_RECORD_ID)
+            .consumedAt(Instant.now())
+            .mealType(buildIdOnlyControllerResponseDto().id(DtoBuilders.MEAL_TYPE_ID).build())
+            .isFreeMeal(true)
+            .standardOption(null)
+            .freeMealDescription("pacote de biscoito")
+            .quantity(1.2)
+            .unit("serving")
+            .notes(null)
+            .metadata(buildMetadataControllerResponseDto().build());
+    }
+
+    public static IdOnlyControllerResponseDto.IdOnlyControllerResponseDtoBuilder buildIdOnlyControllerResponseDto() {
+        return IdOnlyControllerResponseDto.builder()
+            .id(2L);
     }
 
     public static DietPlanControllerRequestDto.DietPlanControllerRequestDtoBuilder buildDietPlanControllerRequestDto() {
@@ -43,5 +82,9 @@ public final class DtoControllerBuilders {
                 .optionNumber(1)
                 .description(
                         "2 slices of whole grain bread + 2 scrambled eggs + 1 banana + 200ml of coffee without sugar");
+    }
+
+    public static MetadataControllerResponseDto.MetadataControllerResponseDtoBuilder buildMetadataControllerResponseDto() {
+        return MetadataControllerResponseDto.builder().createdAt(Instant.now()).updatedAt(Instant.now());
     }
 }
