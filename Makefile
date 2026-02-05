@@ -31,13 +31,25 @@ all: help
 
 
 # ==================================================================================== #
-## ===== COMPILE =====
+## ===== DEV =====
 # ==================================================================================== #
-## compile: Just compile the application
-.PHONY: compile
-compile:
+## dev/compile: Just compile the application
+.PHONY: dev/compile
+dev/compile:
 	@echo ">>> Compiling…"
 	./mvnw -B -ntp clean compile
+
+## dev/run: Run the application locally (performs clean compile first, loads .env variables)
+.PHONY: dev/run
+dev/run:
+	@echo '>>> Loading environment variables from .env...' && \
+	set -a && \
+	. $(CURDIR)/.env && \
+	set +a && \
+	echo '>>> Compiling...' && \
+	./mvnw -B -ntp clean compile && \
+	echo '>>> Starting Spring Boot application...' && \
+	./mvnw -B -ntp spring-boot:run
 
 
 
