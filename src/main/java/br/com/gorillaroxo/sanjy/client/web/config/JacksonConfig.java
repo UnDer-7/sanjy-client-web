@@ -1,9 +1,12 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
@@ -41,8 +44,32 @@ public class JacksonConfig {
         builder.serializers(new LocalTimeSerializer(timeFormatter));
         builder.deserializers(new LocalTimeDeserializer(timeFormatter));
 
-        // Register custom ZonedDateTime deserializer that requires ZoneId in brackets
+        // Register custom ZonedDateTime serializer/deserializer that requires ZoneId in brackets
+        builder.serializerByType(ZonedDateTime.class, new ZonedDateTimeWithZoneIdSerializer());
         builder.deserializerByType(ZonedDateTime.class, new StrictZonedDateTimeDeserializer());
+    }
+
+    /**
+     * Custom serializer for ZonedDateTime that includes the ZoneId in brackets.
+     *
+     * <p>This serializer outputs datetime strings with the full ZoneId (e.g., "2026-01-05T20:54:30-02:00[America/Sao_Paulo]")
+     * to match the expected format for deserialization.
+     */
+    @Slf4j
+    public static final class ZonedDateTimeWithZoneIdSerializer extends JsonSerializer<ZonedDateTime> {
+
+        @Override
+        public void serialize(final ZonedDateTime value, final JsonGenerator gen, final SerializerProvider serializers)
+                throws IOException {
+
+            if (value == null) {
+                gen.writeNull();
+                return;
+            }
+
+            // Format using ISO_ZONED_DATE_TIME which includes the zone ID in brackets
+            gen.writeString(value.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.test.builder;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.DietPlanControllerRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealRecordControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.MealTypeControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.StandardOptionControllerRequestDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.IdOnlyControllerResponseDto;
@@ -11,6 +12,8 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataContr
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public final class DtoControllerBuilders {
@@ -86,5 +89,32 @@ public final class DtoControllerBuilders {
 
     public static MetadataControllerResponseDto.MetadataControllerResponseDtoBuilder buildMetadataControllerResponseDto() {
         return MetadataControllerResponseDto.builder().createdAt(Instant.now()).updatedAt(Instant.now());
+    }
+
+    public static MealRecordControllerRequestDto.MealRecordControllerRequestDtoBuilder buildMealRecordControllerRequestDto() {
+        return MealRecordControllerRequestDto.builder()
+            .mealTypeId(DtoBuilders.MEAL_TYPE_ID)
+            .consumedAt(ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")))
+            .isFreeMeal(true)
+            .standardOptionId(null)
+            .freeMealDescription("pacote de biscoito")
+            .quantity(1.0)
+            .unit("serving")
+            .notes(null);
+
+    }
+
+    public static MealRecordControllerRequestDto.MealRecordControllerRequestDtoBuilder buildMealRecordControllerRequestDtoFreeMeal() {
+        return buildMealRecordControllerRequestDto()
+            .isFreeMeal(true)
+            .standardOptionId(null)
+            .freeMealDescription("pacote de biscoito");
+    }
+
+    public static MealRecordControllerRequestDto.MealRecordControllerRequestDtoBuilder buildMealRecordControllerRequestDtoPlannedMeal() {
+        return buildMealRecordControllerRequestDto()
+            .isFreeMeal(false)
+            .standardOptionId(DtoBuilders.STANDARD_OPTION_ID)
+            .freeMealDescription(null);
     }
 }

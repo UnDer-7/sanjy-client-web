@@ -4,6 +4,7 @@ import br.com.gorillaroxo.sanjy.client.web.SanjyClientWebApplication;
 import br.com.gorillaroxo.sanjy.client.web.test.ai.FakeChatModel;
 import br.com.gorillaroxo.sanjy.client.web.test.ai.TestChatModelConfig;
 import br.com.gorillaroxo.sanjy.client.web.test.client.DietPlanRestClientMock;
+import br.com.gorillaroxo.sanjy.client.web.test.client.MealRecordRestClientMock;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerManager;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
@@ -41,6 +42,8 @@ public abstract class IntegrationTestController {
 
     protected DietPlanRestClientMock dietPlanRestClientMock;
 
+    protected MealRecordRestClientMock mealRecordRestClientMock;
+
     @Autowired
     protected WebTestClient webTestClient;
 
@@ -66,6 +69,7 @@ public abstract class IntegrationTestController {
         dispatcher = new MockWebServerDispatcher();
         MockWebServerManager.setDispatcher(dispatcher);
         dietPlanRestClientMock = new DietPlanRestClientMock(mockWebServer, dispatcher, jsonUtil);
+        mealRecordRestClientMock = new MealRecordRestClientMock(mockWebServer, dispatcher, jsonUtil);
     }
 
     @BeforeEach

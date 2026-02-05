@@ -103,7 +103,7 @@ public class MealRecordRestClient {
         return restClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/statistics")
+                        .path(CLIENT_URL + "/statistics")
                         .queryParamIfPresent(
                                 RequestConstants.Query.CONSUMED_AT_AFTER, Optional.ofNullable(consumedAtAfter))
                         .queryParamIfPresent(

@@ -131,7 +131,7 @@ public final class DtoBuilders {
         return MealTypeSimplifiedResponseDto.builder()
                 .id(MEAL_TYPE_ID)
                 .name("Breakfast")
-                .scheduledTime(LocalTime.now())
+                .scheduledTime(LocalTime.of(9, 30, 0))
                 .observation("30 g proteína | 20 g carbo | 5 g gordura | 250 kcal")
                 .metadata(buildMetadataResponseDto().build());
     }
@@ -209,11 +209,13 @@ public final class DtoBuilders {
     public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto>
             buildPagedMealRecordResponseDto() {
         return PagedResponseDto.<MealRecordResponseDto>builder()
-                .totalPages(116)
+                .totalPages(27)
                 .currentPage(0)
-                .pageSize(1)
-                .totalItems(116L)
-                .content(List.of(buildMealRecordResponseDto().build()));
+                .pageSize(2)
+                .totalItems(132L)
+                .content(List.of(
+                        buildMealRecordResponseDtoFreeMeal().build(),
+                        buildMealRecordResponseDtoPlanned().build()));
     }
 
     public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto>
