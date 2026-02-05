@@ -23,6 +23,7 @@ public interface MealRecordMapper {
     MealRecordRequestDto toDto(MealRecordControllerRequestDto request);
 
     MealRecordControllerResponseDto toResponse(MealRecordResponseDto response);
+
     MealRecordCreatedControllerResponseDto toResponse(MealRecordCreatedResponseDto response);
 
     PagedControllerResponseDto<MealRecordControllerResponseDto> toResponse(

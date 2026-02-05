@@ -5,6 +5,5 @@ import lombok.Builder;
 
 @Builder
 public record IdOnlyResponseDto(
-    @JsonPropertyDescription("Unique identifier of the entity. Example: 123")
-    Long id) {
-}
+        @JsonPropertyDescription("Unique identifier of the entity. Example: 123")
+        Long id) {}

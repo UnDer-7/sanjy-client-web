@@ -3,9 +3,8 @@ package br.com.gorillaroxo.sanjy.client.web.controller.dto.response;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-
 import java.time.Instant;
+import lombok.Builder;
 
 @Builder
 public record MetadataControllerResponseDto(

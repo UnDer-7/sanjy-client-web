@@ -297,16 +297,12 @@ class DietPlanControllerIT extends IntegrationTestController {
                         assertThat(actualDietPlan.id()).isEqualTo(DtoBuilders.DIET_PLAN_ID);
                         assertThat(actualDietPlan.name()).isNotEmpty();
                         assertThat(actualDietPlan.isActive()).isTrue();
-                        assertThat(actualDietPlan.mealTypes())
-                                .isNotNull()
-                                .isNotEmpty();
+                        assertThat(actualDietPlan.mealTypes()).isNotNull().isNotEmpty();
 
                         final MealTypeControllerResponseDto actualMealType =
                                 actualDietPlan.mealTypes().stream().findFirst().orElseThrow();
                         assertThat(actualMealType.id()).isEqualTo(DtoBuilders.MEAL_TYPE_ID);
-                        assertThat(actualMealType.standardOptions())
-                                .isNotNull()
-                                .isNotEmpty();
+                        assertThat(actualMealType.standardOptions()).isNotNull().isNotEmpty();
 
                         assertThat(actualDietPlan.metadata()).isNotNull();
                         assertThat(actualDietPlan.metadata().createdAt()).isNotNull();
@@ -430,11 +426,12 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should extract diet plan from text file successfully")
         void should_extract_diet_plan_from_text_file_successfully() throws IOException {
             final var uuid = UUID.randomUUID().toString();
-            final var fileContent = new ClassPathResource("files/diet-plan-sample.txt")
-                    .getContentAsString(StandardCharsets.UTF_8);
+            final var fileContent =
+                    new ClassPathResource("files/diet-plan-sample.txt").getContentAsString(StandardCharsets.UTF_8);
 
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", fileContent.getBytes(StandardCharsets.UTF_8))
+            bodyBuilder
+                    .part("file", fileContent.getBytes(StandardCharsets.UTF_8))
                     .filename("diet-plan.txt")
                     .contentType(MediaType.TEXT_PLAIN);
 
@@ -465,33 +462,32 @@ class DietPlanControllerIT extends IntegrationTestController {
         void should_extract_diet_plan_from_pdf_file_successfully() throws IOException {
             final var uuid = UUID.randomUUID().toString();
             final var fileBytes = new ClassPathResource("files/diet-plan-sample.pdf")
-                .getInputStream().readAllBytes();
+                    .getInputStream()
+                    .readAllBytes();
 
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", fileBytes)
-                .filename("diet-plan-sample.pdf")
-                .contentType(MediaType.APPLICATION_PDF);
+            bodyBuilder.part("file", fileBytes).filename("diet-plan-sample.pdf").contentType(MediaType.APPLICATION_PDF);
 
             webTestClient
-                .post()
-                .uri(EXTRACT_URL)
-                .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(DietPlanControllerRequestDto.class)
-                .value(actualDietPlan -> {
-                    assertThat(actualDietPlan.name()).isNotEmpty();
-                    assertThat(actualDietPlan.mealTypes())
-                        .isNotNull()
-                        .isNotEmpty()
-                        .hasSizeGreaterThanOrEqualTo(1);
-                    assertThat(actualDietPlan.mealTypes().getFirst().standardOptions())
-                        .isNotNull()
-                        .isNotEmpty();
-                });
+                    .post()
+                    .uri(EXTRACT_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(DietPlanControllerRequestDto.class)
+                    .value(actualDietPlan -> {
+                        assertThat(actualDietPlan.name()).isNotEmpty();
+                        assertThat(actualDietPlan.mealTypes())
+                                .isNotNull()
+                                .isNotEmpty()
+                                .hasSizeGreaterThanOrEqualTo(1);
+                        assertThat(actualDietPlan.mealTypes().getFirst().standardOptions())
+                                .isNotNull()
+                                .isNotEmpty();
+                    });
         }
 
         @Test
@@ -500,9 +496,7 @@ class DietPlanControllerIT extends IntegrationTestController {
             final var uuid = UUID.randomUUID().toString();
 
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", new byte[0])
-                    .filename("empty.txt")
-                    .contentType(MediaType.TEXT_PLAIN);
+            bodyBuilder.part("file", new byte[0]).filename("empty.txt").contentType(MediaType.TEXT_PLAIN);
 
             webTestClient
                     .post()
@@ -527,7 +521,8 @@ class DietPlanControllerIT extends IntegrationTestController {
         @DisplayName("Should return 400 when X-Correlation-ID header is missing")
         void should_return_bad_request_when_correlation_id_header_is_missing() {
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", "some content".getBytes(StandardCharsets.UTF_8))
+            bodyBuilder
+                    .part("file", "some content".getBytes(StandardCharsets.UTF_8))
                     .filename("diet-plan.txt")
                     .contentType(MediaType.TEXT_PLAIN);
 
@@ -558,7 +553,8 @@ class DietPlanControllerIT extends IntegrationTestController {
             final var uuid = UUID.randomUUID().toString();
 
             final MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-            bodyBuilder.part("file", "some content".getBytes(StandardCharsets.UTF_8))
+            bodyBuilder
+                    .part("file", "some content".getBytes(StandardCharsets.UTF_8))
                     .filename("diet-plan.xml")
                     .contentType(MediaType.APPLICATION_XML);
 

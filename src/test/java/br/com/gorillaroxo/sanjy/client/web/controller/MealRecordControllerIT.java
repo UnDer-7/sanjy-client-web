@@ -36,8 +36,8 @@ class MealRecordControllerIT extends IntegrationTestController {
         @DisplayName("Should create meal record successfully and return correct response structure")
         void should_create_meal_record_successfully() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody =
-                    DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal().build();
+            final var requestBody = DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal()
+                    .build();
 
             final MealRecordCreatedResponseDto expectedMealRecord =
                     mealRecordRestClientMock.newMealRecord().success(uuid);
@@ -62,7 +62,8 @@ class MealRecordControllerIT extends IntegrationTestController {
                         if (expectedMealRecord.standardOption() != null) {
                             assertThat(actualMealRecord.standardOption()).isNotNull();
                             assertThat(actualMealRecord.standardOption().id())
-                                    .isEqualTo(expectedMealRecord.standardOption().id());
+                                    .isEqualTo(
+                                            expectedMealRecord.standardOption().id());
                         } else {
                             assertThat(actualMealRecord.standardOption()).isNull();
                         }
@@ -173,8 +174,8 @@ class MealRecordControllerIT extends IntegrationTestController {
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody =
-                    DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal().build();
+            final var requestBody = DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal()
+                    .build();
 
             mealRecordRestClientMock.newMealRecord().genericBadRequest(uuid);
 
@@ -205,8 +206,8 @@ class MealRecordControllerIT extends IntegrationTestController {
         @DisplayName("Should return 500 when sanjy-server returns 5xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_server_error() {
             final var uuid = UUID.randomUUID().toString();
-            final var requestBody =
-                    DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal().build();
+            final var requestBody = DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal()
+                    .build();
 
             mealRecordRestClientMock.newMealRecord().genericInternalServerError(uuid);
 
@@ -236,8 +237,8 @@ class MealRecordControllerIT extends IntegrationTestController {
         @Test
         @DisplayName("Should return 400 when X-Correlation-ID header is missing")
         void should_return_bad_request_when_correlation_id_header_is_missing() {
-            final var requestBody =
-                    DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal().build();
+            final var requestBody = DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal()
+                    .build();
 
             webTestClient
                     .post()
@@ -299,20 +300,17 @@ class MealRecordControllerIT extends IntegrationTestController {
                         assertThat(actualResponse.page().pageSize()).isEqualTo(expectedPagedResponse.pageSize());
                         assertThat(actualResponse.page().totalItems()).isEqualTo(expectedPagedResponse.totalItems());
                         assertThat(actualResponse.page().content()).isNotNull();
-                        assertThat(actualResponse.page().content())
-                                .hasSameSizeAs(expectedPagedResponse.content());
+                        assertThat(actualResponse.page().content()).hasSameSizeAs(expectedPagedResponse.content());
 
                         // Validate free meal record
-                        final MealRecordControllerResponseDto actualFreeMeal =
-                                actualResponse.page().content().stream()
-                                        .filter(MealRecordControllerResponseDto::isFreeMeal)
-                                        .findFirst()
-                                        .orElseThrow();
-                        final MealRecordResponseDto expectedFreeMeal =
-                                expectedPagedResponse.content().stream()
-                                        .filter(MealRecordResponseDto::isFreeMeal)
-                                        .findFirst()
-                                        .orElseThrow();
+                        final MealRecordControllerResponseDto actualFreeMeal = actualResponse.page().content().stream()
+                                .filter(MealRecordControllerResponseDto::isFreeMeal)
+                                .findFirst()
+                                .orElseThrow();
+                        final MealRecordResponseDto expectedFreeMeal = expectedPagedResponse.content().stream()
+                                .filter(MealRecordResponseDto::isFreeMeal)
+                                .findFirst()
+                                .orElseThrow();
 
                         assertThat(actualFreeMeal.id()).isEqualTo(expectedFreeMeal.id());
                         assertThat(actualFreeMeal.consumedAt()).isEqualTo(expectedFreeMeal.consumedAt());
@@ -344,11 +342,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                                         .filter(m -> !m.isFreeMeal())
                                         .findFirst()
                                         .orElseThrow();
-                        final MealRecordResponseDto expectedPlannedMeal =
-                                expectedPagedResponse.content().stream()
-                                        .filter(m -> !m.isFreeMeal())
-                                        .findFirst()
-                                        .orElseThrow();
+                        final MealRecordResponseDto expectedPlannedMeal = expectedPagedResponse.content().stream()
+                                .filter(m -> !m.isFreeMeal())
+                                .findFirst()
+                                .orElseThrow();
 
                         assertThat(actualPlannedMeal.id()).isEqualTo(expectedPlannedMeal.id());
                         assertThat(actualPlannedMeal.consumedAt()).isEqualTo(expectedPlannedMeal.consumedAt());
@@ -396,10 +393,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -438,9 +435,9 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -469,9 +466,9 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -500,9 +497,9 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -535,10 +532,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -572,10 +569,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -609,10 +606,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -646,10 +643,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
                     .exchange()
@@ -679,10 +676,10 @@ class MealRecordControllerIT extends IntegrationTestController {
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .path(RESOURCE_URL)
-                        .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
-                        .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
-                        .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
                             .build())
                     .exchange()
                     .expectStatus()

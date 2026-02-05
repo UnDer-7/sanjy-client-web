@@ -18,9 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
-
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.IdOnlyControllerResponseDto;
-import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
 import org.springframework.http.HttpStatus;
 
 public final class DtoBuilders {
@@ -146,50 +143,53 @@ public final class DtoBuilders {
     }
 
     public static IdOnlyResponseDto.IdOnlyResponseDtoBuilder buildIdOnlyResponseDto() {
-        return IdOnlyResponseDto.builder()
-            .id(2L);
+        return IdOnlyResponseDto.builder().id(2L);
     }
 
-    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDtoPlannedMeal() {
+    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder
+            buildMealRecordCreatedResponseDtoPlannedMeal() {
         return buildMealRecordCreatedResponseDto()
-            .isFreeMeal(false)
-            .freeMealDescription(null)
-            .standardOption(buildIdOnlyResponseDto().id(DtoBuilders.STANDARD_OPTION_ID).build());
+                .isFreeMeal(false)
+                .freeMealDescription(null)
+                .standardOption(buildIdOnlyResponseDto()
+                        .id(DtoBuilders.STANDARD_OPTION_ID)
+                        .build());
     }
 
-    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDtoFreeMeal() {
+    public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder
+            buildMealRecordCreatedResponseDtoFreeMeal() {
         return buildMealRecordCreatedResponseDto()
-            .isFreeMeal(true)
-            .freeMealDescription("BigMac")
-            .standardOption(null);
+                .isFreeMeal(true)
+                .freeMealDescription("BigMac")
+                .standardOption(null);
     }
 
     public static MealRecordCreatedResponseDto.MealRecordCreatedResponseDtoBuilder buildMealRecordCreatedResponseDto() {
         return MealRecordCreatedResponseDto.builder()
-            .id(MEAL_RECORD_ID)
-            .consumedAt(Instant.now())
-            .mealType(buildIdOnlyResponseDto().id(DtoBuilders.MEAL_TYPE_ID).build())
-            .isFreeMeal(true)
-            .standardOption(null)
-            .freeMealDescription("pacote de biscoito")
-            .quantity(1.0)
-            .unit("serving")
-            .notes(null)
-            .metadata(buildMetadataResponseDto().build());
+                .id(MEAL_RECORD_ID)
+                .consumedAt(Instant.now())
+                .mealType(buildIdOnlyResponseDto().id(DtoBuilders.MEAL_TYPE_ID).build())
+                .isFreeMeal(true)
+                .standardOption(null)
+                .freeMealDescription("pacote de biscoito")
+                .quantity(1.0)
+                .unit("serving")
+                .notes(null)
+                .metadata(buildMetadataResponseDto().build());
     }
 
     public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDtoPlanned() {
         return buildMealRecordResponseDto()
-            .isFreeMeal(false)
-            .standardOption(buildStandardOptionSimplifiedResponseDto().build())
-            .freeMealDescription(null);
+                .isFreeMeal(false)
+                .standardOption(buildStandardOptionSimplifiedResponseDto().build())
+                .freeMealDescription(null);
     }
 
     public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDtoFreeMeal() {
         return buildMealRecordResponseDto()
-            .isFreeMeal(true)
-            .standardOption(null)
-            .freeMealDescription("BigMac");
+                .isFreeMeal(true)
+                .standardOption(null)
+                .freeMealDescription("BigMac");
     }
 
     public static MealRecordResponseDto.MealRecordResponseDtoBuilder buildMealRecordResponseDto() {
@@ -206,8 +206,7 @@ public final class DtoBuilders {
                 .metadata(buildMetadataResponseDto().build());
     }
 
-    public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto>
-            buildPagedMealRecordResponseDto() {
+    public static PagedResponseDto.PagedResponseDtoBuilder<MealRecordResponseDto> buildPagedMealRecordResponseDto() {
         return PagedResponseDto.<MealRecordResponseDto>builder()
                 .totalPages(27)
                 .currentPage(0)

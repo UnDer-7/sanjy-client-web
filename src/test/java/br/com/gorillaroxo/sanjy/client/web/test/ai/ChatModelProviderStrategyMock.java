@@ -12,11 +12,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 /**
- * Test implementation of ChatModelProviderStrategy that provides a FakeChatModel.
- * This strategy has highest priority (@Order(0)) and is always accepted in test profile.
+ * Test implementation of ChatModelProviderStrategy that provides a FakeChatModel. This strategy has highest priority
+ * (@Order(0)) and is always accepted in test profile.
  *
- * <p>Since this is a @Service in the test classpath with @Profile("test"),
- * it will be discovered by Spring's component scan and used by ChatModelWrapperConfig.
+ * <p>Since this is a @Service in the test classpath with @Profile("test"), it will be discovered by Spring's component
+ * scan and used by ChatModelWrapperConfig.
  */
 @Slf4j
 @Service
@@ -31,8 +31,9 @@ public class ChatModelProviderStrategyMock implements ChatModelProviderStrategy 
     public boolean accept(final SanjyClientWebConfigProp.AiProp aiProp) {
         // Always accept in test profile
         log.info(
-            LogField.Placeholders.ONE.getPlaceholder(),
-            StructuredArguments.kv(LogField.MSG.label(), "ChatModelProviderStrategyTest accepting - using FakeChatModel"));
+                LogField.Placeholders.ONE.getPlaceholder(),
+                StructuredArguments.kv(
+                        LogField.MSG.label(), "ChatModelProviderStrategyTest accepting - using FakeChatModel"));
 
         return true;
     }
@@ -47,5 +48,4 @@ public class ChatModelProviderStrategyMock implements ChatModelProviderStrategy 
     public String providerName(final SanjyClientWebConfigProp.AiProp aiProp) {
         return "MockFakeChatModel";
     }
-
 }

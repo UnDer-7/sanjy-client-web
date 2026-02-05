@@ -52,8 +52,8 @@ public class JacksonConfig {
     /**
      * Custom serializer for ZonedDateTime that includes the ZoneId in brackets.
      *
-     * <p>This serializer outputs datetime strings with the full ZoneId (e.g., "2026-01-05T20:54:30-02:00[America/Sao_Paulo]")
-     * to match the expected format for deserialization.
+     * <p>This serializer outputs datetime strings with the full ZoneId (e.g.,
+     * "2026-01-05T20:54:30-02:00[America/Sao_Paulo]") to match the expected format for deserialization.
      */
     @Slf4j
     public static final class ZonedDateTimeWithZoneIdSerializer extends JsonSerializer<ZonedDateTime> {

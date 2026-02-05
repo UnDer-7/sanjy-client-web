@@ -9,9 +9,8 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 
 /**
- * Fake ChatModel implementation for integration tests.
- * Returns a controlled JSON response that can be deserialized into DietPlanControllerRequestDto.
- * Compatible with GraalVM Native Image (no Mockito needed).
+ * Fake ChatModel implementation for integration tests. Returns a controlled JSON response that can be deserialized into
+ * DietPlanControllerRequestDto. Compatible with GraalVM Native Image (no Mockito needed).
  */
 public class FakeChatModel implements ChatModel {
 
@@ -63,16 +62,12 @@ public class FakeChatModel implements ChatModel {
         this.responseJson = responseJson;
     }
 
-    /**
-     * Updates the response that will be returned by the next call.
-     */
+    /** Updates the response that will be returned by the next call. */
     public void setResponse(final String responseJson) {
         this.responseJson = responseJson;
     }
 
-    /**
-     * Resets the response to the default value.
-     */
+    /** Resets the response to the default value. */
     public void reset() {
         this.responseJson = DEFAULT_RESPONSE;
     }
