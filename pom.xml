@@ -37,7 +37,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <springdoc.version>2.8.15</springdoc.version>
+        <!-- Careful when upgrading springdoc-->
+        <!-- springdoc version 2.18.15 breaks GraalVm Native Image at runtime, throws given error: "Error creating bean with name 'swaggerWelcome': Instantiation of supplied bean failed"-->
+        <springdoc.version>2.8.14</springdoc.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.42</lombok.version>
 
@@ -82,7 +84,8 @@
 
             <!-- Swagger Version Alignment -->
             <!-- Force consistent swagger-annotations version to fix NoSuchMethodError with springdoc-openapi -->
-            <!-- spring-ai-client-chat brings 2.2.30, but springdoc 2.8.15 needs 2.2.41 -->
+            <!-- spring-ai-client-chat brings 2.2.30, but springdoc 2.8.14 needs 2.2.41 -->
+            <!-- Without this fix when accessing swagger in Native Image throws this exception: "Caused by: java.lang.NoSuchMethodError: io.swagger.v3.oas.annotations.media.Schema.$dynamicRef()"-->
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations-jakarta</artifactId>

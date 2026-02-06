@@ -39,7 +39,7 @@ dev/compile:
 	@echo ">>> Compiling…"
 	./mvnw -B -ntp clean compile
 
-## dev/run: Run the application locally (performs clean compile first, loads .env variables)
+## dev/run: Run the application locally (performs clean install first, loads .env variables)
 .PHONY: dev/run
 dev/run:
 	@echo '>>> Loading environment variables from .env...' && \
@@ -47,7 +47,7 @@ dev/run:
 	. $(CURDIR)/.env && \
 	set +a && \
 	echo '>>> Compiling...' && \
-	./mvnw -B -ntp clean compile && \
+	./mvnw -B -ntp clean install -DskipTests && \
 	echo '>>> Starting Spring Boot application...' && \
 	./mvnw -B -ntp spring-boot:run
 
