@@ -1,15 +1,15 @@
 name: sanjy-client-web-prod
 services:
   sanjy_client_web:
-    image: under7/sanjy-client-web:0.1.0-graalvm
-    container_name: "sanjy-client-web_graalvm"
-    restart: unless-stopped
+    image: "under7/sanjy-client-web:latest"
+    container_name: "sanjy-client-web"
+    restart: "unless-stopped"
     ports:
       - "8081:8081"
     volumes:
-      - ./.docker_volume/sanjy_client_web:/app/data
+      - "./.docker_volume/sanjy_client_web:/app/data"
     networks:
-      - sanjy-network
+      - "sanjy-network"
     environment:
       # ::: SERVER :::
       SANJY_CLIENT_WEB_SERVER_PORT: 8081
@@ -17,17 +17,17 @@ services:
       SANJY_CLIENT_WEB_SERVER_UPLOAD_MAX_REQUEST_SIZE_IN_MB: 100
 
       # ::: LOGGING :::
-      SANJY_CLIENT_WEB_LOGGING_LEVEL: INFO
-      SANJY_CLIENT_WEB_LOGGING_FILE_PATH: /app/data/logs
-      SANJY_CLIENT_WEB_LOGGING_APPENDER: CONSOLE-UNSTRUCTURED
+      SANJY_CLIENT_WEB_LOGGING_LEVEL: "INFO"
+      SANJY_CLIENT_WEB_LOGGING_FILE_PATH: "/app/data/logs"
+      SANJY_CLIENT_WEB_LOGGING_APPENDER: "CONSOLE-UNSTRUCTURED"
 
       # ::: EXTERNAL HTTP CLIENTS :::
       # -- SanJy Server
-      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_URL: http://sanjy-server:8080
-      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_CHANNEL: web
+      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_URL: "http://sanjy-server:8080"
+      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_SANJY_SERVER_CHANNEL: "web"
 
       # -- GitHib
-      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_GITHUB_URL: https://api.github.com
+      SANJY_CLIENT_WEB_EXTERNAL_HTTP_CLIENT_GITHUB_URL: "https://api.github.com"
 
       # ::: A.I. :::
       # -- Open AI
@@ -35,7 +35,7 @@ services:
       # -- Anthropic
       #SANJY_CLIENT_WEB_AI_API_KEY_ANTHROPIC: "${LOCAL_SANJY_ANTHROPIC_API_KEY}"
       # -- AI Settings
-      SANJY_CLIENT_WEB_AI_MODEL: gpt-4o-mini
+      SANJY_CLIENT_WEB_AI_MODEL: "gpt-4o-mini"
       SANJY_CLIENT_WEB_AI_MAX_TOKENS:
       SANJY_CLIENT_WEB_AI_MAX_TEMPERATURE: 0.8
       SANJY_CLIENT_WEB_AI_MAX_STOP_SEQUENCES:
@@ -43,14 +43,14 @@ services:
 
       # ::: OPEN_API :::
       SANJY_CLIENT_WEB_OPEN_API_API_DOCS_ENABLE: true
-      SANJY_CLIENT_WEB_OPEN_API_API_DOCS_PATH: /api-docs
+      SANJY_CLIENT_WEB_OPEN_API_API_DOCS_PATH: "/api-docs"
       SANJY_CLIENT_WEB_OPEN_API_SWAGGER_UI_ENABLE: true
-      SANJY_CLIENT_WEB_OPEN_API_SWAGGER_UI_REDIRECT_PATH: /swagger
+      SANJY_CLIENT_WEB_OPEN_API_SWAGGER_UI_REDIRECT_PATH: "/swagger"
 
 volumes:
   sanJy_database_prod:
-    name: sanJy_database_prod
+    name: "sanJy_database_prod"
 
 networks:
   sanjy-network:
-    name: sanjy-network
+    name: "sanjy-network"

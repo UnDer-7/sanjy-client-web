@@ -29,17 +29,16 @@ RUN make build/frontend
 ##################
 # BUILD STEP (FULL MODE)
 ##################
-FROM container-registry.oracle.com/graalvm/native-image:25 AS build-full
+FROM eclipse-temurin:25.0.1_8-jdk-alpine-3.22 AS build-full
 
 RUN echo "========================================" && \
-    echo "STAGE: build-full (GraalVM native compilation)" && \
+    echo "STAGE: build-full (JVM full compilation)" && \
     echo "========================================"
 
-# Install build dependencies
-RUN microdnf install -y findutils && \
-    microdnf clean all
-
 WORKDIR /build
+
+# Install necessary packages
+RUN apk add --no-cache make
 
 # Copy backend project files
 COPY src/main/java src/main/java
@@ -48,15 +47,14 @@ COPY lombok.config .
 COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
-COPY .env .env
 COPY Makefile .
 
 # Copy frontend build output from frontend stage
 COPY --from=frontend-build /build/src/main/resources/static/ src/main/resources/static/
 
-# Build native image with environment variables loaded and move to standard location
-RUN make build/backend/graalvm && \
-    mv target/*.graal /build/app.graal
+# Build and move JAR to standard location
+RUN make build/backend/jvm && \
+    mv target/*.jar /build/app.jar
 
 ##################
 # BUILD STEP (LOCAL MODE)
@@ -64,21 +62,21 @@ RUN make build/backend/graalvm && \
 FROM alpine:3.22.2 AS build-local
 
 RUN echo "========================================" && \
-    echo "STAGE: build-local (using pre-built native binary)" && \
+    echo "STAGE: build-local (using pre-built JAR)" && \
     echo "========================================"
 
 WORKDIR /build
 
-# Copy pre-built GraalVM native binary from local build
-# Note: When using local mode, run 'make build/graalvm' first to build frontend + backend
-COPY target/*.graal ./app.graal
+# Copy pre-built jar from local build
+# Note: When using local mode, run 'make build/jvm' first to build frontend + backend
+COPY target/*.jar ./app.jar
 
 ##################
 # RELEASE STEP
 ##################
 FROM build-${BUILD_MODE} AS build-selected
 
-FROM alpine:3.22.2 AS release
+FROM eclipse-temurin:25.0.1_8-jdk-alpine-3.22 AS release
 
 RUN echo "========================================" && \
     echo "STAGE: release (final image)" && \
@@ -86,15 +84,8 @@ RUN echo "========================================" && \
 
 WORKDIR /app
 
-# Copy the native binary (either from build-full or build-local)
-COPY --from=build-selected /build/*.graal ./app.graal
-
-# Add executable permission to the binary
-RUN chmod +x /app/app.graal
-
-# Update busybox to fix CVE-2025-46394 and install glibc compatibility
-RUN apk upgrade --no-cache busybox busybox-binsh ssl_client && \
-    apk add --no-cache gcompat
+# Copy the jar (either from build-full or build-local)
+COPY --from=build-selected /build/*.jar ./app.jar
 
 # Set up directories
 ARG S_DATA_PATH=/app/data
@@ -106,8 +97,11 @@ RUN addgroup -g 1000 sanjy && \
     adduser -u 1000 -G sanjy -s /bin/sh -D sanjy && \
     chown -R sanjy:sanjy /app
 
+# Switch to non-root user for running the app
 USER sanjy
 
+# Expose the application port
 EXPOSE 8081
 
-ENTRYPOINT ["./app.graal"]
+# Set the final entrypoint
+ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-Dlog4j2.formatMsgNoLookups=true", "-jar", "/app/app.jar"]
