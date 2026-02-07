@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.github.client;
 
 import br.com.gorillaroxo.sanjy.client.web.client.github.dto.response.GitHubReleaseResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +18,11 @@ public class GitHubReleaseRestClient {
     @Qualifier("gitHubRestClient")
     private final RestClient restClient;
 
+    /**
+     * Search for a release in GitHub repo
+     *
+     * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     */
     public GitHubReleaseResponseDto getLatestRelease(final String repo) {
         return restClient
                 .get()
