@@ -55,12 +55,13 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.java.source>25</sonar.java.source>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <!-- Exclude frontend from Sonar analysis (backend only) -->
-        <sonar.exclusions>src/main/frontend/**,src/main/resources/static/**</sonar.exclusions>
+        <sonar.sources>pom.xml,src/main/java,src/main/frontend/src</sonar.sources>
+        <sonar.exclusions>src/main/resources/static/**,**/node_modules/**</sonar.exclusions>
         <sonar.coverage.exclusions>**/exception/**,
             **/*Constants.java,
             **/SanjyClientWebApplication.java,
-            **/GlobalExceptionHandlerConfig.java</sonar.coverage.exclusions>
+            **/GlobalExceptionHandlerConfig.java,
+            src/main/frontend/**</sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
