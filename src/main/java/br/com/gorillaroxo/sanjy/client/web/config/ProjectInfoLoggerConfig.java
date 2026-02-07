@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.service.GetLatestProjectVersionService;
+import br.com.gorillaroxo.sanjy.client.web.util.DetectRuntimeMode;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.ThreadUtils;
@@ -20,10 +21,6 @@ import org.springframework.core.task.TaskExecutor;
 @Configuration
 @RequiredArgsConstructor
 public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationReadyEvent> {
-
-    private static final String NATIVE_IMAGE_PROPERTY = "org.graalvm.nativeimage.imagecode";
-    private static final String RUNTIME_MODE_NATIVE = "Native";
-    private static final String RUNTIME_MODE_JVM = "JVM";
 
     @Qualifier("applicationTaskExecutor")
     private final TaskExecutor taskExecutor;
@@ -49,7 +46,7 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
 
         ThreadUtils.runAsyncWithMdc(
                 () -> {
-                    final String runtimeMode = detectRuntimeMode();
+                    final String runtimeMode = DetectRuntimeMode.detect();
                     final String latestVersion = fetchLatestVersionFromGitHub();
                     final SanjyClientWebConfigProp.ApplicationProp application = prop.application();
 
@@ -63,11 +60,6 @@ public class ProjectInfoLoggerConfig implements ApplicationListener<ApplicationR
                             StructuredArguments.kv(LogField.APPLICATION_TIMEZONE.label(), ZoneId.systemDefault()));
                 },
                 taskExecutor);
-    }
-
-    private static String detectRuntimeMode() {
-        final String nativeImageProperty = System.getProperty(NATIVE_IMAGE_PROPERTY);
-        return nativeImageProperty != null ? RUNTIME_MODE_NATIVE : RUNTIME_MODE_JVM;
     }
 
     private String fetchLatestVersionFromGitHub() {

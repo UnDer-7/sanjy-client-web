@@ -11,6 +11,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealR
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.ProjectInfoResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.TimezoneInitializer;
@@ -28,6 +29,7 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCre
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealTypeSimplifiedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.StandardOptionControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.StandardOptionSimplifiedControllerResponseDto;
@@ -70,7 +72,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
     MealRecordStatisticsResponseDto.class,
     GitHubReleaseResponseDto.class,
     MealRecordCreatedControllerResponseDto.class,
-    MealRecordCreatedResponseDto.class
+    MealRecordCreatedResponseDto.class,
+    ProjectInfoMaintenanceControllerResponseDto.class,
+    ProjectInfoResponseDto.class
 })
 public class SanjyClientWebApplication {
 
