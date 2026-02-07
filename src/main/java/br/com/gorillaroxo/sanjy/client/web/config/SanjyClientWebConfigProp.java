@@ -72,7 +72,7 @@ public record SanjyClientWebConfigProp(
                     .map(valuePresent -> {
                         try {
                             Double.parseDouble(valuePresent);
-                        } catch (final NumberFormatException _) {
+                        } catch (NumberFormatException _) {
                             throw new InvalidValuesException("""
                                 Invalid configuration: Environment Variable '%s' must be a valid number, but received '%s'
                                 """.formatted(envName, valuePresent));
