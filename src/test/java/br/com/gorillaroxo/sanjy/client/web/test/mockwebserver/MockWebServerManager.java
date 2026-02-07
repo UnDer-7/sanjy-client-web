@@ -26,9 +26,7 @@ public final class MockWebServerManager {
     private static final MockWebServer instance;
 
     @Getter
-    private static final String baseUrl;
-
-    private static MockWebServerDispatcher currentDispatcher;
+    private static final String BASE_URL;
 
     static {
         try {
@@ -38,7 +36,7 @@ public final class MockWebServerManager {
             instance.start();
             String url = instance.url("/").toString();
             // Remove trailing slash for consistency
-            baseUrl = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+            BASE_URL = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
         } catch (IOException e) {
             throw new ExceptionInInitializerError("Failed to start MockWebServer: " + e.getMessage());
         }
@@ -47,7 +45,6 @@ public final class MockWebServerManager {
     private MockWebServerManager() {}
 
     public static void setDispatcher(MockWebServerDispatcher dispatcher) {
-        currentDispatcher = dispatcher;
         instance.setDispatcher(new DelegatingDispatcher(dispatcher));
     }
 

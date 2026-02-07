@@ -59,7 +59,7 @@ public abstract class IntegrationTestController {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("mockwebserver.url", MockWebServerManager::getBaseUrl);
+        registry.add("mockwebserver.url", MockWebServerManager::getBASE_URL);
     }
 
     /**
@@ -71,9 +71,9 @@ public abstract class IntegrationTestController {
         final MockWebServer mockWebServer = MockWebServerManager.getInstance();
         dispatcher = new MockWebServerDispatcher();
         MockWebServerManager.setDispatcher(dispatcher);
-        dietPlanRestClientMock = new DietPlanRestClientMock(mockWebServer, dispatcher, jsonUtil);
-        maintenanceRestClientMock = new MaintenanceRestClientMock(mockWebServer, dispatcher, jsonUtil);
-        mealRecordRestClientMock = new MealRecordRestClientMock(mockWebServer, dispatcher, jsonUtil);
+        dietPlanRestClientMock = new DietPlanRestClientMock(dispatcher, jsonUtil);
+        maintenanceRestClientMock = new MaintenanceRestClientMock(dispatcher, jsonUtil);
+        mealRecordRestClientMock = new MealRecordRestClientMock(dispatcher, jsonUtil);
     }
 
     @BeforeEach

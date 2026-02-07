@@ -83,7 +83,7 @@ test/native:
 build/frontend:
 	@START=$$(date +%s); \
 	echo '>>> Building frontend...'; \
-	cd src/main/frontend && npm ci && npm run build; \
+	cd src/main/frontend && npm ci --ignore-scripts && npm run build; \
 	END=$$(date +%s); \
 	ELAPSED=$$((END-START)); \
 	echo ">>> Frontend build completed in $$((ELAPSED/3600))h $$(((ELAPSED%3600)/60))m $$((ELAPSED%60))s"

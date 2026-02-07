@@ -1,9 +1,15 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
+import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +22,26 @@ import org.springframework.web.servlet.resource.ResourceResolverChain;
 @Slf4j
 @Configuration
 @RestController
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    private final SanjyClientWebConfigProp configProp;
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/api/**").allowedOriginPatterns("*");
+        Optional.ofNullable(configProp.cors())
+                .map(SanjyClientWebConfigProp.CorsProp::allowedOrigins)
+                .filter(Predicate.not(String::isBlank))
+                .ifPresent(origins -> {
+                    final String[] corsOrigins = origins.split(",");
+
+                    log.info(
+                        LogField.Placeholders.TWO.getPlaceholder(),
+                        StructuredArguments.kv(LogField.MSG.label(), "Allowing CORS"),
+                        StructuredArguments.kv(LogField.CORS_ORIGIN_PATTERNS.label(), "( " + String.join(", ", corsOrigins) + " )"));
+
+                    registry.addMapping("/api/**").allowedOriginPatterns(corsOrigins);
+                });
     }
 
     @Override

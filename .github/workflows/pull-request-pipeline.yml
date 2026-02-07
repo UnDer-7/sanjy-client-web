@@ -244,7 +244,7 @@ jobs:
           cache-dependency-path: src/main/frontend/package-lock.json
 
       - name: Install frontend dependencies
-        run: cd src/main/frontend && npm ci
+        run: cd src/main/frontend && npm ci --ignore-scripts
 
       - name: Verify GraalVM installation
         run: |
@@ -320,7 +320,7 @@ jobs:
           cache-dependency-path: src/main/frontend/package-lock.json
 
       - name: Install frontend dependencies
-        run: cd src/main/frontend && npm ci
+        run: cd src/main/frontend && npm ci --ignore-scripts
 
       - name: Verify GraalVM installation
         run: |

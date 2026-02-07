@@ -31,8 +31,7 @@ public class MealRecordRestClientMock {
     private final MealRecordStatistics mealRecordStatistics;
     private final JsonUtil jsonUtil;
 
-    public MealRecordRestClientMock(
-            final MockWebServer mockWebServer, final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
+    public MealRecordRestClientMock(final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
         this.dispatcher = dispatcher;
         this.newMealRecord = new NewMealRecord(dispatcher);
         this.getTodayMealRecords = new GetTodayMealRecords(dispatcher);

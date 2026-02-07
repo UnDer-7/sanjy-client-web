@@ -62,7 +62,8 @@ public enum LogField {
     AI_TEMPERTURE,
     AI_STOP_SEQUENCES,
     AI_TOP_P,
-    CONFIG_PROP;
+    CONFIG_PROP,
+    CORS_ORIGIN_PATTERNS;
 
     public String label() {
         return this.name().toLowerCase();

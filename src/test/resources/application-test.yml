@@ -4,6 +4,8 @@ server:
   shutdown: "graceful"
 
 sanjy-client-web:
+  cors:
+    allowed-origins: ''
   logging:
     level: "INFO"
     file-path: "/tmp/sanjy-client-web-logging"

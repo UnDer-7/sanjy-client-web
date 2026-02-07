@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -66,16 +69,16 @@ public class UnhandledClientHttpException extends BusinessException {
         private final String requestUrl;
 
         @Getter
-        private final Set<Map.Entry<String, List<String>>> requestHeaders;
+        private final Map<String, List<String>> requestHeaders;
 
         private final Integer responseHttpStatusCode;
 
         @Getter
-        private final Set<Map.Entry<String, List<String>>> responseHeaders;
+        private final Map<String, List<String>> responseHeaders;
 
         private final String responseBody;
 
-        private final JsonUtil jsonUtil;
+        private final transient JsonUtil jsonUtil;
 
         @Builder
         public RequestInformation(
@@ -87,14 +90,19 @@ public class UnhandledClientHttpException extends BusinessException {
                 final String responseBody,
                 final JsonUtil jsonUtil) {
 
+            final Function<Set<Map.Entry<String, List<String>>>, Map<String, List<String>>> safeGetHeader = headers -> Optional.ofNullable(headers)
+                .filter(Predicate.not(Set::isEmpty))
+                .map(header -> header.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                .orElse(Collections.emptyMap());
+
             // Request info
             this.requestMethod = requestMethod;
             this.requestUrl = requestUrl;
-            this.requestHeaders = Objects.requireNonNullElseGet(requestHeaders, Collections::emptySet);
+            this.requestHeaders = safeGetHeader.apply(requestHeaders);
 
             // Response info
             this.responseHttpStatusCode = responseHttpStatusCode;
-            this.responseHeaders = Objects.requireNonNullElseGet(responseHeaders, Collections::emptySet);
+            this.responseHeaders = safeGetHeader.apply(responseHeaders);
             this.responseBody = responseBody;
             this.jsonUtil = jsonUtil;
         }

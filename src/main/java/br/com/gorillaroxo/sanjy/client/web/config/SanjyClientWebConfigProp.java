@@ -27,7 +27,8 @@ public record SanjyClientWebConfigProp(
         @NotNull @Valid ApplicationProp application,
         @NotNull @Valid LoggingProp logging,
         @NotNull @Valid UploadProp upload,
-        @NotNull @Valid AiProp ai) {
+        @NotNull @Valid AiProp ai,
+        @Valid CorsProp cors) {
 
     public record AiProp(
             @NotNull @Valid AiGenericConfigProp openAI,
@@ -71,7 +72,7 @@ public record SanjyClientWebConfigProp(
                     .map(valuePresent -> {
                         try {
                             Double.parseDouble(valuePresent);
-                        } catch (final NumberFormatException ignored) {
+                        } catch (final NumberFormatException _) {
                             throw new InvalidValuesException("""
                                 Invalid configuration: Environment Variable '%s' must be a valid number, but received '%s'
                                 """.formatted(envName, valuePresent));
@@ -110,4 +111,6 @@ public record SanjyClientWebConfigProp(
             @NotBlank String appender) {}
 
     public record UploadProp(@NotNull Integer maxFileSizeInMb) {}
+
+    public record CorsProp(String allowedOrigins) {}
 }

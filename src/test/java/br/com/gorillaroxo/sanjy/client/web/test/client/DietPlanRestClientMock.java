@@ -29,8 +29,7 @@ public class DietPlanRestClientMock {
     private final ActiveDietPlan activeDietPlan;
     private final JsonUtil jsonUtil;
 
-    public DietPlanRestClientMock(
-            final MockWebServer mockWebServer, final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
+    public DietPlanRestClientMock(final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
         this.dispatcher = dispatcher;
         this.newDietPlan = new NewDietPlan(dispatcher);
         this.activeDietPlan = new ActiveDietPlan(dispatcher);

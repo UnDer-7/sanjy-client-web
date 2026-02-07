@@ -5,6 +5,8 @@ server:
   shutdown: graceful
 
 sanjy-client-web:
+  cors:
+    allowed-origins: ${SANJY_CLIENT_WEB_CORS_ALLOWED_ORIGINS:}
   logging:
     level: ${SANJY_CLIENT_WEB_LOGGING_LEVEL}
     file-path: ${SANJY_CLIENT_WEB_LOGGING_FILE_PATH:}
