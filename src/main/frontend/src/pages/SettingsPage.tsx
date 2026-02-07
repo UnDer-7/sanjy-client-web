@@ -259,11 +259,7 @@ function ProjectInfoCard({ title, project }: ProjectInfoCardProps) {
         <Text fw={600} size="sm">
           {title}
         </Text>
-        <Badge
-          color={project.version.isLatest ? 'green' : 'yellow'}
-          variant="light"
-          size="sm"
-        >
+        <Badge color={project.version.isLatest ? 'green' : 'yellow'} variant="light" size="sm">
           {project.version.isLatest ? 'Up to date' : 'Update available'}
         </Badge>
       </Group>
