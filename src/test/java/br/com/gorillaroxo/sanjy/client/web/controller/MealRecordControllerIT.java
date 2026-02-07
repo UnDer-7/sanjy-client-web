@@ -171,6 +171,38 @@ class MealRecordControllerIT extends IntegrationTestController {
         }
 
         @Test
+        @DisplayName("Should return 502 when sanjy-server is unreachable")
+        void should_return_bad_gateway_when_sanjy_server_is_unreachable() {
+            final var uuid = UUID.randomUUID().toString();
+            final var requestBody = DtoControllerBuilders.buildMealRecordControllerRequestDtoFreeMeal()
+                    .build();
+
+            mealRecordRestClientMock.newMealRecord().connectionFailure();
+
+            webTestClient
+                    .post()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(HttpStatus.BAD_GATEWAY)
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();
@@ -514,6 +546,43 @@ class MealRecordControllerIT extends IntegrationTestController {
                         assertThat(actualErrorResponse.customMessage())
                                 .isNotEmpty()
                                 .containsIgnoringCase("consumedAtBefore");
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 502 when sanjy-server is unreachable")
+        void should_return_bad_gateway_when_sanjy_server_is_unreachable() {
+            final var uuid = UUID.randomUUID().toString();
+            final var consumedAtAfter = ZonedDateTime.now().minusDays(30);
+            final var consumedAtBefore = ZonedDateTime.now();
+
+            mealRecordRestClientMock.searchMealRecords().connectionFailure();
+            mealRecordRestClientMock.mealRecordStatistics().connectionFailure();
+
+            webTestClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(RESOURCE_URL)
+                            .queryParam(RequestConstants.Query.PAGE_NUMBER, 0)
+                            .queryParam(RequestConstants.Query.PAGE_SIZE, 10)
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_AFTER, consumedAtAfter.toString())
+                            .queryParam(RequestConstants.Query.CONSUMED_AT_BEFORE, consumedAtBefore.toString())
+                            .build())
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(HttpStatus.BAD_GATEWAY)
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
                         assertThat(actualErrorResponse.timestamp()).isNotNull();
                     });
         }

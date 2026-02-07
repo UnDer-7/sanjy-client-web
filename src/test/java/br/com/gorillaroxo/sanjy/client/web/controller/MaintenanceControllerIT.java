@@ -63,6 +63,34 @@ class MaintenanceControllerIT extends IntegrationTestController {
         }
 
         @Test
+        @DisplayName("Should return 502 when sanjy-server is unreachable")
+        void should_return_bad_gateway_when_sanjy_server_is_unreachable() {
+            final var uuid = UUID.randomUUID().toString();
+
+            maintenanceRestClientMock.projectInfo().connectionFailure();
+
+            webTestClient
+                    .get()
+                    .uri(PROJECT_INFO_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(HttpStatus.BAD_GATEWAY)
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
         @DisplayName("Should return 500 when sanjy-server returns 4xx error")
         void should_return_internal_server_error_when_sanjy_server_returns_client_error() {
             final var uuid = UUID.randomUUID().toString();

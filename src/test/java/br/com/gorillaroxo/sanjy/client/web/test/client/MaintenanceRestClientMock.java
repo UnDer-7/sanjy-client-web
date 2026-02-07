@@ -9,6 +9,7 @@ import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
+import mockwebserver3.SocketPolicy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,6 +60,14 @@ public class MaintenanceRestClientMock {
                     DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
+        }
+
+        public void connectionFailure() {
+            dispatcher.register(
+                    PATH,
+                    _ -> new MockResponse.Builder()
+                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {

@@ -217,6 +217,38 @@ class DietPlanControllerIT extends IntegrationTestController {
         }
 
         @Test
+        @DisplayName("Should return 502 when sanjy-server is unreachable")
+        void should_return_bad_gateway_when_sanjy_server_is_unreachable() {
+            final var uuid = UUID.randomUUID().toString();
+            final var requestBody =
+                    DtoControllerBuilders.buildDietPlanControllerRequestDto().build();
+
+            dietPlanRestClientMock.newDietPlan().connectionFailure();
+
+            webTestClient
+                    .post()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(HttpStatus.BAD_GATEWAY)
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
         @DisplayName("Should return 400 when X-Correlation-ID header is missing")
         void should_return_bad_request_when_correlation_id_header_is_missing() {
             final var requestBody =
@@ -352,6 +384,34 @@ class DietPlanControllerIT extends IntegrationTestController {
 
                         assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
                         assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+                        assertThat(actualErrorResponse.userMessage())
+                                .isNotEmpty()
+                                .isEqualTo(exceptionCode.getUserMessage());
+                        assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("Should return 502 when sanjy-server is unreachable")
+        void should_return_bad_gateway_when_sanjy_server_is_unreachable() {
+            final var uuid = UUID.randomUUID().toString();
+
+            dietPlanRestClientMock.activeDietPlan().connectionFailure();
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(HttpStatus.BAD_GATEWAY)
+                    .expectBody(ErrorResponseDto.class)
+                    .value(actualErrorResponse -> {
+                        final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
+
+                        assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
+                        assertThat(actualErrorResponse.httpStatusCode())
+                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
                         assertThat(actualErrorResponse.userMessage())
                                 .isNotEmpty()
                                 .isEqualTo(exceptionCode.getUserMessage());

@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
+import mockwebserver3.SocketPolicy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,6 +72,14 @@ public class MealRecordRestClientMock {
                     DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
+        }
+
+        public void connectionFailure() {
+            dispatcher.register(
+                    PATH,
+                    _ -> new MockResponse.Builder()
+                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -135,6 +144,14 @@ public class MealRecordRestClientMock {
                     DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
+        }
+
+        public void connectionFailure() {
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -202,6 +219,14 @@ public class MealRecordRestClientMock {
             return responseDto;
         }
 
+        public void connectionFailure() {
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                            .build());
+        }
+
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
             dispatcher.register(PATH, request -> {
                 final String correlationId = request.getHeaders().get(RequestConstants.Headers.X_CORRELATION_ID);
@@ -265,6 +290,14 @@ public class MealRecordRestClientMock {
                     DtoBuilders.buildSanjyServerErrorResponseDtoGeneric400().build();
             generic(HttpStatus.BAD_REQUEST, xCorrelationId, jsonUtil.serialize(responseDto));
             return responseDto;
+        }
+
+        public void connectionFailure() {
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
