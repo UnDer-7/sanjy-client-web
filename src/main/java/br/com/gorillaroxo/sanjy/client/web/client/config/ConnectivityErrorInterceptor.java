@@ -10,13 +10,13 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
 /**
- * Interceptor that catches connectivity errors ({@link IOException}) during HTTP request execution
- * and converts them into {@link ServiceConnectivityException}.
- * <p>
- * This interceptor ensures that connection failures (e.g., connection refused, DNS resolution failure, timeout)
- * are represented as domain-specific exceptions rather than generic Spring {@code ResourceAccessException}.
- * By converting the error at the {@code RestClient} level, callers can explicitly handle connectivity
- * failures in their code via try-catch, rather than having the error bubble up to the global exception handler.
+ * Interceptor that catches connectivity errors ({@link IOException}) during HTTP request execution and converts them
+ * into {@link ServiceConnectivityException}.
+ *
+ * <p>This interceptor ensures that connection failures (e.g., connection refused, DNS resolution failure, timeout) are
+ * represented as domain-specific exceptions rather than generic Spring {@code ResourceAccessException}. By converting
+ * the error at the {@code RestClient} level, callers can explicitly handle connectivity failures in their code via
+ * try-catch, rather than having the error bubble up to the global exception handler.
  *
  * @see ServiceConnectivityException
  */
@@ -31,7 +31,8 @@ class ConnectivityErrorInterceptor implements ClientHttpRequestInterceptor {
         try {
             return execution.execute(request, body);
         } catch (final IOException ex) {
-            throw new ServiceConnectivityException(ex, request.getMethod().name(), request.getURI().toString());
+            throw new ServiceConnectivityException(
+                    ex, request.getMethod().name(), request.getURI().toString());
         }
     }
 }

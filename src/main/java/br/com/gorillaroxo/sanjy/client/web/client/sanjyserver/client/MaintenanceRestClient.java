@@ -20,8 +20,9 @@ public class MaintenanceRestClient {
     private final RestClient restClient;
 
     /**
-     * Retrieves project information including version details (current and latest),
-     * application and database timezone configuration, and the current runtime mode.
+     * Retrieves project information including version details (current and latest), application and database timezone
+     * configuration, and the current runtime mode.
+     *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
      * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */

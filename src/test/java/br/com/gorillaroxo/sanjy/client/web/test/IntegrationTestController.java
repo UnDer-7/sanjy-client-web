@@ -10,7 +10,6 @@ import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispa
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerManager;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
-import mockwebserver3.MockWebServer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
