@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **Note:** Version 0.x is considered pre-alpha. The project is under active development and testing.
 > Breaking changes may occur in any release, including minor versions.
 
+<br>
+
+> **Important:** Follow the standard [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) structure (`## [X.Y.Z] - YYYY-MM-DD`).
+> The CI/CD pipeline automatically extracts the changelog section for each version to create the GitHub Release notes.
+
+---
+
 ## [0.1.0] - 2026-02-06
 
 First release. Full project restructure into a Single Page Application architecture ([#3](https://github.com/UnDer-7/sanjy-client-web/pull/3)).

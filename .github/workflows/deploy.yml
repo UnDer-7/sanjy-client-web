@@ -17,6 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
 
+      - name: Setup Node.js 22
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 #v6.2.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: src/main/frontend/package-lock.json
+
       - name: Setup GraalVM 25 (Oracle)
         uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 #v1.4.4
         with:
@@ -50,6 +57,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
 
+      - name: Setup Node.js 22
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 #v6.2.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: src/main/frontend/package-lock.json
+
       - name: Setup GraalVM 25 (Oracle)
         uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 #v1.4.4
         with:
@@ -63,6 +77,8 @@ jobs:
           echo "GRAALVM_HOME: $GRAALVM_HOME"
           echo "JAVA_HOME: $JAVA_HOME"
           java -version
+          node --version
+          npm --version
 
       - name: Get current project version
         id: project-version
@@ -104,22 +120,22 @@ jobs:
             exit 1
           fi
 
-      - name: Build GraalVM native image and JAR
+      - name: Build frontend + GraalVM native image and JAR
         run: make build/graalvm
 
       - name: Find build artifacts
         id: artifacts
         run: |
-          JAR_FILE=$(find infrastructure/target -name "*.jar" -type f | head -n 1)
-          GRAAL_FILE=$(find infrastructure/target -name "*.graal" -type f | head -n 1)
+          JAR_FILE=$(find target -name "*.jar" -type f | head -n 1)
+          GRAAL_FILE=$(find target -name "*.graal" -type f | head -n 1)
 
           if [ -z "$JAR_FILE" ]; then
-            echo "::error::JAR file not found in infrastructure/target/"
+            echo "::error::JAR file not found in target/"
             exit 1
           fi
 
           if [ -z "$GRAAL_FILE" ]; then
-            echo "::error::GraalVM binary (.graal) not found in infrastructure/target/"
+            echo "::error::GraalVM binary (.graal) not found in target/"
             exit 1
           fi
 
@@ -163,7 +179,7 @@ jobs:
           echo "✅ Created and pushed tag $VERSION"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 #v2.2.0
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b #v2.5.0
         with:
           tag_name: ${{ steps.project-version.outputs.version }}
           name: ${{ steps.project-version.outputs.version }}
@@ -177,7 +193,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload build artifacts for Docker
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 #v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: build-artifacts
           path: |
@@ -213,15 +229,15 @@ jobs:
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 #v6.0.0
         with:
           name: build-artifacts
-          path: infrastructure/target/
+          path: target/
 
       - name: Verify downloaded artifacts
         run: |
           echo "Downloaded artifacts:"
-          ls -lh infrastructure/target/
+          ls -lh target/
 
-          JAR_FILE=$(find infrastructure/target -name "*.jar" -type f | head -n 1)
-          GRAAL_FILE=$(find infrastructure/target -name "*.graal" -type f | head -n 1)
+          JAR_FILE=$(find target -name "*.jar" -type f | head -n 1)
+          GRAAL_FILE=$(find target -name "*.graal" -type f | head -n 1)
 
           if [ -z "$JAR_FILE" ]; then
             echo "::error::JAR file not found!"
@@ -239,14 +255,14 @@ jobs:
       - name: Build JVM Docker image
         run: |
           echo "Building JVM Docker image..."
-          make build/jvm/docker/local
-          echo "✅ JVM image built: under7/sanjy-server:${{ steps.project-version.outputs.version }}-jvm"
+          make build/docker/local/jvm
+          echo "✅ JVM image built: under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-jvm"
 
       - name: Build GraalVM Docker image
         run: |
           echo "Building GraalVM Docker image..."
-          make build/graalvm/docker/local
-          echo "✅ GraalVM image built: under7/sanjy-server:${{ steps.project-version.outputs.version }}-graalvm"
+          make build/docker/local/graalvm
+          echo "✅ GraalVM image built: under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-graalvm"
 
       - name: Login to Docker Hub
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef #v3.6.0
@@ -256,34 +272,34 @@ jobs:
 
       - name: Push JVM image to Docker Hub
         run: |
-          IMAGE_NAME="under7/sanjy-server:${{ steps.project-version.outputs.version }}-jvm"
+          IMAGE_NAME="under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-jvm"
           echo "Pushing $IMAGE_NAME..."
           docker push $IMAGE_NAME
           echo "✅ JVM image pushed successfully"
 
       - name: Push GraalVM image to Docker Hub
         run: |
-          IMAGE_NAME="under7/sanjy-server:${{ steps.project-version.outputs.version }}-graalvm"
+          IMAGE_NAME="under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-graalvm"
           echo "Pushing $IMAGE_NAME..."
           docker push $IMAGE_NAME
           echo "✅ GraalVM image pushed successfully"
 
       - name: Tag and push latest images
         run: |
-          JVM_IMAGE="under7/sanjy-server:${{ steps.project-version.outputs.version }}-jvm"
-          GRAALVM_IMAGE="under7/sanjy-server:${{ steps.project-version.outputs.version }}-graalvm"
+          JVM_IMAGE="under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-jvm"
+          GRAALVM_IMAGE="under7/sanjy-client-web:${{ steps.project-version.outputs.version }}-graalvm"
 
           # Tag and push latest-jvm
-          docker tag $JVM_IMAGE under7/sanjy-server:latest-jvm
-          docker push under7/sanjy-server:latest-jvm
-          echo "✅ Tagged and pushed under7/sanjy-server:latest-jvm"
+          docker tag $JVM_IMAGE under7/sanjy-client-web:latest-jvm
+          docker push under7/sanjy-client-web:latest-jvm
+          echo "✅ Tagged and pushed under7/sanjy-client-web:latest-jvm"
 
           # Tag and push latest-graalvm
-          docker tag $GRAALVM_IMAGE under7/sanjy-server:latest-graalvm
-          docker push under7/sanjy-server:latest-graalvm
-          echo "✅ Tagged and pushed under7/sanjy-server:latest-graalvm"
+          docker tag $GRAALVM_IMAGE under7/sanjy-client-web:latest-graalvm
+          docker push under7/sanjy-client-web:latest-graalvm
+          echo "✅ Tagged and pushed under7/sanjy-client-web:latest-graalvm"
 
           # Tag and push latest (pointing to GraalVM)
-          docker tag $GRAALVM_IMAGE under7/sanjy-server:latest
-          docker push under7/sanjy-server:latest
-          echo "✅ Tagged and pushed under7/sanjy-server:latest"
+          docker tag $GRAALVM_IMAGE under7/sanjy-client-web:latest
+          docker push under7/sanjy-client-web:latest
+          echo "✅ Tagged and pushed under7/sanjy-client-web:latest"

@@ -251,6 +251,8 @@ jobs:
           echo "GRAALVM_HOME: $GRAALVM_HOME"
           echo "JAVA_HOME: $JAVA_HOME"
           java -version
+          node --version
+          npm --version
 
       - name: Check code formatting
         id: format-check
@@ -325,6 +327,8 @@ jobs:
           echo "GRAALVM_HOME: $GRAALVM_HOME"
           echo "JAVA_HOME: $JAVA_HOME"
           java -version
+          node --version
+          npm --version
 
       - name: Run Snyk vulnerability scan
         id: snyk
