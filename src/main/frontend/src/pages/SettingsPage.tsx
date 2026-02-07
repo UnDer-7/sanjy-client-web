@@ -1,7 +1,10 @@
 import {
+  Alert,
   Container,
   Title,
   Select,
+  SimpleGrid,
+  Skeleton,
   Stack,
   Text,
   useMantineColorScheme,
@@ -19,6 +22,7 @@ import {
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import {
+  IconAlertCircle,
   IconDownload,
   IconTrash,
   IconEye,
@@ -35,8 +39,10 @@ import {
 } from '../services/ErrorLogService.ts';
 import { DateTimeService } from '../services/DateTimeService.ts';
 import { ErrorType, type ErrorLogEntry } from '../models/ErrorLog.ts';
+import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
+import type { BackendProjectInfo, Project } from '../models/BackendProjectInfo.ts';
 import { toZonedTime } from 'date-fns-tz';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 function getErrorTypeBadgeColor(type: ErrorType): string {
   switch (type) {
@@ -241,6 +247,56 @@ function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileList
   );
 }
 
+interface ProjectInfoCardProps {
+  title: string;
+  project: Project;
+}
+
+function ProjectInfoCard({ title, project }: ProjectInfoCardProps) {
+  return (
+    <Paper withBorder p="md" radius="md">
+      <Group justify="space-between" align="center">
+        <Text fw={600} size="sm">
+          {title}
+        </Text>
+        <Badge
+          color={project.version.isLatest ? 'green' : 'yellow'}
+          variant="light"
+          size="sm"
+        >
+          {project.version.isLatest ? 'Up to date' : 'Update available'}
+        </Badge>
+      </Group>
+      <Stack gap="xs" mt="sm">
+        <Group justify="space-between">
+          <Text size="sm" c="dimmed">
+            Current Version
+          </Text>
+          <Text size="sm" fw={500}>
+            {project.version.current}
+          </Text>
+        </Group>
+        <Group justify="space-between">
+          <Text size="sm" c="dimmed">
+            Latest Version
+          </Text>
+          <Text size="sm" fw={500} c={project.version.latest === null ? 'dimmed' : undefined}>
+            {project.version.latest ?? 'Unable to retrieve'}
+          </Text>
+        </Group>
+        <Group justify="space-between">
+          <Text size="sm" c="dimmed">
+            Runtime Mode
+          </Text>
+          <Text size="sm" fw={500}>
+            {project.runtimeMode}
+          </Text>
+        </Group>
+      </Stack>
+    </Paper>
+  );
+}
+
 export function SettingsPage() {
   const {
     settings: { userTimezone, userTimeFormat },
@@ -249,6 +305,16 @@ export function SettingsPage() {
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const [logsModalOpened, { open: openLogsModal, close: closeLogsModal }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [projectInfo, setProjectInfo] = useState<BackendProjectInfo | null>(null);
+  const [projectInfoLoading, setProjectInfoLoading] = useState(true);
+  const [projectInfoError, setProjectInfoError] = useState(false);
+
+  useEffect(() => {
+    MaintenanceClient.projectInfo()
+      .then((data) => setProjectInfo(data))
+      .catch(() => setProjectInfoError(true))
+      .finally(() => setProjectInfoLoading(false));
+  }, []);
 
   const sortedLogs = useMemo(() => {
     return [...errorLogs.value].sort(
@@ -405,6 +471,36 @@ export function SettingsPage() {
               Clear
             </Button>
           </Group>
+        </div>
+
+        <div>
+          <Title order={2} size="h3" mb="sm">
+            Project Info
+          </Title>
+          <Text c="dimmed" size="sm" mb="md">
+            Version and runtime information for the application components.
+          </Text>
+          {projectInfoLoading && (
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+              <Skeleton height={140} radius="md" />
+              <Skeleton height={140} radius="md" />
+            </SimpleGrid>
+          )}
+          {!projectInfoLoading && projectInfoError && (
+            <Alert
+              icon={<IconAlertCircle size={16} />}
+              title="Failed to Load Project Info"
+              color="red"
+            >
+              Could not retrieve project information. Please try again later.
+            </Alert>
+          )}
+          {!projectInfoLoading && !projectInfoError && projectInfo && (
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+              <ProjectInfoCard title="sanjy-client-web" project={projectInfo.sanjyClientWeb} />
+              <ProjectInfoCard title="sanjy-server" project={projectInfo.sanjyServer} />
+            </SimpleGrid>
+          )}
         </div>
       </Stack>
 

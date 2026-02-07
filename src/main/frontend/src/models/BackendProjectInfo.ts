@@ -10,6 +10,6 @@ export interface Project {
 
 export interface Version {
   current: string;
-  latest: string;
+  latest: string | null;
   isLatest: boolean;
 }

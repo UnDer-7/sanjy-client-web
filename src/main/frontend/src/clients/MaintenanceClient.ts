@@ -11,7 +11,7 @@ async function checkAiAvailability(): Promise<boolean> {
 
 async function projectInfo(): Promise<BackendProjectInfo> {
   const response = await HttpClient.get<BackendProjectInfo>(`${RESOURCE_URL}/project-info`);
-  return response.data.value;
+  return response.data;
 }
 
 export const MaintenanceClient = {
