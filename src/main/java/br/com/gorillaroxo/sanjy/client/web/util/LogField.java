@@ -16,7 +16,7 @@ public enum LogField {
     ERROR_CODE,
     ERROR_TIMESTAMP,
     ERROR_MESSAGE,
-    HTTP_STATUS_CODE,
+    RESPONSE_HTTP_STATUS_CODE,
     CUSTOM_EXCEPTION_STACK_TRACE,
     CUSTOM_ERROR_MESSAGE,
     EXCEPTION_CAUSE,
@@ -49,12 +49,27 @@ public enum LogField {
     CLASS_SERIALIZATION_SOURCE,
     DIET_PLAN_ID,
     DIET_PLAN_IS_ACTIVE,
-    DIET_PLAN_CREATED_AT;
+    DIET_PLAN_CREATED_AT,
+    PROJECT_CURRENT_VERSION,
+    PROJECT_LATEST_VERSION,
+    RUNTIME_MODE,
+    APPLICATION_TIMEZONE,
+    PROJECT_NAME,
+    TIMEZONE_ID,
+    SEARCH_PARAMS,
+    AI_MODEL,
+    AI_MAX_TOKENS,
+    AI_TEMPERTURE,
+    AI_STOP_SEQUENCES,
+    AI_TOP_P,
+    CONFIG_PROP,
+    CORS_ORIGIN_PATTERNS;
 
     public String label() {
         return this.name().toLowerCase();
     }
 
+    @Getter
     @RequiredArgsConstructor
     public enum Placeholders {
         ONE(createPlaceholder(1)),
@@ -68,7 +83,7 @@ public enum LogField {
         NINE(createPlaceholder(9)),
         TEN(createPlaceholder(10));
 
-        public final String placeholder;
+        private final String placeholder;
 
         public static String createPlaceholder(final int total) {
             return "{} ".repeat(total);

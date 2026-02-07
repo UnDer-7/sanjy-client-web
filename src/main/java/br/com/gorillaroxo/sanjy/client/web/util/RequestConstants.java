@@ -27,7 +27,6 @@ public final class RequestConstants {
         private Headers() {
             throw new IllegalStateException("Utility class");
         }
-
     }
 
     public static final class DateTimeFormats {
@@ -35,10 +34,10 @@ public final class RequestConstants {
 
         public static final String TIME_FORMAT = "HH:mm:ss";
         public static final String DATE_TIME_FORMAT_UTC = "yyyy-MM-ddTHH:mm:ssZ";
+        public static final String DATE_TIME_FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssXXX'['VV']'";
 
         /**
-         * Format for HTML datetime-local input (ISO 8601 without timezone)
-         * Used for user input in their local timezone
+         * Format for HTML datetime-local input (ISO 8601 without timezone) Used for user input in their local timezone
          */
         public static final String DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm";
 
@@ -49,6 +48,7 @@ public final class RequestConstants {
 
     public static final class Examples {
         public static final String DATE_TIME = "2025-01-15T14:30:00Z";
+        public static final String DATE_TIME_TIMEZONE = "2026-01-05T20:54:30-02:00[America/Sao_Paulo]";
         public static final String TIME = "14:30:00";
         public static final String DATE = "2025-01-15";
         public static final String TIMEZONE = "America/Sao_Paulo";

@@ -1,0 +1,6 @@
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-dark.svg)](https://sonarcloud.io/summary/new_code?id=UnDer-7_sanjy-client-web)  
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=UnDer-7_sanjy-client-web&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=UnDer-7_sanjy-client-web)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=UnDer-7_sanjy-client-web&metric=coverage)](https://sonarcloud.io/summary/new_code?id=UnDer-7_sanjy-client-web)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=UnDer-7_sanjy-client-web&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=UnDer-7_sanjy-client-web)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=UnDer-7_sanjy-client-web&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=UnDer-7_sanjy-client-web)
+[![Known Vulnerabilities](https://snyk.io/test/github/under-7/sanjy-client-web-frontend/badge.svg)](https://snyk.io/test/github/{username}/{repo})

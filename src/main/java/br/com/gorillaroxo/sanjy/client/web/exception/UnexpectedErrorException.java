@@ -36,5 +36,4 @@ public class UnexpectedErrorException extends BusinessException {
     protected Logger getLogger() {
         return log;
     }
-
 }

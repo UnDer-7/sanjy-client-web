@@ -1,0 +1,101 @@
+meta {
+  name: newMealRecord
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{SERVER_URL}}/api/v1/meal-record
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "mealTypeId": 1,
+    "consumedAt": "2026-01-05T22:50:00-03:00[America/Sao_Paulo]",
+    
+    "isFreeMeal": false,
+  //   "standardOptionId": 1,
+    
+    "isFreeMeal": true,
+    "standardOptionId": null,
+    "freeMealDescription": "pacote de biscoito",
+    
+    "quantity": null,
+    "unit": null,
+    "notes": null
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: success
+  description: saved one meal record
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/meal-record
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "mealTypeId": 1,
+        "consumedAt": "2026-01-05T22:50:00-03:00[America/Sao_Paulo]",
+        
+        "isFreeMeal": false,
+      //   "standardOptionId": 1,
+        
+        "isFreeMeal": true,
+        "standardOptionId": null,
+        "freeMealDescription": "pacote de biscoito",
+        
+        "quantity": null,
+        "unit": null,
+        "notes": null
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Thu, 08 Jan 2026 23:50:36 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": 132,
+          "consumedAt": "2026-01-06T01:50:00Z",
+          "mealType": {
+            "id": 1
+          },
+          "isFreeMeal": true,
+          "standardOption": null,
+          "freeMealDescription": "pacote de biscoito",
+          "quantity": 1,
+          "unit": "serving",
+          "notes": null,
+          "metadata": {
+            "createdAt": "2026-01-08T23:50:36.101501835Z",
+            "updatedAt": "2026-01-08T23:50:36.101522455Z"
+          }
+        }
+      '''
+    }
+  }
+}

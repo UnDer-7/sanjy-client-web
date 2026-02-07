@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public class DietPlanExtractorStrategyNotFoundException extends BusinessException {
 
     private static final ExceptionCode CODE = ExceptionCode.DIET_PLAN_EXTRACTOR_STRATEGY_NOT_FOUND;
-    private static final HttpStatus STATUS = HttpStatus.INTERNAL_SERVER_ERROR;
+    private static final HttpStatus STATUS = HttpStatus.BAD_REQUEST;
 
     public DietPlanExtractorStrategyNotFoundException(final String customMessage, final Throwable originalCause) {
         super(CODE, STATUS, customMessage, originalCause);
@@ -36,5 +36,4 @@ public class DietPlanExtractorStrategyNotFoundException extends BusinessExceptio
     protected Logger getLogger() {
         return log;
     }
-
 }

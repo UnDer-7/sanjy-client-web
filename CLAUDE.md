@@ -4,9 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Sanjy Client is a Spring Boot-based application for diet and meal tracking. It's a multi-module Maven project with two client applications (web and telegram) that communicate with a backend service (sanjy-server) via OpenFeign clients.
+Sanjy Client Web is a modern full-stack application for diet and meal tracking. It consists of a React-based Single Page Application (SPA) frontend bundled with a Spring Boot Backend for Frontend (BFF). The BFF communicates with a backend service (sanjy-server) via OpenFeign clients.
 
 **Base Package**: `br.com.gorillaroxo.sanjy.client`
+
+**Architecture Pattern**: Backend for Frontend (BFF) - The Spring Boot application serves the React SPA and provides API endpoints that aggregate/transform data from the backend service.
 
 ## Essential Rules
 
@@ -14,76 +16,111 @@ Sanjy Client is a Spring Boot-based application for diet and meal tracking. It's
 
 1. **English Only**: ALL code, comments, commit messages, variable names, class names, method names, and documentation MUST be written in English. Never use Portuguese or any other language in the codebase.
 
-2. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
+2. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS fetch and consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns. This is MANDATORY before writing any Mantine component code.
+
+3. **Browser Validation**: You have access to Google Chrome for debugging the application. Use it to validate your implementation by checking:
+
+   - Visual rendering of components
+   - Console errors and warnings
+   - Network requests and responses
+   - Application behavior and user interactions
+4. **Dependency Installation**: You MAY install new libraries in `package.json` if necessary for implementing features. Use `npm install <package>` in the frontend directory.
+5. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
    - Run `mvn clean install` from the project root
    - If the build fails, analyze errors, fix them, and run `mvn clean install` again
    - Repeat until the build succeeds with `BUILD SUCCESS`
    - Only consider the task complete when the build passes successfully
+6. **Use Custom DateTimePickerSanjy Component**: When adding date-time pickers in the frontend, ALWAYS use the `DateTimePickerSanjy` component from `src/components/DateTimePickerSanjy.tsx`. NEVER use the Mantine `DateTimePicker` directly. The custom component automatically applies the user's preferred date and time format settings from local storage.
 
 ## Architecture
 
-### Multi-Module Structure
+### Project Structure
 
-The project consists of three Maven modules:
+The project is a single-module Maven application with two main parts:
 
-1. **`shared`** - Shared library containing:
+1. **Frontend** (`src/main/frontend/`) - React SPA:
+   - **React 19** with **TypeScript**
+   - **Mantine v8** component library for UI
+   - **Vite** for build tooling and development server
+   - PostCSS with Mantine preset for styling
+   - Built artifacts are bundled into Spring Boot's static resources for production
+2. **Backend** (`src/main/java/`) - Spring Boot BFF (Backend for Frontend):
+   - **Spring Boot 3.5.6** REST API (port 8080 in production, 8081 in development)
+   - OpenFeign clients for communicating with sanjy-server backend
    - Request/Response DTOs for API communication
-   - Feign client interfaces (`DietPlanFeignClient`, `MealRecordFeignClient`)
    - Configuration properties (`SanjyClientConfigProp`)
    - Feign interceptor for distributed tracing (correlation ID, channel headers)
    - Utility classes for distributed tracing and request constants
    - Exception classes (`BusinessException`, `UnexpectedErrorException`)
-
-2. **`web`** - Spring Boot web application (port 8081)
-   - Thymeleaf-based MVC controllers
    - Spring AI integration for diet plan file processing (PDF, text)
-   - Request filter for correlation ID management
-   - Global exception handling
-   - Depends on `shared` module
-
-3. **`telegram`** - Spring Boot telegram bot application (port 8082)
-   - Telegram bot controllers (currently minimal implementation)
-   - Depends on `shared` module
+   - Serves the React SPA in production
 
 ### Key Technologies
 
+**Backend:**
 - **Java 21**
 - **Spring Boot 3.5.6**
 - **Spring Cloud 2025.0.0** (OpenFeign for HTTP clients)
 - **Spring AI 1.0.2** (OpenAI integration for diet plan extraction)
-- **Thymeleaf** (server-side rendering for web module)
 - **Apache PDFBox** (PDF text extraction)
 - **Lombok** + **MapStruct** (with proper annotation processor ordering)
 - **SpringDoc OpenAPI** (Swagger documentation)
 - **Logstash Logback Encoder** (structured logging)
 - **GraalVM Native Image** support (static musl builds)
 
+**Frontend:**
+- **React 19.2.0** (UI library)
+- **TypeScript ~5.9.3** (type safety)
+- **Mantine v8.3.10** (component library - see Essential Rule #2 for docs)
+- **Vite 7.2.4** (build tool and dev server)
+- **PostCSS** with Mantine preset (styling)
+
 ### Distributed Tracing
 
-The application implements correlation ID tracking across all requests:
-- `RequestFilter` (web module) generates or extracts correlation IDs from headers
-- `FeignInterceptor` (shared module) propagates correlation IDs to backend service calls
+The BFF implements correlation ID tracking across all requests:
+- `RequestFilter` generates or extracts correlation IDs from headers
+- `FeignInterceptor` propagates correlation IDs to backend service calls
 - Uses SLF4J MDC for logging context (correlation ID, transaction ID, HTTP request)
-- Custom channel header (`X-Channel`) identifies the client type (web/telegram)
+- Custom channel header (`X-Channel`) identifies the client type
 
 ### Configuration Management
 
-Environment-specific configuration is managed via:
+**Backend Configuration:**
 - `.env` file for development environment variables
-- `application.yml` files in each runnable module (web, telegram)
+- `application.yml` in `src/main/resources`
 - Type-safe configuration via `SanjyClientConfigProp` record with validation
 - Key configuration properties:
-  - `sanjy-client.external-apis.sanjy-server.url` - Backend service URL
-  - `sanjy-client.application.channel` - Client channel identifier
-  - `sanjy-client.logging.*` - Logging configuration
-  - `spring.ai.openai.*` - OpenAI API credentials
+- `sanjy-client.external-apis.sanjy-server.url` - Backend service URL
+- `sanjy-client.application.channel` - Client channel identifier
+- `sanjy-client.logging.*` - Logging configuration
+- `spring.ai.openai.*` - OpenAI API credentials
 
-### Spring AI Integration (Web Module)
+**Frontend Configuration:**
+- Environment variables via `.env` files in the frontend directory
+- Vite uses `VITE_` prefix for environment variables exposed to the client
+- API base URL configuration for development vs production
 
-The web module uses Spring AI to extract diet plan information from uploaded files:
+### Spring AI Integration
+
+The BFF uses Spring AI to extract diet plan information from uploaded files:
 - `ProcessDietPlanFileService` - Orchestrates file processing
 - `ExtractTextFromFileStrategy` - Strategy pattern for different file types (PDF, text)
 - `DietPlanConverter` - Uses OpenAI ChatClient to convert extracted text to structured DTOs
+
+### Frontend-Backend Integration
+
+The project follows the architecture described in [Bundling React (Vite) with Spring Boot](https://www.jessym.com/articles/bundling-react-vite-with-spring-boot):
+
+**Development Mode:**
+- Frontend runs on Vite dev server (port 5173) with hot module replacement
+- Backend BFF runs on Spring Boot (port 8081)
+- Frontend proxies API requests to the backend during development
+
+**Production Mode:**
+- Vite builds the React app to static assets
+- Static assets are copied to Spring Boot's `src/main/resources/static`
+- Spring Boot serves both the SPA and API endpoints on a single port
+- All frontend routes fall back to `index.html` for client-side routing
 
 ## CRITICAL: Code Validation Rules
 
@@ -108,60 +145,108 @@ The web module uses Spring AI to extract diet plan information from uploaded fil
 
 ### Building the Project
 
+**Integrated Build (Frontend + Backend):**
+The project is configured with an integrated build system where the frontend is automatically built and bundled with the backend:
+
 ```bash
-# Clean install (compile all modules)
+# Clean install - builds both frontend and backend
 mvn clean install
 
-# Compile only (quieter output)
+# Clean - removes target/ directory and static resources
+mvn clean
+
+# Compile only (quieter output) - includes frontend build
 mvn clean compile -q
-
-# Run the web application
-cd web
-../mvnw spring-boot:run
-
-# Run the telegram application
-cd telegram
-../mvnw spring-boot:run
-
-# Access web application
-http://localhost:8081
-
-# Access telegram application
-http://localhost:8082
 ```
+
+**What happens during `mvn clean install`:**
+1. `maven-clean-plugin` deletes `target/` and `src/main/resources/static/`
+2. `exec-maven-plugin` runs `npm install` in `src/main/frontend/` (generate-sources phase)
+3. `exec-maven-plugin` runs `npm run build` to build the React app directly to `src/main/resources/static/`
+4. Backend is compiled and packaged with the frontend assets included
+
+**Note:** The `node_modules/` folder is NOT deleted by `mvn clean` to speed up builds. If you need to clean dependencies, manually delete it or run `npm ci` in the frontend directory.
+
+**Backend Only (for development):**
+
+```bash
+# Run the Spring Boot BFF (serves the bundled React app in production)
+./mvnw spring-boot:run
+
+# Access BFF API and bundled frontend
+http://localhost:8081/api
+```
+
+**Frontend Only (for development with HMR):**
+
+```bash
+# Navigate to frontend directory
+cd src/main/frontend
+
+# Install dependencies (if not already installed)
+npm install
+
+# Run development server with HMR
+npm run dev
+
+# Build for production (standalone)
+npm run build
+
+# Preview production build
+npm run preview
+
+# Access frontend dev server
+http://localhost:5173
+```
+
+**Important:** For active frontend development, use `npm run dev` to run the Vite dev server with hot module replacement. The frontend will proxy API requests to the backend running on port 8081.
 
 ### Running Tests
 
-```bash
-# Run all tests
-mvn test
+**Backend Tests:**
 
-# Run tests for specific module
-cd web
-../mvnw test
+```bash
+# Run all backend tests
+mvn test
 
 # Run tests in native image
 mvn test -PnativeTest
 ```
 
+**Frontend Tests:**
+
+```bash
+cd src/main/frontend
+
+# Run tests (when configured)
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
 ### Environment Setup
 
-Before running the application, ensure environment variables are set:
-- Copy `.env` file and populate with required values
+**Backend Environment:**
+- Copy `.env` file in project root and populate with required values
 - Required OpenAI credentials: `LOCAL_SANJY_OPENAI_API_KEY`, `LOCAL_SANJY_OPENAI_ORGANIZATION_ID`, `LOCAL_SANJY_OPENAI_PROJECT_ID`
 - Backend service URL defaults to `http://localhost:8080`
 
+**Frontend Environment:**
+- Create `.env` file in `src/main/frontend/` if needed
+- Use `VITE_` prefix for environment variables exposed to the browser
+- Example: `VITE_API_BASE_URL=http://localhost:8081/api` for development
+
 ### GraalVM Native Image
 
-The modules are configured for GraalVM native compilation with static musl builds:
+The application is configured for GraalVM native compilation with static musl builds:
 
 ```bash
 # Build native image
 mvn native:compile -Pnative
 
 # Run native executable
-./web/target/web.graalvm
-./telegram/target/telegram.graalvm
+./target/sanjy-client-web.graalvm
 
 # Build Docker container with Cloud Native Buildpacks
 ./mvnw spring-boot:build-image -Pnative
@@ -170,76 +255,159 @@ docker run --rm -p 8081:8081 sanjy-client:0.0.1-SNAPSHOT
 
 ### Important Build Notes
 
-- **Annotation Processors**: Lombok must run before MapStruct. The parent `pom.xml` configures the correct ordering with `lombok-mapstruct-binding`.
-- **Module Dependencies**: Both `web` and `telegram` depend on `shared`, so always build from the root or ensure `shared` is installed first.
-- **Component Scanning**: Both applications use `@ComponentScan` to scan both their own packages and the `shared` package.
+**Backend:**
+- **Annotation Processors**: Lombok must run before MapStruct. The `pom.xml` configures the correct ordering with `lombok-mapstruct-binding`.
 - **Lombok Configuration**: `lombok.config` ensures Spring annotations (`@Qualifier`, `@Value`, `@Lazy`) are copied to generated constructors.
+
+**Frontend:**
+- **PostCSS Configuration**: `postcss.config.cjs` must be present with `postcss-preset-mantine` for Mantine styles to work correctly
+- **TypeScript**: Project uses strict TypeScript configuration for type safety
+- **ESLint**: Code quality is enforced via ESLint with React-specific rules
+
+**Integrated Build:**
+- **Automatic Frontend Build**: The `pom.xml` is configured with `exec-maven-plugin` to automatically run `npm install` and `npm run build` during the `generate-sources` phase
+- **Automatic Cleanup**: The `maven-clean-plugin` is configured to delete `src/main/resources/static/` when running `mvn clean` (node_modules is preserved to speed up builds)
+- **Single Build Command**: Running `mvn clean install` builds both frontend and backend, bundling the React app into the Spring Boot JAR
+- **No Manual Frontend Build**: You don't need to manually build the frontend before running Maven commands - it's handled automatically
+- **Direct Build to Static**: Vite builds the React app directly to `src/main/resources/static/` (no intermediate `dist/` folder)
+
+**Integration:**
+- Frontend build output is generated directly in `src/main/resources/static` during the Maven build
+- Spring Boot must be configured to serve `index.html` for all non-API routes to support client-side routing
+- For development with hot module replacement, run the Vite dev server separately (`npm run dev`) and let it proxy to the backend
 
 ## Application Structure
 
-### Controller Organization (Web Module)
+### Backend Structure (BFF)
 
-Controllers follow a domain-driven structure:
-- `HomeController` - Landing page (`/`)
-- `DietPlanController` - Diet plan management (`/diet-plan/*`)
-  - Create new diet plan (manual or file upload)
-  - View active diet plan
-  - File processing with Spring AI
-- `MealRecordController` - Meal recording and viewing (`/meal/*`)
+**Controllers** - REST API endpoints (use `@RestController`):
+- Diet plan management endpoints (`/api/diet-plan/*`)
+- Meal recording and viewing endpoints (`/api/meal/*`)
+- File upload endpoints for diet plan processing
 
-All controllers use `@Controller` (not `@RestController`) as they return Thymeleaf view names.
+**Services:**
+- `ProcessDietPlanFileService` - Orchestrates file processing with Spring AI
+- Business logic for diet plan and meal management
 
-### Feign Client Usage
+**DTOs:**
+- Request/Response objects for API communication
+- Separate packages for requests and responses
 
-Feign clients in `shared` module are annotated with `@FeignClient`:
+**Feign Clients:**
 - `DietPlanFeignClient` - Diet plan operations (`/v1/diet-plan`)
 - `MealRecordFeignClient` - Meal record operations
 - Configured to use `${sanjy-client.external-apis.sanjy-server.url}` from properties
 - Automatically intercepted by `FeignInterceptor` for header propagation
 
-### DTO Pattern
-
-The project uses separate request/response DTOs:
+**DTO Pattern:**
 - **Requests**: POJOs with Lombok `@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`
 - **Responses**: Java records with `@Builder` and defensive copying in compact constructors
+
+### Frontend Structure (React SPA)
+
+**Directory Structure:**
+
+```
+src/main/frontend/
+├── src/
+│   ├── components/      # Reusable React components
+│   ├── pages/          # Page-level components
+│   ├── hooks/          # Custom React hooks
+│   ├── services/       # API client services
+│   ├── types/          # TypeScript type definitions
+│   ├── theme.ts        # Mantine theme configuration
+│   ├── App.tsx         # Root component with MantineProvider
+│   └── main.tsx        # Application entry point
+├── public/             # Static assets
+├── index.html          # HTML template
+├── vite.config.ts      # Vite configuration
+├── tsconfig.json       # TypeScript configuration
+└── package.json        # NPM dependencies
+```
+
+**Key Components:**
+- **App.tsx**: Root component that wraps the application with `MantineProvider`
+- **theme.ts**: Mantine theme customization (colors, fonts, spacing, etc.)
+- **Components**: Use Mantine v8 components (see Essential Rule #2)
 
 ## Development Workflow
 
 ### Adding New Features
 
-1. **Define DTOs first** in the `shared` module under `dto.request` and `dto.response`
-2. **Create/update Feign client interface** in `shared/client`
-3. **Implement controller** in `web/controller` or `telegram/controller`
-4. **Create Thymeleaf templates** in `web/resources/templates` (for web module)
-5. **Add CSS** in `web/resources/static/css` if needed
+**Full-Stack Feature (Frontend + Backend):**
+1. **Consult Swagger** - Check sanjy-server Swagger for available backend APIs
+2. **Define DTOs** in the backend under `dto.request` and `dto.response`
+3. **Create/update Feign client interface** if communicating with sanjy-server
+4. **Implement REST controller** in the BFF with `@RestController`
+5. **Create API service** in frontend (`src/main/frontend/src/services/`)
+6. **Define TypeScript types** matching the backend DTOs
+7. **Create React components** using Mantine v8 (see Essential Rule #2)
+8. **Create page components** that use the services and components
+9. **Validate in browser** - Use Chrome to verify the implementation works correctly
 
-### Template Organization (Web Module)
+**Backend-Only Feature:**
+1. Define DTOs in `dto.request` and `dto.response`
+2. Create/update Feign client if needed
+3. Implement REST controller
+4. Add business logic in services
 
-Templates are organized by domain:
-- `templates/index.html` - Home page
-- `templates/diet-plan/` - Diet plan views
-- `templates/meal/` - Meal tracking views
+**Frontend-Only Feature:**
+1. Create TypeScript types in `src/types/`
+2. Create Mantine components (see Essential Rule #2 for docs)
+3. Add custom hooks in `src/hooks/` if needed
+4. Create page components
+5. Validate in browser - Use Chrome to verify the implementation
 
 ### Exception Handling
 
-Use the shared exception hierarchy:
-- `BusinessException` - For expected business rule violations
-- `UnexpectedErrorException` - For unexpected technical errors
+**Backend:**
+- Use exception hierarchy: `BusinessException` (business rule violations), `UnexpectedErrorException` (technical errors)
 - `ExceptionCode` - Centralized error codes
-- Web module has `GlobalExceptionHandlerConfig` for handling exceptions and rendering error pages
+- `GlobalExceptionHandlerConfig` - Handles exceptions and returns JSON error responses
 
-## API Documentation
+**Frontend:**
+- Implement error boundaries for React component errors
+- Handle API errors in service layer
+- Display user-friendly error messages using Mantine notifications
 
-Swagger UI is available when the web application is running:
-- Swagger UI: `http://localhost:8081/swagger-ui.html`
-- OpenAPI spec: `http://localhost:8081/v3/api-docs`
+## API Documentation & Development URLs
+
+**Development URLs:**
+- **Frontend (Vite dev server)**: http://localhost:5173
+- **Backend BFF**: http://localhost:8081/api
+- **Backend Server (sanjy-server)**: http://localhost:8080
+
+**Swagger UI (API Documentation):**
+- **BFF Swagger** (APIs that frontend calls): http://localhost:8081/swagger-ui/index.html
+- **sanjy-server Swagger** (APIs that BFF calls): http://localhost:8080/swagger-ui/index.html
+- **OpenAPI spec (BFF)**: http://localhost:8081/api-docs
+- **OpenAPI spec (sanjy-server)**: http://localhost:8080/api-docs
+
+Use these Swagger UIs to understand available endpoints, request/response schemas, and test API calls during development.
 
 ## Code Style Notes
 
+**Backend:**
 - Use Lombok annotations to reduce boilerplate
 - Response DTOs should be immutable records
 - Request DTOs can be mutable POJOs for form binding
-- Controllers return view names (Strings), not ResponseEntity
-- Follow the existing package structure: `controller`, `client`, `dto.request`, `dto.response`, `service`, `config`, `filter`
+- REST controllers use `@RestController` and return `ResponseEntity`
+- Follow the package structure: `controller`, `client`, `dto.request`, `dto.response`, `service`, `config`, `filter`
 - Use structured logging with `StructuredArguments.kv()` for JSON logging support
 - Always use correlation ID context in logs (automatically available via MDC)
+
+**Frontend:**
+- Use functional components with TypeScript
+- Define proper TypeScript types for all props and state
+- Use Mantine v8 components (see Essential Rule #2)
+- Follow React best practices: hooks, composition, single responsibility
+- Organize components by feature or domain
+- Use custom hooks for reusable logic
+- Handle errors gracefully with error boundaries
+- Use ESLint rules defined in the project
+- Validate all changes in Chrome browser (see Essential Rule #3)
+
+**Integration:**
+- Keep TypeScript types in sync with backend DTOs
+- Use consistent naming between frontend and backend
+- Document API endpoints used by frontend services

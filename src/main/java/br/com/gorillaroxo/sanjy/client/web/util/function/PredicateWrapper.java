@@ -16,5 +16,4 @@ public interface PredicateWrapper<T, E extends Exception> {
     }
 
     boolean test(T arg) throws E;
-
 }

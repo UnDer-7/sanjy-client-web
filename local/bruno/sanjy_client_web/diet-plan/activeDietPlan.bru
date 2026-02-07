@@ -1,0 +1,326 @@
+meta {
+  name: activeDietPlan
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/diet-plan
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: success
+  description: retrieved current diet plan
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/diet-plan
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Thu, 08 Jan 2026 23:49:40 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "id": 1,
+          "name": "Plan N°02 - Cutting",
+          "startDate": "2025-12-12",
+          "endDate": "2026-03-09",
+          "dailyCalories": 2266,
+          "dailyProteinInG": 186,
+          "dailyCarbsInG": 288,
+          "dailyFatInG": 30,
+          "goal": "Body fat reduction with muscle mass preservation",
+          "nutritionistNotes": "Patient has lactose intolerance. Avoid dairy products. Drink at least 2.5L of water daily.",
+          "mealTypes": [
+            {
+              "id": 2,
+              "name": "Pre-workout snack",
+              "scheduledTime": "06:20:00",
+              "observation": "25g protein | 40g carbs | 3g fat | 285 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 4,
+                  "optionNumber": 1,
+                  "description": "Banana -- 1 unit (90g) | Whey protein isolate -- 30g | Oats -- 20g",
+                  "mealTypeId": 2,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.491752Z",
+                    "updatedAt": "2025-12-12T23:05:16.491752Z"
+                  }
+                },
+                {
+                  "id": 5,
+                  "optionNumber": 2,
+                  "description": "Sweet potato -- 150g | Chicken breast -- 80g",
+                  "mealTypeId": 2,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.491752Z",
+                    "updatedAt": "2025-12-12T23:05:16.491752Z"
+                  }
+                },
+                {
+                  "id": 6,
+                  "optionNumber": 3,
+                  "description": "White rice -- 40g (cooked) | Egg whites -- 4 units (120g)",
+                  "mealTypeId": 2,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.491752Z",
+                    "updatedAt": "2025-12-12T23:05:16.491752Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.480276Z",
+                "updatedAt": "2025-12-12T23:05:16.480276Z"
+              }
+            },
+            {
+              "id": 1,
+              "name": "Breakfast",
+              "scheduledTime": "09:30:00",
+              "observation": "45g protein | 35g carbs | 6g fat | 380 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 1,
+                  "optionNumber": 1,
+                  "description": "French bread without crumb -- 45g | Scrambled eggs -- 3 eggs (150g) | Zero lactose fresh minas cheese -- 25g",
+                  "mealTypeId": 1,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.489676Z",
+                    "updatedAt": "2025-12-12T23:05:16.489676Z"
+                  }
+                },
+                {
+                  "id": 2,
+                  "optionNumber": 2,
+                  "description": "Scrambled eggs -- 2 whole eggs (100g) | Whole wheat bread -- 25g (half large slice or 1 small slice) | Natural juice (no sugar) -- 180ml",
+                  "mealTypeId": 1,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.489676Z",
+                    "updatedAt": "2025-12-12T23:05:16.489676Z"
+                  }
+                },
+                {
+                  "id": 3,
+                  "optionNumber": 3,
+                  "description": "Tapioca -- 50g | Shredded chicken breast -- 80g | Tomato -- 50g | Zero lactose cottage cheese -- 30g",
+                  "mealTypeId": 1,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.489676Z",
+                    "updatedAt": "2025-12-12T23:05:16.489676Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.477948Z",
+                "updatedAt": "2025-12-12T23:05:16.477948Z"
+              }
+            },
+            {
+              "id": 3,
+              "name": "Lunch",
+              "scheduledTime": "12:30:00",
+              "observation": "50g protein | 80g carbs | 8g fat | 600 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 7,
+                  "optionNumber": 1,
+                  "description": "Grilled chicken breast -- 150g | Brown rice -- 100g (cooked) | Black beans -- 80g | Mixed salad -- 100g | Olive oil -- 5g",
+                  "mealTypeId": 3,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.493648Z",
+                    "updatedAt": "2025-12-12T23:05:16.493648Z"
+                  }
+                },
+                {
+                  "id": 8,
+                  "optionNumber": 2,
+                  "description": "Baked tilapia -- 180g | Sweet potato -- 200g | Steamed broccoli -- 150g | Olive oil -- 5g",
+                  "mealTypeId": 3,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.493648Z",
+                    "updatedAt": "2025-12-12T23:05:16.493648Z"
+                  }
+                },
+                {
+                  "id": 9,
+                  "optionNumber": 3,
+                  "description": "Lean ground beef (patinho) -- 150g | White rice -- 100g (cooked) | Sautéed vegetables -- 150g | Tomato sauce -- 30g",
+                  "mealTypeId": 3,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.493648Z",
+                    "updatedAt": "2025-12-12T23:05:16.493648Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.482208Z",
+                "updatedAt": "2025-12-12T23:05:16.482208Z"
+              }
+            },
+            {
+              "id": 4,
+              "name": "Afternoon snack",
+              "scheduledTime": "16:00:00",
+              "observation": "20g protein | 30g carbs | 5g fat | 250 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 10,
+                  "optionNumber": 1,
+                  "description": "Rice crackers -- 30g | Turkey breast -- 50g | Apple -- 1 unit (120g)",
+                  "mealTypeId": 4,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.495557Z",
+                    "updatedAt": "2025-12-12T23:05:16.495557Z"
+                  }
+                },
+                {
+                  "id": 11,
+                  "optionNumber": 2,
+                  "description": "Natural yogurt zero lactose -- 150g | Granola -- 25g | Strawberries -- 80g",
+                  "mealTypeId": 4,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.495557Z",
+                    "updatedAt": "2025-12-12T23:05:16.495557Z"
+                  }
+                },
+                {
+                  "id": 12,
+                  "optionNumber": 3,
+                  "description": "Whole wheat bread -- 25g | Tuna in water -- 80g | Lettuce and tomato -- 50g",
+                  "mealTypeId": 4,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.495557Z",
+                    "updatedAt": "2025-12-12T23:05:16.495557Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.484068Z",
+                "updatedAt": "2025-12-12T23:05:16.484068Z"
+              }
+            },
+            {
+              "id": 6,
+              "name": "Evening snack",
+              "scheduledTime": "23:30:00",
+              "observation": "20g protein | 15g carbs | 3g fat | 170 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 16,
+                  "optionNumber": 1,
+                  "description": "Casein protein -- 30g | Peanut butter -- 10g",
+                  "mealTypeId": 6,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.500947Z",
+                    "updatedAt": "2025-12-12T23:05:16.500947Z"
+                  }
+                },
+                {
+                  "id": 17,
+                  "optionNumber": 2,
+                  "description": "Zero lactose cottage cheese -- 100g | Almonds -- 15g",
+                  "mealTypeId": 6,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.500947Z",
+                    "updatedAt": "2025-12-12T23:05:16.500947Z"
+                  }
+                },
+                {
+                  "id": 18,
+                  "optionNumber": 3,
+                  "description": "Scrambled egg whites -- 3 units (90g) | Cherry tomatoes -- 50g",
+                  "mealTypeId": 6,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.500947Z",
+                    "updatedAt": "2025-12-12T23:05:16.500947Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.487813Z",
+                "updatedAt": "2025-12-12T23:05:16.487813Z"
+              }
+            },
+            {
+              "id": 5,
+              "name": "Dinner",
+              "scheduledTime": "21:00:00",
+              "observation": "45g protein | 30g carbs | 5g fat | 360 kcal",
+              "dietPlanId": 1,
+              "standardOptions": [
+                {
+                  "id": 13,
+                  "optionNumber": 1,
+                  "description": "Cooked pasta -- 90g | Ground beef (patinho) -- 120g | Homemade tomato sauce -- 50g | Steamed broccoli -- 100g",
+                  "mealTypeId": 5,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.497471Z",
+                    "updatedAt": "2025-12-12T23:05:16.497471Z"
+                  }
+                },
+                {
+                  "id": 14,
+                  "optionNumber": 2,
+                  "description": "Grilled chicken -- 140g | Mashed potato or sweet potato (no milk) -- 130g or 170g | Mixed vegetables -- 100g | Olive oil -- 5g",
+                  "mealTypeId": 5,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.497471Z",
+                    "updatedAt": "2025-12-12T23:05:16.497471Z"
+                  }
+                },
+                {
+                  "id": 15,
+                  "optionNumber": 3,
+                  "description": "Grilled salmon -- 150g | Quinoa -- 80g (cooked) | Asparagus -- 120g | Lemon -- 1/2 unit",
+                  "mealTypeId": 5,
+                  "metadata": {
+                    "createdAt": "2025-12-12T23:05:16.497471Z",
+                    "updatedAt": "2025-12-12T23:05:16.497471Z"
+                  }
+                }
+              ],
+              "metadata": {
+                "createdAt": "2025-12-12T23:05:16.485970Z",
+                "updatedAt": "2025-12-12T23:05:16.485970Z"
+              }
+            }
+          ],
+          "isActive": true,
+          "metadata": {
+            "createdAt": "2025-12-12T23:05:16.475684Z",
+            "updatedAt": "2025-12-12T23:05:16.475684Z"
+          }
+        }
+      '''
+    }
+  }
+}

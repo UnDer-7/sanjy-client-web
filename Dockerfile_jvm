@@ -1,0 +1,107 @@
+##################
+# BUILD ARGUMENTS
+##################
+
+# Define BUILD_MODE at global scope to be used in FROM instructions
+ARG BUILD_MODE=full
+
+##################
+# FRONTEND BUILD STEP
+##################
+FROM node:22-alpine AS frontend-build
+
+RUN echo "========================================" && \
+    echo "STAGE: frontend-build (React/Vite)" && \
+    echo "========================================"
+
+# Install make for running Makefile
+RUN apk add --no-cache make
+
+WORKDIR /build
+
+# Copy Makefile and frontend source
+COPY Makefile .
+COPY src/main/frontend src/main/frontend
+
+# Build frontend using Makefile
+RUN make build/frontend
+
+##################
+# BUILD STEP (FULL MODE)
+##################
+FROM eclipse-temurin:25.0.1_8-jdk-alpine-3.22 AS build-full
+
+RUN echo "========================================" && \
+    echo "STAGE: build-full (JVM full compilation)" && \
+    echo "========================================"
+
+WORKDIR /build
+
+# Install necessary packages
+RUN apk add --no-cache make
+
+# Copy backend project files
+COPY src/main/java src/main/java
+COPY src/main/resources src/main/resources
+COPY lombok.config .
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+COPY Makefile .
+
+# Copy frontend build output from frontend stage
+COPY --from=frontend-build /build/src/main/resources/static/ src/main/resources/static/
+
+# Build and move JAR to standard location
+RUN make build/backend/jvm && \
+    mv target/*.jar /build/app.jar
+
+##################
+# BUILD STEP (LOCAL MODE)
+##################
+FROM alpine:3.22.2 AS build-local
+
+RUN echo "========================================" && \
+    echo "STAGE: build-local (using pre-built JAR)" && \
+    echo "========================================"
+
+WORKDIR /build
+
+# Copy pre-built jar from local build
+# Note: When using local mode, run 'make build/jvm' first to build frontend + backend
+COPY target/*.jar ./app.jar
+
+##################
+# RELEASE STEP
+##################
+FROM build-${BUILD_MODE} AS build-selected
+
+FROM eclipse-temurin:25.0.1_8-jdk-alpine-3.22 AS release
+
+RUN echo "========================================" && \
+    echo "STAGE: release (final image)" && \
+    echo "========================================"
+
+WORKDIR /app
+
+# Copy the jar (either from build-full or build-local)
+COPY --from=build-selected /build/*.jar ./app.jar
+
+# Set up directories
+ARG S_DATA_PATH=/app/data
+RUN mkdir -p ${S_DATA_PATH}/logs/structured \
+    && mkdir -p ${S_DATA_PATH}/logs/unstructured
+
+# Create non-root user
+RUN addgroup -g 1000 sanjy && \
+    adduser -u 1000 -G sanjy -s /bin/sh -D sanjy && \
+    chown -R sanjy:sanjy /app
+
+# Switch to non-root user for running the app
+USER sanjy
+
+# Expose the application port
+EXPOSE 8081
+
+# Set the final entrypoint
+ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-Dlog4j2.formatMsgNoLookups=true", "-jar", "/app/app.jar"]

@@ -1,13 +1,17 @@
 package br.com.gorillaroxo.sanjy.client.web.service;
 
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.MealRecordFeignClient;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDTO;
-import br.com.gorillaroxo.sanjy.client.web.domain.SearchMealRecordDomain;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.client.MealRecordRestClient;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.SearchMealRecordParamRequestDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.SearchMealRecordParamControllerRequest;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.SearchMealRecordControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.mapper.MealRecordMapper;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.ThreadUtils;
+import java.time.Instant;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
@@ -15,50 +19,58 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.concurrent.CompletableFuture;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchMealRecordService {
 
-    private final MealRecordFeignClient mealRecordFeignClient;
+    private final MealRecordRestClient mealRecordRestClient;
+    private final MealRecordMapper mealRecordMapper;
 
     @Qualifier("applicationTaskExecutor")
     private final TaskExecutor taskExecutor;
 
-    public SearchMealRecordDomain search(Integer pageNumber, Integer pageSize, Instant consumedAtAfter, Instant consumedAtBefore,
-        Boolean isFreeMeal) {
-        final CompletableFuture<PagedResponseDTO<MealRecordResponseDTO>> mealRecordFuture = ThreadUtils.supplyAsyncWithMDC(() -> {
-            log.info(
-                LogField.Placeholders.ONE.placeholder,
-                StructuredArguments.kv(LogField.MSG.label(), "Searching meal records asynchronously..."));
+    public SearchMealRecordControllerResponseDto execute(final SearchMealRecordParamControllerRequest pageRequest) {
 
-            return mealRecordFeignClient.searchMealRecords(
-                SearchMealRecordParamRequestDTO.builder()
-                    .pageNumber(pageNumber)
-                    .pageSize(pageSize)
-                    .consumedAtAfter(consumedAtAfter)
-                    .consumedAtBefore(consumedAtBefore)
-                    .isFreeMeal(isFreeMeal)
-                    .build());
-        }, taskExecutor);
+        final Instant consumedAtAfter = pageRequest.getConsumedAtAfter().toInstant();
+        final Instant consumedAtBefore = pageRequest.getConsumedAtBefore().toInstant();
 
-        final CompletableFuture<MealRecordStatisticsResponseDTO> mealRecordStatisticsFuture = ThreadUtils.supplyAsyncWithMDC(
-            () -> {
-                log.info(
-                    LogField.Placeholders.ONE.placeholder,
-                    StructuredArguments.kv(LogField.MSG.label(), "Searching meal records statistics asynchronously..."));
+        final CompletableFuture<PagedResponseDto<MealRecordResponseDto>> mealRecordFuture =
+                ThreadUtils.supplyAsyncWithMdc(
+                        () -> {
+                            log.info(
+                                    LogField.Placeholders.TWO.getPlaceholder(),
+                                    StructuredArguments.kv(
+                                            LogField.MSG.label(), "Searching meal records asynchronously..."),
+                                    StructuredArguments.kv(LogField.SEARCH_PARAMS.label(), "( " + pageRequest + " )"));
 
-                return mealRecordFeignClient.getMealRecordStatisticsByDateRange(consumedAtAfter, consumedAtBefore);
-            }, taskExecutor);
+                            //noinspection S3252 - @SuperBuilder generates builder in each class
+                            return mealRecordRestClient.searchMealRecords(SearchMealRecordParamRequestDto.builder()
+                                    .pageNumber(pageRequest.getPageNumber())
+                                    .pageSize(pageRequest.getPageSize())
+                                    .consumedAtAfter(consumedAtAfter)
+                                    .consumedAtBefore(consumedAtBefore)
+                                    .isFreeMeal(pageRequest.getIsFreeMeal())
+                                    .build());
+                        },
+                        taskExecutor);
 
-        return new SearchMealRecordDomain(
-            mealRecordFuture.join(),
-            mealRecordStatisticsFuture.join()
-        );
+        final CompletableFuture<MealRecordStatisticsResponseDto> mealRecordStatisticsFuture =
+                ThreadUtils.supplyAsyncWithMdc(
+                        () -> {
+                            log.info(
+                                    LogField.Placeholders.ONE.getPlaceholder(),
+                                    StructuredArguments.kv(
+                                            LogField.MSG.label(),
+                                            "Searching meal records statistics asynchronously..."));
+
+                            return mealRecordRestClient.getMealRecordStatisticsByDateRange(
+                                    consumedAtAfter, consumedAtBefore);
+                        },
+                        taskExecutor);
+
+        return new SearchMealRecordControllerResponseDto(
+                mealRecordMapper.toResponse(mealRecordFuture.join()),
+                mealRecordMapper.toResponse(mealRecordStatisticsFuture.join()));
     }
-
 }

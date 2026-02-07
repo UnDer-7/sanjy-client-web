@@ -36,5 +36,4 @@ public class SerializationException extends BusinessException {
     protected Logger getLogger() {
         return log;
     }
-
 }

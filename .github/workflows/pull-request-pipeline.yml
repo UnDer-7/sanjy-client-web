@@ -1,0 +1,347 @@
+name: Pull Request Pipeline
+
+on:
+  pull_request:
+    types: [opened, labeled, synchronize, reopened]
+
+jobs:
+  version-validation:
+    name: Version Validation
+    runs-on: ubuntu-latest
+
+    # Only run if PR has 'run-pipe' label
+    if: contains(github.event.pull_request.labels.*.name, 'run-pipe')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
+
+      - name: Setup GraalVM 25 (Oracle)
+        uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 #v1.4.4
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      - name: Get current project version
+        id: project-version
+        run: |
+          VERSION=$(make version)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current project version: $VERSION"
+
+      - name: Get latest version tag
+        id: latest-tag
+        run: |
+          # Fetch all version tags and get the latest one following semantic versioning
+          LATEST_TAG=$(git ls-remote --tags https://github.com/UnDer-7/sanjy-client-web.git | \
+            grep -oP 'refs/tags/\K[0-9]+\.[0-9]+\.[0-9]+$' | \
+            sort -V | \
+            tail -n 1)
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "latest_version=0.0.0" >> $GITHUB_OUTPUT
+            echo "No existing version tags found. Starting from 0.0.0"
+          else
+            echo "latest_version=$LATEST_TAG" >> $GITHUB_OUTPUT
+            echo "Latest published version: $LATEST_TAG"
+          fi
+
+      - name: Compare versions (Semantic Versioning)
+        id: compare-versions
+        run: |
+          CURRENT_VERSION="${{ steps.project-version.outputs.version }}"
+          LATEST_VERSION="${{ steps.latest-tag.outputs.latest_version }}"
+
+          # Function to compare semantic versions
+          compare_versions() {
+            if [ "$1" = "$2" ]; then
+              echo "equal"
+              return
+            fi
+
+            # Split versions into major.minor.patch
+            IFS='.' read -r -a current <<< "$1"
+            IFS='.' read -r -a latest <<< "$2"
+
+            # Compare major version
+            if [ "${current[0]}" -gt "${latest[0]}" ]; then
+              echo "greater"
+              return
+            elif [ "${current[0]}" -lt "${latest[0]}" ]; then
+              echo "less"
+              return
+            fi
+
+            # Compare minor version
+            if [ "${current[1]}" -gt "${latest[1]}" ]; then
+              echo "greater"
+              return
+            elif [ "${current[1]}" -lt "${latest[1]}" ]; then
+              echo "less"
+              return
+            fi
+
+            # Compare patch version
+            if [ "${current[2]}" -gt "${latest[2]}" ]; then
+              echo "greater"
+              return
+            elif [ "${current[2]}" -lt "${latest[2]}" ]; then
+              echo "less"
+              return
+            fi
+
+            echo "equal"
+          }
+
+          COMPARISON=$(compare_versions "$CURRENT_VERSION" "$LATEST_VERSION")
+          echo "comparison=$COMPARISON" >> $GITHUB_OUTPUT
+          echo "Version comparison: $CURRENT_VERSION vs $LATEST_VERSION = $COMPARISON"
+
+      - name: Fail if version is not greater than latest
+        if: steps.compare-versions.outputs.comparison != 'greater'
+        run: |
+          CURRENT_VERSION="${{ steps.project-version.outputs.version }}"
+          LATEST_VERSION="${{ steps.latest-tag.outputs.latest_version }}"
+          COMPARISON="${{ steps.compare-versions.outputs.comparison }}"
+
+          echo "::error::Version validation failed!"
+          echo ""
+
+          if [ "$COMPARISON" = "equal" ]; then
+            echo "❌ Current version $CURRENT_VERSION is equal to the latest published version."
+          else
+            echo "❌ Current version $CURRENT_VERSION is LESS than the latest published version $LATEST_VERSION."
+          fi
+
+          echo ""
+          echo "💡 You must bump the version to be greater than $LATEST_VERSION"
+          echo ""
+          echo "Following Semantic Versioning:"
+          echo "  - Patch release (bug fixes): make version/set $LATEST_VERSION → increment patch (e.g., 1.0.0 → 1.0.1)"
+          echo "  - Minor release (new features): make version/set → increment minor (e.g., 1.0.0 → 1.1.0)"
+          echo "  - Major release (breaking changes): make version/set → increment major (e.g., 1.0.0 → 2.0.0)"
+          echo ""
+          echo "After updating the version, commit and push the changes."
+          exit 1
+
+      - name: Validate CHANGELOG.md entry
+        id: changelog-validation
+        run: |
+          CURRENT_VERSION="${{ steps.project-version.outputs.version }}"
+          CHANGELOG_FILE="CHANGELOG.md"
+
+          # Check if CHANGELOG.md exists
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "changelog_valid=false" >> $GITHUB_OUTPUT
+            echo "changelog_error=missing_file" >> $GITHUB_OUTPUT
+            echo "::error::CHANGELOG.md file not found!"
+            exit 0
+          fi
+
+          # Check if version header exists (## [X.Y.Z])
+          if ! grep -q "^## \[$CURRENT_VERSION\]" "$CHANGELOG_FILE"; then
+            echo "changelog_valid=false" >> $GITHUB_OUTPUT
+            echo "changelog_error=missing_version_header" >> $GITHUB_OUTPUT
+            echo "::error::Version $CURRENT_VERSION not found in CHANGELOG.md!"
+            exit 0
+          fi
+
+          # Extract the section for the current version
+          # Get content between ## [CURRENT_VERSION] and the next ## (or end of file)
+          VERSION_SECTION=$(sed -n "/^## \[$CURRENT_VERSION\]/,/^## \[/p" "$CHANGELOG_FILE" | sed '$d')
+
+          # If it's the last version in the file, get everything until end
+          if [ -z "$VERSION_SECTION" ]; then
+            VERSION_SECTION=$(sed -n "/^## \[$CURRENT_VERSION\]/,\$p" "$CHANGELOG_FILE")
+          fi
+
+          # Check if there's at least one ### header within the version section
+          if ! echo "$VERSION_SECTION" | grep -q "^###"; then
+            echo "changelog_valid=false" >> $GITHUB_OUTPUT
+            echo "changelog_error=missing_changes" >> $GITHUB_OUTPUT
+            echo "::error::No changes documented for version $CURRENT_VERSION in CHANGELOG.md!"
+            exit 0
+          fi
+
+          # Validation passed
+          echo "changelog_valid=true" >> $GITHUB_OUTPUT
+          echo "✅ CHANGELOG.md properly documented for version $CURRENT_VERSION"
+
+      - name: Fail if CHANGELOG.md is not properly documented
+        if: steps.changelog-validation.outputs.changelog_valid != 'true'
+        run: |
+          CURRENT_VERSION="${{ steps.project-version.outputs.version }}"
+          ERROR_TYPE="${{ steps.changelog-validation.outputs.changelog_error }}"
+
+          echo "::error::CHANGELOG validation failed!"
+          echo ""
+
+          if [ "$ERROR_TYPE" = "missing_file" ]; then
+            echo "❌ CHANGELOG.md file does not exist in the repository."
+            echo ""
+            echo "💡 Create a CHANGELOG.md file in the root of the project."
+          elif [ "$ERROR_TYPE" = "missing_version_header" ]; then
+            echo "❌ Version $CURRENT_VERSION is not documented in CHANGELOG.md."
+            echo ""
+            echo "💡 Add a version header to CHANGELOG.md:"
+            echo "   ## [$CURRENT_VERSION] - $(date +%Y-%m-%d)"
+            echo ""
+            echo "Example structure:"
+            echo "   ## [$CURRENT_VERSION] - $(date +%Y-%m-%d)"
+            echo "   "
+            echo "   ### Added"
+            echo "   "
+            echo "   #### Feature Name"
+            echo "   - Description of changes"
+          elif [ "$ERROR_TYPE" = "missing_changes" ]; then
+            echo "❌ Version $CURRENT_VERSION exists in CHANGELOG.md but has no documented changes."
+            echo ""
+            echo "💡 Add at least one change description using #### headers:"
+            echo ""
+            echo "Example:"
+            echo "   ## [$CURRENT_VERSION] - $(date +%Y-%m-%d)"
+            echo "   "
+            echo "   ### Added"
+            echo "   "
+            echo "   #### New Feature API"
+            echo "   - \`POST /new-endpoint\` - Description of the endpoint"
+            echo "   - \`GET /another-endpoint\` - Description of the endpoint"
+          fi
+
+          echo ""
+          echo "📖 Follow the Keep a Changelog format: https://keepachangelog.com/"
+          echo ""
+          echo "After updating CHANGELOG.md, commit and push the changes."
+          exit 1
+
+  coding-style:
+    name: Coding Style
+    runs-on: ubuntu-latest
+
+    # Only run if version-validation job succeeded
+    needs: version-validation
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
+
+      - name: Setup GraalVM 25 (Oracle)
+        uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 #v1.4.4
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 #v6.2.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: src/main/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd src/main/frontend && npm ci --ignore-scripts
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java -version
+          node --version
+          npm --version
+
+      - name: Check code formatting
+        id: format-check
+        run: make fmt/check
+        continue-on-error: true
+
+      - name: Format check failed
+        if: steps.format-check.outcome == 'failure'
+        run: |
+          echo "::error::Code formatting check failed!"
+          echo ""
+          echo "❌ To resolve this issue, format the code following the project guidelines."
+          echo ""
+          echo "💡 You can run the following command to automatically format the code:"
+          echo "   make fmt"
+          echo ""
+          echo "After that, commit and push the formatted code."
+          exit 1
+
+      - name: Run lint check
+        id: lint-check
+        run: make lint
+        continue-on-error: true
+
+      - name: Lint check failed
+        if: steps.lint-check.outcome == 'failure'
+        run: |
+          echo "::error::Lint check failed!"
+          echo ""
+          echo "❌ The project lint failed, some checkstyle rule was not followed."
+          echo ""
+          echo "💡 You can run the following command in your terminal to create an HTML report of the issues found:"
+          echo "   make lint/report"
+          echo ""
+          echo "The report will show in detail which rules were violated."
+          exit 1
+
+  quality:
+    name: Quality Analysis
+    runs-on: ubuntu-latest
+
+    # Only run if coding-style job succeeded
+    needs: coding-style
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 #v6.0.0
+        with:
+          fetch-depth: 0  # Fetch all history for SonarCloud analysis
+
+      - name: Setup GraalVM 25 (Oracle)
+        uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 #v1.4.4
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 #v6.2.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: src/main/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd src/main/frontend && npm ci --ignore-scripts
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java -version
+          node --version
+          npm --version
+
+      - name: Run Snyk vulnerability scan
+        id: snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: make snyk/test
+
+      - name: Run tests
+        id: test
+        run: make test
+
+      - name: Publish to SonarCloud
+        if: steps.test.outcome == 'success'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: make sonar

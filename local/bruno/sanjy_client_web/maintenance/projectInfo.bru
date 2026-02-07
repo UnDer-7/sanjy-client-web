@@ -1,0 +1,104 @@
+meta {
+  name: projectInfo
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/maintenance/project-info
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: success
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/maintenance/project-info
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Sat, 07 Feb 2026 05:31:38 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "sanjyClientWeb": {
+            "version": {
+              "current": "0.1.0",
+              "latest": null,
+              "isLatest": true
+            },
+            "runtimeMode": "JVM"
+          },
+          "sanjyServer": {
+            "version": {
+              "current": "1.0.0",
+              "latest": "1.0.0",
+              "isLatest": true
+            },
+            "runtimeMode": "JVM"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: fail
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/maintenance/project-info
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Sat, 07 Feb 2026 06:02:37 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 502
+      text: Bad Gateway
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "userCode": "017",
+          "timestamp": "2026-02-07T06:02:37.549205014Z",
+          "userMessage": "Failed to connect to an external service. The service may be temporarily unavailable.",
+          "httpStatusCode": 502
+        }
+      '''
+    }
+  }
+}

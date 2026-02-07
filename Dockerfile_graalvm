@@ -1,0 +1,113 @@
+##################
+# BUILD ARGUMENTS
+##################
+
+# Define BUILD_MODE at global scope to be used in FROM instructions
+ARG BUILD_MODE=full
+
+##################
+# FRONTEND BUILD STEP
+##################
+FROM node:22-alpine AS frontend-build
+
+RUN echo "========================================" && \
+    echo "STAGE: frontend-build (React/Vite)" && \
+    echo "========================================"
+
+# Install make for running Makefile
+RUN apk add --no-cache make
+
+WORKDIR /build
+
+# Copy Makefile and frontend source
+COPY Makefile .
+COPY src/main/frontend src/main/frontend
+
+# Build frontend using Makefile
+RUN make build/frontend
+
+##################
+# BUILD STEP (FULL MODE)
+##################
+FROM container-registry.oracle.com/graalvm/native-image:25 AS build-full
+
+RUN echo "========================================" && \
+    echo "STAGE: build-full (GraalVM native compilation)" && \
+    echo "========================================"
+
+# Install build dependencies
+RUN microdnf install -y findutils && \
+    microdnf clean all
+
+WORKDIR /build
+
+# Copy backend project files
+COPY src/main/java src/main/java
+COPY src/main/resources src/main/resources
+COPY lombok.config .
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+COPY .env .env
+COPY Makefile .
+
+# Copy frontend build output from frontend stage
+COPY --from=frontend-build /build/src/main/resources/static/ src/main/resources/static/
+
+# Build native image with environment variables loaded and move to standard location
+RUN make build/backend/graalvm && \
+    mv target/*.graal /build/app.graal
+
+##################
+# BUILD STEP (LOCAL MODE)
+##################
+FROM alpine:3.22.2 AS build-local
+
+RUN echo "========================================" && \
+    echo "STAGE: build-local (using pre-built native binary)" && \
+    echo "========================================"
+
+WORKDIR /build
+
+# Copy pre-built GraalVM native binary from local build
+# Note: When using local mode, run 'make build/graalvm' first to build frontend + backend
+COPY target/*.graal ./app.graal
+
+##################
+# RELEASE STEP
+##################
+FROM build-${BUILD_MODE} AS build-selected
+
+FROM alpine:3.22.2 AS release
+
+RUN echo "========================================" && \
+    echo "STAGE: release (final image)" && \
+    echo "========================================"
+
+WORKDIR /app
+
+# Copy the native binary (either from build-full or build-local)
+COPY --from=build-selected /build/*.graal ./app.graal
+
+# Add executable permission to the binary
+RUN chmod +x /app/app.graal
+
+# Update busybox to fix CVE-2025-46394 and install glibc compatibility
+RUN apk upgrade --no-cache busybox busybox-binsh ssl_client && \
+    apk add --no-cache gcompat
+
+# Set up directories
+ARG S_DATA_PATH=/app/data
+RUN mkdir -p ${S_DATA_PATH}/logs/structured \
+    && mkdir -p ${S_DATA_PATH}/logs/unstructured
+
+# Create non-root user
+RUN addgroup -g 1000 sanjy && \
+    adduser -u 1000 -G sanjy -s /bin/sh -D sanjy && \
+    chown -R sanjy:sanjy /app
+
+USER sanjy
+
+EXPOSE 8081
+
+ENTRYPOINT ["./app.graal"]

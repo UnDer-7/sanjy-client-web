@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.5.10</version>
+        <relativePath/>
+        <!-- lookup parent from repository -->
     </parent>
 
     <groupId>br.com.gorillaroxo</groupId>
     <artifactId>sanjy-client-web</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
     <name>sanjy-client-web</name>
-    <description>sanjy-client-web</description>
+    <description>Web client for the Sanjy diet and meal management application</description>
 
     <url/>
     <licenses>
@@ -37,12 +37,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <springdoc.version>2.6.0</springdoc.version>
-        <mapstruct.version>1.6.2</mapstruct.version>
+        <!-- Careful when upgrading springdoc-->
+        <!-- springdoc version 2.18.15 breaks GraalVm Native Image at runtime, throws given error: "Error creating bean with name 'swaggerWelcome': Instantiation of supplied bean failed"-->
+        <springdoc.version>2.8.14</springdoc.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.42</lombok.version>
 
-        <spring-ai.version>1.0.2</spring-ai.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <spring-ai.version>1.0.3</spring-ai.version>
+
+        <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
+        <spotless-palantirJavaFormat.version>2.82.0</spotless-palantirJavaFormat.version>
+        <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
+
+        <!-- SonarCloud Configuration -->
+        <sonar.projectKey>UnDer-7_sanjy-client-web</sonar.projectKey>
+        <sonar.organization>under-7</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.source>25</sonar.java.source>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.sources>pom.xml,src/main/java,src/main/frontend/src</sonar.sources>
+        <sonar.exclusions>src/main/resources/static/**,**/node_modules/**</sonar.exclusions>
+        <sonar.coverage.exclusions>**/exception/**,
+            **/*Constants.java,
+            **/SanjyClientWebApplication.java,
+            **/GlobalExceptionHandlerConfig.java,
+            src/main/frontend/**</sonar.coverage.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -56,77 +75,48 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-bom</artifactId>
+                <version>${springdoc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- ####################### -->
+
+            <!-- Swagger Version Alignment -->
+            <!-- Force consistent swagger-annotations version to fix NoSuchMethodError with springdoc-openapi -->
+            <!-- spring-ai-client-chat brings 2.2.30, but springdoc 2.8.14 needs 2.2.41 -->
+            <!-- Without this fix when accessing swagger in Native Image throws this exception: "Caused by: java.lang.NoSuchMethodError: io.swagger.v3.oas.annotations.media.Schema.$dynamicRef()"-->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>2.2.41</version>
+            </dependency>
+            <!-- ####################### -->
+
+            <!-- Security Fixes -->
+            <!-- Override vulnerable commons-lang3 (SNYK-JAVA-ORGAPACHECOMMONS-10734078) -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+            <!-- Override vulnerable commons-fileupload (SNYK-JAVA-COMMONSFILEUPLOAD-10363252) -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.6.0</version>
             </dependency>
             <!-- ####################### -->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <!-- WEB -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!-- ####################### -->
-
-        <!-- Template Engine -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <!-- ####################### -->
-
-        <!-- PDF Processing -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
-        </dependency>
-        <!-- ####################### -->
-
-        <!-- Artificial intelligence -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-model-openai</artifactId>
-        </dependency>
-        <!-- ####################### -->
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- ####################### -->
-
-        <!-- Swagger -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-            <version>${springdoc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${springdoc.version}</version>
-        </dependency>
-        <!-- ####################### -->
-
         <!-- Logging -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>8.0</version>
+            <version>8.1</version>
         </dependency>
         <!-- ####################### -->
 
@@ -147,15 +137,38 @@
             <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- ####################### -->
+
+        <!-- WEB -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.17.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- Artificial intelligence -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>33.5.0-jre</version>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-anthropic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-client-chat</artifactId>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
         <!-- ####################### -->
 
@@ -163,6 +176,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>3.9.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- ####################### -->
+
+        <!-- PDF Text Extraction (iText - GraalVM Native Image supported) -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>9.1.0</version>
+            <type>pom</type>
         </dependency>
         <!-- ####################### -->
 
@@ -173,15 +201,24 @@
             <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver3-junit5</artifactId>
+            <version>5.0.0-alpha.14</version>
+            <scope>test</scope>
+        </dependency>
         <!-- ####################### -->
     </dependencies>
 
     <build>
+        <finalName>sanjy-client-web-${project.version}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+            <!-- ==================== Build & Packaging ==================== -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -208,21 +245,349 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>br.com.gorillaroxo.sanjy.client.web.SanjyClientWebApplication</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <fail>true</fail>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                    <message>Invalid Java version. It should, at least, be 25</message>
+                                </requireJavaVersion>
+
+                                <!-- Detects duplicate dependencies within the same POM -->
+                                <banDuplicatePomDependencyVersions/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- ============================================================ -->
+
+            <!-- ==================== Testing ==================== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.14</version>
+                <configuration>
+                    <excludes>
+                        <!-- Exclude exception classes from coverage -->
+                        <exclude>**/exception/**/*.class</exclude>
+                        <!-- Exclude Constants classes from coverage -->
+                        <exclude>**/*Constants.class</exclude>
+                        <!-- Exclude main application class from coverage -->
+                        <exclude>**/SanjyClientWebApplication.class</exclude>
+                        <!-- Exclude global exception handler from coverage -->
+                        <exclude>**/GlobalExceptionHandlerConfig.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- ================================================= -->
+
+            <!-- ==================== Native Build (GraalVM) ==================== -->
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.bytebuddy</groupId>
+                        <artifactId>byte-buddy</artifactId>
+                        <version>1.18.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>enhance</id>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <enableLazyInitialization>true</enableLazyInitialization>
+                            <enableDirtyTracking>true</enableDirtyTracking>
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
-                    <imageName>${project.name}.graalvm</imageName>
+                    <imageName>sanjy-client-web-${project.version}.graal</imageName>
+                    <buildArgs>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                    </buildArgs>
                     <jvmArgs>
                         <arg>-XX:MaxRAMPercentage=99.0</arg>
                     </jvmArgs>
-                    <buildArgs>
-                        <buildArg>--static</buildArg>
-                        <buildArg>--libc=musl</buildArg>
-                    </buildArgs>
                 </configuration>
             </plugin>
+            <!-- ================================================================ -->
+
+            <!-- ==================== Code Quality & Style ==================== -->
+            <plugin>
+                <!-- Documentation: https://github.com/diffplug/spotless/tree/main/plugin-maven#table-of-contents -->
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>.dockerignore</include>
+                                <include>.env</include>
+                                <include>.gitattributes</include>
+                                <include>.gitignore</include>
+                                <include>.sdkmanrc</include>
+                                <include>Dockerfile_graalvm</include>
+                                <include>Dockerfile_jvm</include>
+                                <include>lombok.config</include>
+                            </includes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <tabs>false</tabs>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                        </format>
+
+                        <format>
+                            <!-- Makefile must be indented with a single tab character, not spaces -->
+                            <includes>
+                                <include>Makefile</include>
+                            </includes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <tabs>true</tabs>
+                                <spaces>false</spaces>
+                                <spacesPerTab>1</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
+
+                    <java>
+                        <palantirJavaFormat>
+                            <version>${spotless-palantirJavaFormat.version}</version>
+                            <style>PALANTIR</style>
+                            <!-- or PALANTIR | AOSP | GOOGLE (optional) -->
+                            <formatJavadoc>true</formatJavadoc>
+                            <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
+                        </palantirJavaFormat>
+                        <removeUnusedImports/>
+                    </java>
+
+                    <pom>
+                        <sortPom>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                        </sortPom>
+                    </pom>
+
+                    <markdown>
+                        <includes>
+                            <include>**/*.md</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/node_modules/**</exclude>
+                            <exclude>src/main/frontend/**</exclude>
+                        </excludes>
+                        <flexmark/>
+                    </markdown>
+
+                    <sql>
+                        <includes>
+                            <include>**/*.sql</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/node_modules/**</exclude>
+                        </excludes>
+                        <dbeaver>
+                            <configFile>.spotless.dbeaver.properties</configFile>
+                        </dbeaver>
+                    </sql>
+
+                    <!-- Jackson formating removes comments and prettier requires a NodeJS installation. See better options in the future -->
+                    <!--                    <yaml>-->
+                    <!--                        <includes>-->
+                    <!--                            <include>**/*.yaml</include>-->
+                    <!--                            <include>**/*.yml</include>-->
+                    <!--                        </includes>-->
+
+                    <!--                        <jackson>-->
+                    <!--                            <version>2.20.1</version>-->
+                    <!--                            &lt;!&ndash; optional: The version of 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml' to be used &ndash;&gt;-->
+                    <!--                            <features>-->
+                    <!--                                &lt;!&ndash; optional: Customize the set of features (based on com.fasterxml.jackson.databind.SerializationFeature) &ndash;&gt;-->
+                    <!--                                <INDENT_OUTPUT>true</INDENT_OUTPUT>-->
+                    <!--                                &lt;!&ndash; true by default &ndash;&gt;-->
+                    <!--                                <ORDER_MAP_ENTRIES_BY_KEYS>false</ORDER_MAP_ENTRIES_BY_KEYS>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                            </features>-->
+                    <!--                            <yamlFeatures>-->
+                    <!--                                <WRITE_DOC_START_MARKER>true</WRITE_DOC_START_MARKER>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                                <MINIMIZE_QUOTES>false</MINIMIZE_QUOTES>-->
+                    <!--                                &lt;!&ndash; false by default &ndash;&gt;-->
+                    <!--                            </yamlFeatures>-->
+                    <!--                        </jackson>-->
+                    <!--                    </yaml>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-maven-plugin.version}</version>
+                <configuration>
+                    <configLocation>.checkstyle/checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <linkXRef>false</linkXRef>
+                    <propertyExpansion>config_loc=.checkstyle
+                        checkstyle_severity=error</propertyExpansion>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>12.1.2</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.sevntu-checkstyle</groupId>
+                        <artifactId>sevntu-checks</artifactId>
+                        <version>1.44.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.3.0.6276</version>
+            </plugin>
+            <!-- =============================================================== -->
+
+            <!-- ==================== Security ==================== -->
+            <plugin>
+                <groupId>io.snyk</groupId>
+                <artifactId>snyk-maven-plugin</artifactId>
+                <version>2.3.0</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <apiToken>${env.SNYK_TOKEN}</apiToken>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>snyk-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>snyk-monitor</id>
+                        <goals>
+                            <goal>monitor</goal>
+                        </goals>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- ================================================== -->
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+            Native Test Profile
+            GraalVM Native Image does not support Mockito due to reflection/bytecode manipulation.
+            This profile excludes unit tests (*Test.java) which use Mockito.
+            Only integration tests (*IT.java) are executed in native mode.
+        -->
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

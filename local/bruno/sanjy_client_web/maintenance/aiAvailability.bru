@@ -1,0 +1,87 @@
+meta {
+  name: aiAvailability
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/maintenance/ai/availability
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: success | true
+  description: Is available
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/ai/availability
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Thu, 22 Jan 2026 02:20:12 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "value": true
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: success | false
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/maintenance/ai/availability
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Sat, 07 Feb 2026 05:30:16 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "value": false
+        }
+      '''
+    }
+  }
+}
