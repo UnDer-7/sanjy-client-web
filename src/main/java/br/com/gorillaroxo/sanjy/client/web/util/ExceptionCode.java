@@ -26,7 +26,8 @@ public enum ExceptionCode {
     AI_MODEL_INTEGRATION_FAILURE("015", "Failed to process your request using AI. Please try again later."),
     DIET_PLAN_CONVERSION_FAILURE("016", """
             Could not extract a diet plan from your file. Please ensure the file contains a valid diet plan structure.
-            """);
+            """),
+    SERVICE_CONNECTIVITY("017", "Failed to connect to an external service. The service may be temporarily unavailable.");
 
     /** Error code shown to the user */
     private final String userCode;

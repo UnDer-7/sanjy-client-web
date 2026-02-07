@@ -1,6 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.client;
 
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.ProjectInfoResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.exception.ServiceConnectivityException;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class MaintenanceRestClient {
      * Retrieves project information including version details (current and latest),
      * application and database timezone configuration, and the current runtime mode.
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public ProjectInfoResponseDto projectInfo() {
         return restClient

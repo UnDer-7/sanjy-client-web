@@ -44,6 +44,7 @@ public class SearchMealRecordService {
                                             LogField.MSG.label(), "Searching meal records asynchronously..."),
                                     StructuredArguments.kv(LogField.SEARCH_PARAMS.label(), "( " + pageRequest + " )"));
 
+                            //noinspection S3252 - Lombok @SuperBuilder generates builder() in each class; accessing via derived type is correct here
                             return mealRecordRestClient.searchMealRecords(SearchMealRecordParamRequestDto.builder()
                                     .pageNumber(pageRequest.getPageNumber())
                                     .pageSize(pageRequest.getPageSize())

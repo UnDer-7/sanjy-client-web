@@ -6,6 +6,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealR
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.exception.ServiceConnectivityException;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import java.time.Instant;
@@ -34,6 +35,7 @@ public class MealRecordRestClient {
      * (following the diet plan by referencing a standard option) or a free meal (off-plan with custom description).
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public MealRecordCreatedResponseDto newMealRecord(final MealRecordRequestDto request) {
         return restClient
@@ -49,6 +51,7 @@ public class MealRecordRestClient {
      * plan) and free meals (off-plan). Use this to check daily food intake and diet adherence.
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public List<MealRecordResponseDto> getTodayMealRecords(final ZoneId timezone) {
         return restClient
@@ -67,6 +70,7 @@ public class MealRecordRestClient {
      * with total count. Use this to view historical meal data, analyze eating patterns, or generate reports.
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public PagedResponseDto<MealRecordResponseDto> searchMealRecords(
             final SearchMealRecordParamRequestDto searchParams) {
@@ -97,6 +101,7 @@ public class MealRecordRestClient {
      * eating patterns, track diet adherence, and monitor nutritional intake over a period.
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public MealRecordStatisticsResponseDto getMealRecordStatisticsByDateRange(
             final Instant consumedAtAfter, final Instant consumedAtBefore) {

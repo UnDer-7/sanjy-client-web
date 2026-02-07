@@ -68,7 +68,6 @@ public abstract class IntegrationTestController {
      */
     @BeforeAll
     void initMockWebServer() {
-        final MockWebServer mockWebServer = MockWebServerManager.getInstance();
         dispatcher = new MockWebServerDispatcher();
         MockWebServerManager.setDispatcher(dispatcher);
         dietPlanRestClientMock = new DietPlanRestClientMock(dispatcher, jsonUtil);

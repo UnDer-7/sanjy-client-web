@@ -4,6 +4,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.request.DietPl
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.DietPlanResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.handler.DietPlanNotFoundHandler;
 import br.com.gorillaroxo.sanjy.client.web.exception.DietPlanNotFoundException;
+import br.com.gorillaroxo.sanjy.client.web.exception.ServiceConnectivityException;
 import br.com.gorillaroxo.sanjy.client.web.exception.UnhandledClientHttpException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class DietPlanRestClient {
      * deactivated.
      *
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public DietPlanResponseDto newDietPlan(final DietPlanRequestDto body) {
         return restClient
@@ -46,6 +48,7 @@ public class DietPlanRestClient {
      *
      * @throws DietPlanNotFoundException When diet plan is not found
      * @throws UnhandledClientHttpException When the request return an error (4xx or 5xx)
+     * @throws ServiceConnectivityException When the service is unreachable (e.g., connection refused, timeout)
      */
     public DietPlanResponseDto activeDietPlan() {
         return restClient

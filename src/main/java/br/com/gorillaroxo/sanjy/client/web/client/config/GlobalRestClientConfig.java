@@ -18,6 +18,7 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 class GlobalRestClientConfig {
 
+    private final ConnectivityErrorInterceptor connectivityErrorInterceptor;
     private final LogRestClientInterceptor logRestClientInterceptor;
     private final DefaultRestClientErrorHandler defaultRestClientErrorHandler;
 
@@ -26,7 +27,10 @@ class GlobalRestClientConfig {
     public RestClient globalRestClient() {
         return RestClient.builder()
                 .requestFactory(new BufferingClientHttpRequestFactory(new JdkClientHttpRequestFactory()))
-                .requestInterceptors(interceptors -> interceptors.addLast(logRestClientInterceptor))
+                .requestInterceptors(interceptors -> {
+                    interceptors.addLast(logRestClientInterceptor);
+                    interceptors.addLast(connectivityErrorInterceptor);
+                })
                 .defaultStatusHandler(HttpStatusCode::isError, defaultRestClientErrorHandler::handler)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
