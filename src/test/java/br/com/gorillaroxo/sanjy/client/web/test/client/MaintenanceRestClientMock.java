@@ -9,6 +9,7 @@ import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,9 +24,10 @@ public class MaintenanceRestClientMock {
     private final MaintenanceRestClientMock.ProjectInfo projectInfo;
     private final JsonUtil jsonUtil;
 
-    public MaintenanceRestClientMock(final MockWebServerDispatcher dispatcher, final ProjectInfo projectInfo, final JsonUtil jsonUtil) {
+    public MaintenanceRestClientMock(
+            final MockWebServer mockWebServer, final MockWebServerDispatcher dispatcher, final JsonUtil jsonUtil) {
         this.dispatcher = dispatcher;
-        this.projectInfo = projectInfo;
+        this.projectInfo = new ProjectInfo(dispatcher);
         this.jsonUtil = jsonUtil;
     }
 
