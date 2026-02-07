@@ -10,6 +10,7 @@ import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealT
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealTypeSimplifiedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MetadataResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.PagedResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.ProjectInfoResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.SanjyServerErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.StandardOptionResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.StandardOptionSimplifiedResponseDto;
@@ -241,5 +242,25 @@ public final class DtoBuilders {
                 .freeMealQuantity(0L)
                 .plannedMealQuantity(0L)
                 .mealQuantity(0L);
+    }
+
+    public static ProjectInfoResponseDto.ProjectInfoResponseDtoBuilder buildProjectInfoResponseDto() {
+        return ProjectInfoResponseDto.builder()
+            .version(buildProjectInfoVersionResponseDto().build())
+            .timezone(buildProjectInfoTimezoneResponseDto().build())
+            .runtimeMode("JMV");
+    }
+
+    public static ProjectInfoResponseDto.Timezone.TimezoneBuilder buildProjectInfoTimezoneResponseDto() {
+        return ProjectInfoResponseDto.Timezone.builder()
+        .application("UTC")
+            .database("UTC");
+    }
+
+    public static ProjectInfoResponseDto.Version.VersionBuilder buildProjectInfoVersionResponseDto() {
+        return ProjectInfoResponseDto.Version.builder()
+            .current("1.0.0")
+            .latest("1.0.0")
+            .isLatest(true);
     }
 }

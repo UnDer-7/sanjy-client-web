@@ -7,6 +7,8 @@ import br.com.gorillaroxo.sanjy.client.web.controller.dto.request.StandardOption
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.IdOnlyControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MealRecordCreatedControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.MetadataControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -123,5 +125,24 @@ public final class DtoControllerBuilders {
                 .isFreeMeal(false)
                 .standardOptionId(DtoBuilders.STANDARD_OPTION_ID)
                 .freeMealDescription(null);
+    }
+
+    public static ProjectInfoMaintenanceControllerResponseDto.ProjectInfoMaintenanceControllerResponseDtoBuilder buildProjectInfoMaintenanceControllerResponseDto() {
+        return ProjectInfoMaintenanceControllerResponseDto.builder()
+            .sanjyClientWeb(buildProjectInfoMaintenanceControllerProjectResponseDto().build())
+            .sanjyServer(buildProjectInfoMaintenanceControllerProjectResponseDto().build());
+    }
+
+    public static ProjectInfoMaintenanceControllerResponseDto.Project.ProjectBuilder buildProjectInfoMaintenanceControllerProjectResponseDto() {
+        return ProjectInfoMaintenanceControllerResponseDto.Project.builder()
+            .version(buildProjectInfoMaintenanceControllerVersionResponseDto().build())
+            .runtimeMode("JVM");
+    }
+
+    public static ProjectInfoMaintenanceControllerResponseDto.Version.VersionBuilder buildProjectInfoMaintenanceControllerVersionResponseDto() {
+        return ProjectInfoMaintenanceControllerResponseDto.Version.builder()
+            .current("1.0.0")
+            .latest("1.0.0")
+            .isLatest(true);
     }
 }
