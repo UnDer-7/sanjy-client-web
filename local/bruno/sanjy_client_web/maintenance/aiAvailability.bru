@@ -1,11 +1,11 @@
 meta {
-  name: AiAvailability
+  name: aiAvailability
   type: http
   seq: 1
 }
 
 get {
-  url: {{SERVER_URL}}/api/v1/ai/availability
+  url: {{SERVER_URL}}/api/v1/maintenance/ai/availability
   body: none
   auth: inherit
 }
@@ -16,7 +16,7 @@ settings {
 }
 
 example {
-  name: Success
+  name: success | true
   description: Is available
   
   request: {
@@ -45,6 +45,41 @@ example {
       content: '''
         {
           "value": true
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: success | false
+  
+  request: {
+    url: {{SERVER_URL}}/api/v1/maintenance/ai/availability
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+      content-type: application/json
+      transfer-encoding: chunked
+      date: Sat, 07 Feb 2026 05:30:16 GMT
+      keep-alive: timeout=60
+      connection: keep-alive
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "value": false
         }
       '''
     }

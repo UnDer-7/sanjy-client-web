@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
@@ -36,9 +35,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     final String[] corsOrigins = origins.split(",");
 
                     log.info(
-                        LogField.Placeholders.TWO.getPlaceholder(),
-                        StructuredArguments.kv(LogField.MSG.label(), "Allowing CORS"),
-                        StructuredArguments.kv(LogField.CORS_ORIGIN_PATTERNS.label(), "( " + String.join(", ", corsOrigins) + " )"));
+                            LogField.Placeholders.TWO.getPlaceholder(),
+                            StructuredArguments.kv(LogField.MSG.label(), "Allowing CORS"),
+                            StructuredArguments.kv(
+                                    LogField.CORS_ORIGIN_PATTERNS.label(),
+                                    "( " + String.join(", ", corsOrigins) + " )"));
 
                     registry.addMapping("/api/**").allowedOriginPatterns(corsOrigins);
                 });

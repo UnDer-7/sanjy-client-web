@@ -7,13 +7,11 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -90,10 +88,12 @@ public class UnhandledClientHttpException extends BusinessException {
                 final String responseBody,
                 final JsonUtil jsonUtil) {
 
-            final Function<Set<Map.Entry<String, List<String>>>, Map<String, List<String>>> safeGetHeader = headers -> Optional.ofNullable(headers)
-                .filter(Predicate.not(Set::isEmpty))
-                .map(header -> header.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
-                .orElse(Collections.emptyMap());
+            final Function<Set<Map.Entry<String, List<String>>>, Map<String, List<String>>> safeGetHeader =
+                    headers -> Optional.ofNullable(headers)
+                            .filter(Predicate.not(Set::isEmpty))
+                            .map(header ->
+                                    header.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                            .orElse(Collections.emptyMap());
 
             // Request info
             this.requestMethod = requestMethod;

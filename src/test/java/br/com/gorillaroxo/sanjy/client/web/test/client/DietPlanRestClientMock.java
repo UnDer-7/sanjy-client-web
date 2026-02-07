@@ -9,7 +9,6 @@ import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
-import mockwebserver3.MockWebServer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
