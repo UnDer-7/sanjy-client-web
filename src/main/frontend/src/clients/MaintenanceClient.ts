@@ -1,6 +1,6 @@
 import { HttpClient } from './AxiosConfig.ts';
 import type { BooleanWrapperResponse } from '../models/AiAvailability.ts';
-import type {BackendProjectInfo} from "../models/BackendProjectInfo.ts";
+import type { BackendProjectInfo } from '../models/BackendProjectInfo.ts';
 
 const RESOURCE_URL = '/v1/maintenance';
 
@@ -16,5 +16,5 @@ async function projectInfo(): Promise<BackendProjectInfo> {
 
 export const MaintenanceClient = {
   checkAiAvailability,
-  projectInfo
+  projectInfo,
 };

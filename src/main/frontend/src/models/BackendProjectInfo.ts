@@ -1,15 +1,15 @@
 export interface BackendProjectInfo {
-    sanjyClientWeb: Project;
-    sanjyServer: Project;
+  sanjyClientWeb: Project;
+  sanjyServer: Project;
 }
 
 export interface Project {
-    version: Version;
-    runtimeMode: string;
+  version: Version;
+  runtimeMode: string;
 }
 
 export interface Version {
-    current: string;
-    latest: string;
-    isLatest: boolean;
+  current: string;
+  latest: string;
+  isLatest: boolean;
 }
