@@ -32,6 +32,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           cache: 'maven'
 
+      - name: Install frontend dependencies
+        run: cd src/main/frontend && npm ci --ignore-scripts
+
       - name: Run tests to generate coverage report
         run: make test
 
