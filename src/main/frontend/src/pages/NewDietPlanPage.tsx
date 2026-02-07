@@ -25,7 +25,7 @@ import { IconTrash, IconPlus, IconUpload, IconFileUpload } from '@tabler/icons-r
 import { addMonths, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DietPlanClient } from '../clients/DietPlanClient';
-import { AiClient } from '../clients/AiClient';
+import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
 import type { DietPlanCreate } from '../models/DietPlan';
 import type { MealTypeCreate } from '../models/MealType';
 import type { StandardOptionCreate } from '../models/StandardOption';
@@ -64,7 +64,7 @@ export function NewDietPlanPage() {
   const twoMonthsFromNow = addMonths(today, 2);
 
   useEffect(() => {
-    AiClient.checkAvailability()
+    MaintenanceClient.checkAiAvailability()
       .then(setAiAvailable)
       .catch(() => setAiAvailable(false));
   }, []);
