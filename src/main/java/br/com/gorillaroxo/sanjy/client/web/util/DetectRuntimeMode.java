@@ -17,5 +17,4 @@ public final class DetectRuntimeMode {
         final String nativeImageProperty = System.getProperty(NATIVE_IMAGE_PROPERTY);
         return nativeImageProperty != null ? RUNTIME_MODE_NATIVE : RUNTIME_MODE_JVM;
     }
-
 }

@@ -246,21 +246,19 @@ public final class DtoBuilders {
 
     public static ProjectInfoResponseDto.ProjectInfoResponseDtoBuilder buildProjectInfoResponseDto() {
         return ProjectInfoResponseDto.builder()
-            .version(buildProjectInfoVersionResponseDto().build())
-            .timezone(buildProjectInfoTimezoneResponseDto().build())
-            .runtimeMode("JMV");
+                .version(buildProjectInfoVersionResponseDto().build())
+                .timezone(buildProjectInfoTimezoneResponseDto().build())
+                .runtimeMode("JMV");
     }
 
     public static ProjectInfoResponseDto.Timezone.TimezoneBuilder buildProjectInfoTimezoneResponseDto() {
-        return ProjectInfoResponseDto.Timezone.builder()
-        .application("UTC")
-            .database("UTC");
+        return ProjectInfoResponseDto.Timezone.builder().application("UTC").database("UTC");
     }
 
     public static ProjectInfoResponseDto.Version.VersionBuilder buildProjectInfoVersionResponseDto() {
         return ProjectInfoResponseDto.Version.builder()
-            .current("1.0.0")
-            .latest("1.0.0")
-            .isLatest(true);
+                .current("1.0.0")
+                .latest("1.0.0")
+                .isLatest(true);
     }
 }

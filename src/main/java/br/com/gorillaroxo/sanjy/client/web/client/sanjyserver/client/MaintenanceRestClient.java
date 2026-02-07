@@ -19,9 +19,10 @@ public class MaintenanceRestClient {
 
     public ProjectInfoResponseDto projectInfo() {
         return restClient
-            .get()
-            .uri(uriBuilder -> uriBuilder.path(CLIENT_URL).path("/project-info").build())
-            .retrieve()
-            .body(ProjectInfoResponseDto.class);
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder.path(CLIENT_URL).path("/project-info").build())
+                .retrieve()
+                .body(ProjectInfoResponseDto.class);
     }
 }

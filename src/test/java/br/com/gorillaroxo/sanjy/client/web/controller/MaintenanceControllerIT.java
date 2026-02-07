@@ -31,7 +31,8 @@ class MaintenanceControllerIT extends IntegrationTestController {
         void should_get_project_info_successfully() {
             final var uuid = UUID.randomUUID().toString();
 
-            final var expectedServerProjectInfo = maintenanceRestClientMock.projectInfo().success(uuid);
+            final var expectedServerProjectInfo =
+                    maintenanceRestClientMock.projectInfo().success(uuid);
 
             webTestClient
                     .get()

@@ -6,15 +6,14 @@ import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.util.DetectRuntimeMode;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.argument.StructuredArguments;
-import org.springframework.stereotype.Service;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.argument.StructuredArguments;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -31,9 +30,9 @@ public class MaintenanceProjectInfoService {
         final var sanjyServer = buildSanjyServer();
 
         return ProjectInfoMaintenanceControllerResponseDto.builder()
-            .sanjyServer(sanjyServer)
-            .sanjyClientWeb(sanjyClientWeb)
-            .build();
+                .sanjyServer(sanjyServer)
+                .sanjyClientWeb(sanjyClientWeb)
+                .build();
     }
 
     private ProjectInfoMaintenanceControllerResponseDto.Project buildSanjyClientWeb() {
@@ -41,9 +40,9 @@ public class MaintenanceProjectInfoService {
         final var runtimeMode = DetectRuntimeMode.detect();
 
         return ProjectInfoMaintenanceControllerResponseDto.Project.builder()
-            .version(version)
-            .runtimeMode(runtimeMode)
-            .build();
+                .version(version)
+                .runtimeMode(runtimeMode)
+                .build();
     }
 
     private ProjectInfoMaintenanceControllerResponseDto.Project buildSanjyServer() {
@@ -51,13 +50,13 @@ public class MaintenanceProjectInfoService {
         final ProjectInfoResponseDto.Version version = projectInfo.version();
 
         return ProjectInfoMaintenanceControllerResponseDto.Project.builder()
-            .runtimeMode(projectInfo.runtimeMode())
-            .version(ProjectInfoMaintenanceControllerResponseDto.Version.builder()
-                .current(version.current())
-                .latest(version.latest())
-                .isLatest(version.isLatest())
-                .build())
-            .build();
+                .runtimeMode(projectInfo.runtimeMode())
+                .version(ProjectInfoMaintenanceControllerResponseDto.Version.builder()
+                        .current(version.current())
+                        .latest(version.latest())
+                        .isLatest(version.isLatest())
+                        .build())
+                .build();
     }
 
     private ProjectInfoMaintenanceControllerResponseDto.Version buildVersionSanjyClientWeb() {
@@ -74,24 +73,23 @@ public class MaintenanceProjectInfoService {
         };
 
         return ProjectInfoMaintenanceControllerResponseDto.Version.builder()
-            .current(current)
-            .latest(latest)
-            .isLatest(getIsLatest.getAsBoolean())
-            .build();
+                .current(current)
+                .latest(latest)
+                .isLatest(getIsLatest.getAsBoolean())
+                .build();
     }
-
 
     private String fetchLatestVersionFromGitHub() {
         try {
             return Optional.ofNullable(getLatestProjectVersionService.clientWeb())
-                .filter(Predicate.not(String::isBlank))
-                .orElse(null);
+                    .filter(Predicate.not(String::isBlank))
+                    .orElse(null);
         } catch (final Exception e) {
             log.warn(
-                LogField.Placeholders.TWO.getPlaceholder(),
-                StructuredArguments.kv(LogField.MSG.label(), "Error fetching latest version from GitHub"),
-                StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
-                e);
+                    LogField.Placeholders.TWO.getPlaceholder(),
+                    StructuredArguments.kv(LogField.MSG.label(), "Error fetching latest version from GitHub"),
+                    StructuredArguments.kv(LogField.EXCEPTION_MESSAGE.label(), e.getMessage()),
+                    e);
             return null;
         }
     }
