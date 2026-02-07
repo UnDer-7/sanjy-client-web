@@ -193,8 +193,7 @@ class MealRecordControllerIT extends IntegrationTestController {
                         final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
 
                         assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
-                        assertThat(actualErrorResponse.httpStatusCode())
-                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
                         assertThat(actualErrorResponse.userMessage())
                                 .isNotEmpty()
                                 .isEqualTo(exceptionCode.getUserMessage());
@@ -578,8 +577,7 @@ class MealRecordControllerIT extends IntegrationTestController {
                         final var exceptionCode = ExceptionCode.SERVICE_CONNECTIVITY;
 
                         assertThat(actualErrorResponse.userCode()).isEqualTo(exceptionCode.getUserCode());
-                        assertThat(actualErrorResponse.httpStatusCode())
-                                .isEqualTo(HttpStatus.BAD_GATEWAY.value());
+                        assertThat(actualErrorResponse.httpStatusCode()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
                         assertThat(actualErrorResponse.userMessage())
                                 .isNotEmpty()
                                 .isEqualTo(exceptionCode.getUserMessage());

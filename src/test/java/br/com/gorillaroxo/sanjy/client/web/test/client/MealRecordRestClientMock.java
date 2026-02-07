@@ -75,11 +75,9 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(
-                    PATH,
-                    _ -> new MockResponse.Builder()
-                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
-                            .build());
+            dispatcher.register(PATH, _ -> new MockResponse.Builder()
+                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -147,11 +145,9 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(
-                    PATH,
-                    request -> new MockResponse.Builder()
-                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
-                            .build());
+            dispatcher.register(PATH, request -> new MockResponse.Builder()
+                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -220,11 +216,9 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(
-                    PATH,
-                    request -> new MockResponse.Builder()
-                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
-                            .build());
+            dispatcher.register(PATH, request -> new MockResponse.Builder()
+                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -293,11 +287,9 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(
-                    PATH,
-                    request -> new MockResponse.Builder()
-                            .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
-                            .build());
+            dispatcher.register(PATH, request -> new MockResponse.Builder()
+                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
