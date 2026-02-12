@@ -72,11 +72,11 @@ springdoc:
   api-docs:
     path: "/api-docs"
     resolve-schema-properties: true
-    enabled: false
+    enabled: true
   override-with-generic-response: false
   swagger-ui:
     path: "/swagger"
-    enabled: false
+    enabled: true
 
 logging:
   level:
