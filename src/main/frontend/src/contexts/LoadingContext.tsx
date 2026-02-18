@@ -18,7 +18,7 @@ export function LoadingProvider({ children }: Readonly<{ children: ReactNode }>)
 
   const value = useMemo(
     () => ({ isLoadingGlobal, showLoadingGlobal, hideLoadingGlobal }),
-    [isLoadingGlobal, showLoadingGlobal, hideLoadingGlobal],
+    [isLoadingGlobal, showLoadingGlobal, hideLoadingGlobal]
   );
 
   return (
