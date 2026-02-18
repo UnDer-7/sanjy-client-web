@@ -24,13 +24,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidMount(): void {
-    window.addEventListener('error', this.handleGlobalError);
-    window.addEventListener('unhandledrejection', this.handleUnhandledRejection);
+    globalThis.addEventListener('error', this.handleGlobalError);
+    globalThis.addEventListener('unhandledrejection', this.handleUnhandledRejection);
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('error', this.handleGlobalError);
-    window.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
+    globalThis.removeEventListener('error', this.handleGlobalError);
+    globalThis.removeEventListener('unhandledrejection', this.handleUnhandledRejection);
   }
 
   handleGlobalError = (event: ErrorEvent): void => {
@@ -58,7 +58,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           <h1>Something went wrong</h1>
           <p>An unexpected error occurred. Please refresh the page.</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => globalThis.location.reload()}
             style={{
               padding: '10px 20px',
               fontSize: '16px',

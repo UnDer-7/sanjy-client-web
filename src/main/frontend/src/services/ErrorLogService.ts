@@ -39,7 +39,7 @@ function createErrorEntry(message: string, type: ErrorType, detail: string): Err
     message,
     timestamp: new Date().toISOString(),
     type,
-    pageUrl: window.location.pathname,
+    pageUrl: globalThis.location.pathname,
     detail,
   };
 }

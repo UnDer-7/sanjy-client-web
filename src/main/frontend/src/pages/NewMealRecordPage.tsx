@@ -64,7 +64,7 @@ export function NewMealRecordPage() {
       notes: '',
     },
     validate: {
-      mealTypeId: (value) => (!value ? 'Meal type is required' : null),
+      mealTypeId: (value) => (value ? null : 'Meal type is required'),
       isFreeMeal: (value) => (value === '' ? 'Record type is required' : null),
       standardOptionId: (value, values) => {
         if (values.isFreeMeal === 'false' && !value) {
@@ -84,8 +84,8 @@ export function NewMealRecordPage() {
         }
         return null;
       },
-      unit: (value) => (!value.trim() ? 'Unit is required' : null),
-      consumedAt: (value) => (!value ? 'Consumed at date/time is required' : null),
+      unit: (value) => (value.trim() ? null : 'Unit is required'),
+      consumedAt: (value) => (value ? null : 'Consumed at date/time is required'),
     },
   });
 
