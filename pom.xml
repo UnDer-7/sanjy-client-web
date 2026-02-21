@@ -441,8 +441,9 @@
                         </palantirJavaFormat>
                         <removeUnusedImports/>
                         <!-- SonarQube S8445: single-type imports before static imports -->
+                        <!-- Static on-demand (wildcard) imports grouped before single-static imports -->
                         <importOrder>
-                            <order>,\#</order>
+                            <order>,\#org.awaitility.Awaitility,\#</order>
                         </importOrder>
                     </java>
 
