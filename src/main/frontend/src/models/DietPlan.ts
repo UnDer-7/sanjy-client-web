@@ -1,12 +1,11 @@
-import type { LocalDate } from './CustomTypes.ts';
 import type { MealType, MealTypeCreate } from './MealType.ts';
 import type { Metadata } from './Metadata.ts';
 
 export interface DietPlan {
   id: number;
   name: string;
-  startDate: LocalDate;
-  endDate: LocalDate;
+  startDate: string;
+  endDate: string;
   dailyCalories?: number;
   dailyProteinInG?: number;
   dailyCarbsInG?: number;

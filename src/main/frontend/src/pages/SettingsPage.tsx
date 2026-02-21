@@ -75,7 +75,7 @@ interface ErrorLogTableProps {
   timeFormat: TimeFormat;
 }
 
-function ErrorLogTable({ logs, timezone, timeFormat }: ErrorLogTableProps) {
+function ErrorLogTable({ logs, timezone, timeFormat }: Readonly<ErrorLogTableProps>) {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
   const toggleRow = (index: number) => {
@@ -101,7 +101,7 @@ function ErrorLogTable({ logs, timezone, timeFormat }: ErrorLogTableProps) {
   const rows = logs.map((log, index) => {
     const isExpanded = expandedRows.has(index);
     return (
-      <Table.Tr key={index}>
+      <Table.Tr key={log.timestamp + `_${index}`}>
         <Table.Td>
           <Badge color={getErrorTypeBadgeColor(log.type)} size="sm" variant="light">
             {log.type.replace('_', ' ')}
@@ -171,7 +171,7 @@ interface ErrorLogsMobileListProps {
 
 // ToDo: Melhorar codigo depois
 
-function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileListProps) {
+function ErrorLogsMobileList({ logs, timezone, timeFormat }: Readonly<ErrorLogsMobileListProps>) {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
 
   const toggleRow = (index: number) => {
@@ -199,7 +199,7 @@ function ErrorLogsMobileList({ logs, timezone, timeFormat }: ErrorLogsMobileList
       {logs.map((log, index) => {
         const isExpanded = expandedRows.has(index);
         return (
-          <Paper key={index} p="sm" withBorder>
+          <Paper key={log.timestamp + `_${index}`} p="sm" withBorder>
             <Group justify="space-between" mb="xs">
               <Badge color={getErrorTypeBadgeColor(log.type)} size="sm" variant="light">
                 {log.type.replace('_', ' ')}
@@ -252,7 +252,7 @@ interface ProjectInfoCardProps {
   project: Project;
 }
 
-function ProjectInfoCard({ title, project }: ProjectInfoCardProps) {
+function ProjectInfoCard({ title, project }: Readonly<ProjectInfoCardProps>) {
   return (
     <Paper withBorder p="md" radius="md">
       <Group justify="space-between" align="center">
@@ -362,11 +362,11 @@ export function SettingsPage() {
     link.href = url;
     const now = new Date();
     const dateStr = now.toISOString().split('T')[0];
-    const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-');
+    const timeStr = now.toTimeString().split(' ')[0].replaceAll(':', '-');
     link.download = `sanjy-error-logs-${dateStr}_${timeStr}.json`;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    link.remove();
     URL.revokeObjectURL(url);
   };
 

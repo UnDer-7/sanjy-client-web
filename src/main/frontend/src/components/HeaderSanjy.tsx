@@ -43,7 +43,7 @@ function CurrentDateTime() {
   );
 }
 
-export function HeaderSanjy({ opened, toggle }: HeaderProps) {
+export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
   const location = useLocation();
 
   return (
@@ -82,7 +82,7 @@ interface NavigationMenuProps {
   onNavigate?: () => void;
 }
 
-export function NavigationMenu({ onNavigate }: NavigationMenuProps) {
+export function NavigationMenu({ onNavigate }: Readonly<NavigationMenuProps>) {
   const location = useLocation();
 
   return (
