@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.context.annotation.Import;
 import org.springframework.lang.Nullable;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,6 +34,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
  */
 @Slf4j
 @ActiveProfiles("test")
+@AutoConfigureWebTestClient
 @Import(TestChatModelConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = SanjyClientWebApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

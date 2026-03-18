@@ -22,9 +22,9 @@ public class DefaultRestClientErrorHandler {
         throw new UnhandledClientHttpException(UnhandledClientHttpException.RequestInformation.builder()
                 .requestMethod(request.getMethod().name())
                 .requestUrl(request.getURI().toString())
-                .requestHeaders(request.getHeaders().entrySet())
+                .requestHeaders(request.getHeaders().headerSet())
                 .responseHttpStatusCode(getResponseHttpStatusCode(response))
-                .responseHeaders(response.getHeaders().entrySet())
+                .responseHeaders(response.getHeaders().headerSet())
                 .responseBody(BodyUtils.readBody(response))
                 .jsonUtil(jsonUtil)
                 .build());

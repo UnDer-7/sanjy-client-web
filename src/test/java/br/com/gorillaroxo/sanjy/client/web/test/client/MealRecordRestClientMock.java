@@ -13,7 +13,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
-import mockwebserver3.SocketPolicy;
+import mockwebserver3.SocketEffect;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,7 +76,7 @@ public class MealRecordRestClientMock {
 
         public void connectionFailure() {
             dispatcher.register(PATH, _ -> new MockResponse.Builder()
-                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .onResponseStart(new SocketEffect.CloseSocket())
                     .build());
         }
 
@@ -146,7 +146,7 @@ public class MealRecordRestClientMock {
 
         public void connectionFailure() {
             dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .onResponseStart(new SocketEffect.CloseSocket())
                     .build());
         }
 
@@ -217,7 +217,7 @@ public class MealRecordRestClientMock {
 
         public void connectionFailure() {
             dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .onResponseStart(new SocketEffect.CloseSocket())
                     .build());
         }
 
@@ -288,7 +288,7 @@ public class MealRecordRestClientMock {
 
         public void connectionFailure() {
             dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .socketPolicy(SocketPolicy.DisconnectAfterRequest.INSTANCE)
+                    .onResponseStart(new SocketEffect.CloseSocket())
                     .build());
         }
 

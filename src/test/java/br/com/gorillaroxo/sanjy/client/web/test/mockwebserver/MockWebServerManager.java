@@ -49,7 +49,7 @@ public final class MockWebServerManager {
     }
 
     public static void shutdown() throws IOException {
-        instance.shutdown();
+        instance.close();
     }
 
     /**
@@ -60,7 +60,7 @@ public final class MockWebServerManager {
         @NotNull
         @Override
         public MockResponse dispatch(@NotNull RecordedRequest request) {
-            String path = request.getPath();
+            String path = request.getTarget();
             if (path != null && path.contains("/github/repos/") && path.contains("/releases/latest")) {
                 return new MockResponse.Builder()
                         .code(200)
@@ -89,7 +89,7 @@ public final class MockWebServerManager {
             MockResponse response = delegate.dispatch(request);
             // If the delegate returns 404 and it's a GitHub API call, handle it
             if (response.getCode() == 404) {
-                String path = request.getPath();
+                String path = request.getTarget();
                 if (path != null && path.contains("/github/repos/") && path.contains("/releases/latest")) {
                     return new MockResponse.Builder()
                             .code(200)

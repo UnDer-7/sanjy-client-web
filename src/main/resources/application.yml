@@ -63,10 +63,10 @@ spring:
       enabled: true
 
   jackson:
-    serialization:
-      write-dates-as-timestamps: false
-    deserialization:
-      adjust-dates-to-context-time-zone: false
+    datatype:
+      datetime:
+        write-dates-as-timestamps: false
+        adjust-dates-to-context-time-zone: false
 
 springdoc:
   api-docs:

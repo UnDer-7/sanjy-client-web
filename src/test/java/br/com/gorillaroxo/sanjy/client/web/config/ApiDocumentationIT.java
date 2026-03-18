@@ -1,7 +1,7 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.test.IntegrationTestController;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
