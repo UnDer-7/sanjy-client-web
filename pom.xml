@@ -63,7 +63,7 @@
         <lombok.version>1.18.44</lombok.version>
 
         <!-- todo: needs update-->
-        <spring-ai.version>2.0.0-M2</spring-ai.version>
+        <spring-ai.version>2.0.0-M3</spring-ai.version>
 
         <!-- Override Spring Boot 4.0.3 managed 0.11.4 to fix artifact resolution NPE with jarless/POM-type artifacts -->
         <native-build-tools-plugin.version>0.11.5</native-build-tools-plugin.version>
@@ -164,11 +164,32 @@
                     <groupId>io.rest-assured</groupId>
                     <artifactId>json-path</artifactId>
                 </exclusion>
+                <!-- Replace OkHttp 4.x with 5.x: both use okhttp3.* package causing class duplication at runtime; AnthropicOkHttpClient is compatible with OkHttp 5.x -->
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+                <!-- swagger-annotations 2.2.31 (non-jakarta) conflicts with swagger-annotations-jakarta 2.2.38+ used by springdoc; $dynamicRef() method missing -->
+                <exclusion>
+                    <groupId>io.swagger.core.v3</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <!-- jackson-module-kotlin brings kotlin-reflect which triggers Kotlin reflection on Java records in GraalVM native image (NoSuchMethodError: getAccessor) -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>jackson-module-kotlin</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-client-chat</artifactId>
+        </dependency>
+        <!-- OkHttp 5.x: replaces OkHttp 4.x excluded from spring-ai-anthropic; AnthropicOkHttpClient is compatible with OkHttp 5.x -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp-jvm</artifactId>
+            <version>${mock-web-server3.version}</version>
         </dependency>
         <!-- ####################### -->
 
