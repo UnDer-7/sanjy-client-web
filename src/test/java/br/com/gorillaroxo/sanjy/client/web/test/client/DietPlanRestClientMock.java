@@ -70,9 +70,11 @@ public class DietPlanRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, _ -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    _ -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -133,9 +135,11 @@ public class DietPlanRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, _ -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    _ -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public SanjyServerErrorResponseDto dietPlanNotFound(final String xCorrelationId) {

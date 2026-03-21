@@ -1,9 +1,9 @@
 package br.com.gorillaroxo.sanjy.client.web.client.github.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
-import lombok.Builder;
 
 @Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)

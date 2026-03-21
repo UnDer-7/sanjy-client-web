@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -50,8 +49,7 @@
             **/*Constants.java,
             **/SanjyClientWebApplication.java,
             **/GlobalExceptionHandlerConfig.java,
-            src/main/frontend/**
-        </sonar.coverage.exclusions>
+            src/main/frontend/**</sonar.coverage.exclusions>
 
         <!-- ### Versions Control ### -->
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
@@ -62,16 +60,15 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.44</lombok.version>
 
-        <!-- todo: needs update-->
         <spring-ai.version>2.0.0-M3</spring-ai.version>
 
         <!-- Override Spring Boot 4.0.3 managed 0.11.4 to fix artifact resolution NPE with jarless/POM-type artifacts -->
         <native-build-tools-plugin.version>0.11.5</native-build-tools-plugin.version>
 
-        <spotless-maven-plugin.version>3.3.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
         <spotless-palantirJavaFormat.version>2.89.0</spotless-palantirJavaFormat.version>
         <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
-        <maven-artifact.version>3.9.12</maven-artifact.version>
+        <maven-artifact.version>3.9.14</maven-artifact.version>
         <itext-core.version>9.5.0</itext-core.version>
         <mock-web-server3.version>5.3.2</mock-web-server3.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -81,6 +78,7 @@
         <checkstyle-sevntu-checks.version>1.44.1</checkstyle-sevntu-checks.version>
         <maven-sonar-plugin.version>5.5.0.6356</maven-sonar-plugin.version>
         <maven-snyk-plugin.version>2.3.0</maven-snyk-plugin.version>
+        <commons-fileupload.version>1.6.0</commons-fileupload.version>
         <!-- ################ -->
     </properties>
 
@@ -114,7 +112,7 @@
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>1.6.0</version>
+                <version>${commons-fileupload.version}</version>
             </dependency>
             <!-- ####################### -->
         </dependencies>
@@ -244,6 +242,17 @@
         </dependency>
         <!-- ####################### -->
     </dependencies>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>sanjy-client-web-${project.version}</finalName>
@@ -516,8 +525,7 @@
                     <failsOnError>false</failsOnError>
                     <linkXRef>false</linkXRef>
                     <propertyExpansion>config_loc=.checkstyle
-                        checkstyle_severity=error
-                    </propertyExpansion>
+                        checkstyle_severity=error</propertyExpansion>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -569,17 +577,6 @@
             <!-- ================================================== -->
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <profiles>
         <!--

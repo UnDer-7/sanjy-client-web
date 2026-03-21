@@ -75,9 +75,11 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, _ -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    _ -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -145,9 +147,11 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -216,9 +220,11 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {
@@ -287,9 +293,11 @@ public class MealRecordRestClientMock {
         }
 
         public void connectionFailure() {
-            dispatcher.register(PATH, request -> new MockResponse.Builder()
-                    .onResponseStart(new SocketEffect.CloseSocket())
-                    .build());
+            dispatcher.register(
+                    PATH,
+                    request -> new MockResponse.Builder()
+                            .onResponseStart(new SocketEffect.CloseSocket())
+                            .build());
         }
 
         public void generic(final HttpStatus httpStatus, final String xCorrelationId, final String responseBody) {

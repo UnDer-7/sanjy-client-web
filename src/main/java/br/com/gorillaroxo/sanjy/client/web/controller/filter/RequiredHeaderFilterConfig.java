@@ -3,7 +3,6 @@ package br.com.gorillaroxo.sanjy.client.web.controller.filter;
 import br.com.gorillaroxo.sanjy.client.web.exception.InvalidValuesException;
 import br.com.gorillaroxo.sanjy.client.web.mapper.BusinessExceptionMapper;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
-import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Order(2)

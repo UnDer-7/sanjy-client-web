@@ -1,7 +1,6 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,11 +42,9 @@ public class JacksonConfig {
 
         final SimpleModule module = new SimpleModule("SanjyDateTimeModule");
         module.addSerializer(new LocalDateSerializer(dateFormatter));
-        module.addDeserializer(
-                java.time.LocalDate.class, new LocalDateDeserializer(dateFormatter));
+        module.addDeserializer(java.time.LocalDate.class, new LocalDateDeserializer(dateFormatter));
         module.addSerializer(new LocalTimeSerializer(timeFormatter));
-        module.addDeserializer(
-                java.time.LocalTime.class, new LocalTimeDeserializer(timeFormatter));
+        module.addDeserializer(java.time.LocalTime.class, new LocalTimeDeserializer(timeFormatter));
         module.addSerializer(ZonedDateTime.class, new ZonedDateTimeWithZoneIdSerializer());
         module.addDeserializer(ZonedDateTime.class, new StrictZonedDateTimeDeserializer());
 
