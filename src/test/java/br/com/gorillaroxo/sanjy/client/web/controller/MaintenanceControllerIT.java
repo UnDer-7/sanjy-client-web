@@ -1,7 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapperControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ErrorResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class MaintenanceControllerIT extends IntegrationTestController {

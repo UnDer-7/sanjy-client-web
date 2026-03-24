@@ -1,5 +1,9 @@
 import { v4 as uuidV4 } from 'uuid';
 
-export function randomUUID(): string {
+function randomUUID(): string {
   return uuidV4();
 }
+
+export const UuidService = {
+  randomUUID,
+};

@@ -44,7 +44,7 @@ function error(title: string, message: string): void {
   });
 }
 
-export const notificationsSanjy = {
+export const NotificationsSanjy = {
   success,
   info,
   warning,

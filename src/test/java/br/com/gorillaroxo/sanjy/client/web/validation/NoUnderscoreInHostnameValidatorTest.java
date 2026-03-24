@@ -1,7 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +12,8 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)

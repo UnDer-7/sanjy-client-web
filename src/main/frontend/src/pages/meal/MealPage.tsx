@@ -16,13 +16,13 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import { endOfDay, format, isValid, startOfDay, toDate } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { MealRecordClient } from '../clients/MealRecordClient';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
-import type { MealRecordPageResponse } from '../models/MealRecordPageResponse.ts';
-import type { MealRecordSearchResult } from '../models/MealRecord';
-import type { SearchMealRecordRequest } from '../models/SearchMealRecordRequest';
-import { DateTimeService } from '../services/DateTimeService.ts';
-import { DateTimePickerSanjy } from '../components/DateTimePickerSanjy.tsx';
+import { MealRecordClient } from '../../clients/MealRecordClient.ts';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
+import type { MealRecordPageResponse } from '../../models/MealRecordPageResponse.ts';
+import type { MealRecordSearchResult } from '../../models/MealRecord.ts';
+import type { SearchMealRecordRequest } from '../../models/SearchMealRecordRequest.ts';
+import { DateTimeService } from '../../services/DateTimeService.ts';
+import { DateTimePickerSanjy } from '../../components/DateTimePickerSanjy.tsx';
 
 const PAGE_SIZES: number[] = [10, 20, 50, 100];
 

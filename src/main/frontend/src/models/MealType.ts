@@ -1,11 +1,10 @@
-import type { LocalTime } from './CustomTypes.ts';
 import type { StandardOption, StandardOptionCreate } from './StandardOption.ts';
 import type { Metadata } from './Metadata.ts';
 
 export interface MealType {
   id: number;
   name: string;
-  scheduledTime: LocalTime;
+  scheduledTime: string;
   observation?: string;
   dietPlanId: number;
   standardOptions: StandardOption[];

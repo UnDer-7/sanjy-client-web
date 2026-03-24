@@ -30,6 +30,7 @@ public class SearchMealRecordService {
     @Qualifier("applicationTaskExecutor")
     private final TaskExecutor taskExecutor;
 
+    @SuppressWarnings({"java:S3252", "@SuperBuilder generates builder in each class"})
     public SearchMealRecordControllerResponseDto execute(final SearchMealRecordParamControllerRequest pageRequest) {
 
         final Instant consumedAtAfter = pageRequest.getConsumedAtAfter().toInstant();
@@ -44,7 +45,6 @@ public class SearchMealRecordService {
                                             LogField.MSG.label(), "Searching meal records asynchronously..."),
                                     StructuredArguments.kv(LogField.SEARCH_PARAMS.label(), "( " + pageRequest + " )"));
 
-                            //noinspection S3252 - @SuperBuilder generates builder in each class
                             return mealRecordRestClient.searchMealRecords(SearchMealRecordParamRequestDto.builder()
                                     .pageNumber(pageRequest.getPageNumber())
                                     .pageSize(pageRequest.getPageSize())

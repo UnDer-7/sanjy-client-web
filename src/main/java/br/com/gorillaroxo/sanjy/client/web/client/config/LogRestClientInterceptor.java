@@ -38,7 +38,7 @@ class LogRestClientInterceptor implements ClientHttpRequestInterceptor {
                             LogField.REQUEST_URL.label(), request.getURI().toString()),
                     StructuredArguments.kv(
                             LogField.REQUEST_HEADERS.label(),
-                            readHeaders(request.getHeaders().entrySet())),
+                            readHeaders(request.getHeaders().headerSet())),
                     StructuredArguments.kv(
                             LogField.REQUEST_BODY.label(),
                             BodyUtils.readBody(
@@ -48,7 +48,7 @@ class LogRestClientInterceptor implements ClientHttpRequestInterceptor {
                     StructuredArguments.kv(LogField.RESPONSE_HTTP_STATUS_CODE.label(), getResponseStatusCode(response)),
                     StructuredArguments.kv(
                             LogField.RESPONSE_HEADERS.label(),
-                            readHeaders(response.getHeaders().entrySet())),
+                            readHeaders(response.getHeaders().headerSet())),
                     StructuredArguments.kv(LogField.RESPONSE_BODY.label(), BodyUtils.readBody(response)));
         }
 

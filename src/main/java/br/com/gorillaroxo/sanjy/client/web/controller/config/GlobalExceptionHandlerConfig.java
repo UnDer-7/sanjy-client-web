@@ -8,8 +8,6 @@ import br.com.gorillaroxo.sanjy.client.web.exception.UnexpectedErrorException;
 import br.com.gorillaroxo.sanjy.client.web.mapper.BusinessExceptionMapper;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,12 +33,25 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.exc.InvalidFormatException;
 
-/** Global exception handler for the web application. Catches all exceptions and returns a user-friendly error page. */
+/**
+ * Global REST exception handler that converts exceptions into structured error responses.
+ *
+ * <p><b>Sonar S2638 suppression:</b> Rule S2638 ("Method overrides should not change contracts") flags the overridden
+ * methods {@code handleMethodArgumentNotValid} and {@code handleHttpMessageNotReadable} because the parent class
+ * {@link ResponseEntityExceptionHandler} declares their parameters as {@code @Nullable}, but our overrides treat them
+ * as non-null. This is a known false positive in the current version of SonarQube when used with Spring Boot.
+ *
+ * @see <a href="https://community.sonarsource.com/t/unresolvable-fp-java-s2638/151934/5">SonarSource Community -
+ *     Unresolvable FP java:S2638</a>
+ */
 @Slf4j
 @ControllerAdvice
 @RestControllerAdvice
 @RequiredArgsConstructor
+@SuppressWarnings("java:S2638") // FP - Spring Boot overrides are non-null by framework contract
 public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler {
 
     private final SanjyClientWebConfigProp sanjyClientWebConfigProp;
@@ -157,7 +168,7 @@ public class GlobalExceptionHandlerConfig extends ResponseEntityExceptionHandler
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
             final Class<?> targetType = invalidFormatException.getTargetType();
             final String fieldName = invalidFormatException.getPath().stream()
-                    .map(JsonMappingException.Reference::getFieldName)
+                    .map(JacksonException.Reference::getPropertyName)
                     .filter(Objects::nonNull)
                     .collect(Collectors.joining("."));
 

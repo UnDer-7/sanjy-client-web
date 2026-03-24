@@ -39,17 +39,17 @@ function createErrorEntry(message: string, type: ErrorType, detail: string): Err
     message,
     timestamp: new Date().toISOString(),
     type,
-    pageUrl: window.location.pathname,
+    pageUrl: globalThis.location.pathname,
     detail,
   };
 }
 
-export function logJsError(error: Error): void {
+function logJsError(error: Error): void {
   const entry = createErrorEntry(error.message, ErrorType.JS_ERROR, error.stack || '');
   addErrorLog(entry);
 }
 
-export function logApiError(message: string, responseBody: unknown): void {
+function logApiError(message: string, responseBody: unknown): void {
   const detail =
     typeof responseBody === 'string' ? responseBody : JSON.stringify(responseBody, null, 2);
 
@@ -57,7 +57,7 @@ export function logApiError(message: string, responseBody: unknown): void {
   addErrorLog(entry);
 }
 
-export function logUnhandledRejection(reason: unknown): void {
+function logUnhandledRejection(reason: unknown): void {
   const message = reason instanceof Error ? reason.message : String(reason);
   const detail = reason instanceof Error ? reason.stack || '' : String(reason);
 
@@ -65,7 +65,7 @@ export function logUnhandledRejection(reason: unknown): void {
   addErrorLog(entry);
 }
 
-export function logReactError(error: Error, componentStack: string): void {
+function logReactError(error: Error, componentStack: string): void {
   const entry = createErrorEntry(
     error.message,
     ErrorType.REACT_ERROR,
@@ -74,7 +74,7 @@ export function logReactError(error: Error, componentStack: string): void {
   addErrorLog(entry);
 }
 
-export function clearErrorLogs(): void {
+function clearErrorLogs(): void {
   localStorage.removeItem(localStorageKeys.errorLogs);
 }
 
@@ -82,7 +82,7 @@ export function getStoredErrorLogs(): ErrorLogEntry[] {
   return getErrorLogs();
 }
 
-export const errorLogService = {
+export const ErrorLogService = {
   logJsError,
   logApiError,
   logUnhandledRejection,

@@ -1,27 +1,28 @@
 package br.com.gorillaroxo.sanjy.client.web.config;
 
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.ext.javatime.deser.LocalDateDeserializer;
+import tools.jackson.databind.ext.javatime.deser.LocalTimeDeserializer;
+import tools.jackson.databind.ext.javatime.ser.LocalDateSerializer;
+import tools.jackson.databind.ext.javatime.ser.LocalTimeSerializer;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 @Slf4j
 @Configuration
@@ -29,24 +30,25 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class JacksonConfig {
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+    public JsonMapperBuilderCustomizer jsonCustomizer() {
         return JacksonConfig::dateTimeFormat;
     }
 
-    private static void dateTimeFormat(final Jackson2ObjectMapperBuilder builder) {
+    private static void dateTimeFormat(final JsonMapper.Builder builder) {
         final DateTimeFormatter dateFormatter =
                 DateTimeFormatter.ofPattern(RequestConstants.DateTimeFormats.DATE_FORMAT);
-        builder.serializers(new LocalDateSerializer(dateFormatter));
-        builder.deserializers(new LocalDateDeserializer(dateFormatter));
-
         final DateTimeFormatter timeFormatter =
                 DateTimeFormatter.ofPattern(RequestConstants.DateTimeFormats.TIME_FORMAT);
-        builder.serializers(new LocalTimeSerializer(timeFormatter));
-        builder.deserializers(new LocalTimeDeserializer(timeFormatter));
 
-        // Register custom ZonedDateTime serializer/deserializer that requires ZoneId in brackets
-        builder.serializerByType(ZonedDateTime.class, new ZonedDateTimeWithZoneIdSerializer());
-        builder.deserializerByType(ZonedDateTime.class, new StrictZonedDateTimeDeserializer());
+        final SimpleModule module = new SimpleModule("SanjyDateTimeModule");
+        module.addSerializer(new LocalDateSerializer(dateFormatter));
+        module.addDeserializer(java.time.LocalDate.class, new LocalDateDeserializer(dateFormatter));
+        module.addSerializer(new LocalTimeSerializer(timeFormatter));
+        module.addDeserializer(java.time.LocalTime.class, new LocalTimeDeserializer(timeFormatter));
+        module.addSerializer(ZonedDateTime.class, new ZonedDateTimeWithZoneIdSerializer());
+        module.addDeserializer(ZonedDateTime.class, new StrictZonedDateTimeDeserializer());
+
+        builder.addModule(module);
     }
 
     /**
@@ -56,11 +58,12 @@ public class JacksonConfig {
      * "2026-01-05T20:54:30-02:00[America/Sao_Paulo]") to match the expected format for deserialization.
      */
     @Slf4j
-    public static final class ZonedDateTimeWithZoneIdSerializer extends JsonSerializer<ZonedDateTime> {
+    public static final class ZonedDateTimeWithZoneIdSerializer extends ValueSerializer<ZonedDateTime> {
 
         @Override
-        public void serialize(final ZonedDateTime value, final JsonGenerator gen, final SerializerProvider serializers)
-                throws IOException {
+        public void serialize(
+                final ZonedDateTime value, final JsonGenerator gen, final SerializationContext serializers)
+                throws JacksonException {
 
             if (value == null) {
                 gen.writeNull();
@@ -82,11 +85,11 @@ public class JacksonConfig {
      * correctly.
      */
     @Slf4j
-    public static final class StrictZonedDateTimeDeserializer extends JsonDeserializer<ZonedDateTime> {
+    public static final class StrictZonedDateTimeDeserializer extends ValueDeserializer<ZonedDateTime> {
 
         @Override
         public ZonedDateTime deserialize(final JsonParser parser, final DeserializationContext context)
-                throws IOException {
+                throws JacksonException {
 
             String text = parser.getText();
 

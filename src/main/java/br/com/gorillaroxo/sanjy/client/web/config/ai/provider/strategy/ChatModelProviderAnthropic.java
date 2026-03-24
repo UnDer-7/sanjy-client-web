@@ -3,13 +3,14 @@ package br.com.gorillaroxo.sanjy.client.web.config.ai.provider.strategy;
 import br.com.gorillaroxo.sanjy.client.web.config.SanjyClientWebConfigProp;
 import br.com.gorillaroxo.sanjy.client.web.config.ai.ChatModelWrapper;
 import br.com.gorillaroxo.sanjy.client.web.util.LogField;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.models.messages.Model;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.ai.anthropic.AnthropicChatModel;
 import org.springframework.ai.anthropic.AnthropicChatOptions;
-import org.springframework.ai.anthropic.api.AnthropicApi;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -37,19 +38,19 @@ class ChatModelProviderAnthropic implements ChatModelProviderStrategy {
                 StructuredArguments.kv(LogField.AI_STOP_SEQUENCES.label(), config.stopSequences()),
                 StructuredArguments.kv(LogField.AI_TOP_P.label(), config.topP()));
 
-        final AnthropicApi apiKey = AnthropicApi.builder()
+        final var anthropicClient = AnthropicOkHttpClient.builder()
                 .apiKey(Objects.requireNonNull(config.apiKey(), "Anthropic ApiKey cannot be null"))
                 .build();
         final AnthropicChatOptions anthropicOptions = AnthropicChatOptions.builder()
-                .model(Objects.requireNonNull(config.model()))
+                .model(Model.of(Objects.requireNonNull(config.model())))
                 .maxTokens(Objects.requireNonNull(config.maxTokens()))
                 .temperature(Objects.requireNonNull(config.temperature()))
                 .stopSequences(Objects.requireNonNull(config.stopSequences()))
                 .topP(Objects.requireNonNull(config.topP()))
                 .build();
         var chatModel = AnthropicChatModel.builder()
-                .anthropicApi(apiKey)
-                .defaultOptions(anthropicOptions)
+                .anthropicClient(anthropicClient)
+                .options(anthropicOptions)
                 .build();
         return new ChatModelWrapper(chatModel);
     }

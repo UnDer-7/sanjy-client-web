@@ -13,11 +13,11 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IconAlertCircle, IconPlus } from '@tabler/icons-react';
-import { DietPlanClient } from '../clients/DietPlanClient';
-import type { DietPlan } from '../models/DietPlan';
-import type { ApiError } from '../models/ApiError';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
-import { DateTimeService } from '../services/DateTimeService';
+import { DietPlanClient } from '../../clients/DietPlanClient.ts';
+import type { DietPlan } from '../../models/DietPlan.ts';
+import type { ApiError } from '../../models/ApiError.ts';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
+import { DateTimeService } from '../../services/DateTimeService.ts';
 
 export function DietPlanPage() {
   const navigate = useNavigate();
