@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { logReactError, logJsError, logUnhandledRejection } from '../services/ErrorLogService';
+import { ErrorLogService } from '../services/ErrorLogService';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -20,7 +20,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    logReactError(error, errorInfo.componentStack || '');
+    ErrorLogService.logReactError(error, errorInfo.componentStack || '');
   }
 
   componentDidMount(): void {
@@ -35,14 +35,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   handleGlobalError = (event: ErrorEvent): void => {
     if (event.error instanceof Error) {
-      logJsError(event.error);
+      ErrorLogService.logJsError(event.error);
     } else {
-      logJsError(new Error(event.message));
+      ErrorLogService.logJsError(new Error(event.message));
     }
   };
 
   handleUnhandledRejection = (event: PromiseRejectionEvent): void => {
-    logUnhandledRejection(event.reason);
+    ErrorLogService.logUnhandledRejection(event.reason);
   };
 
   render(): ReactNode {

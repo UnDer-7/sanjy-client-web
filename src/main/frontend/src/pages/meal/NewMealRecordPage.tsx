@@ -17,15 +17,15 @@ import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import { toZonedTime } from 'date-fns-tz';
-import { DietPlanClient } from '../clients/DietPlanClient';
-import { MealRecordClient } from '../clients/MealRecordClient';
-import type { DietPlan } from '../models/DietPlan';
-import type { MealRecordCreate } from '../models/MealRecord';
-import type { MealType } from '../models/MealType';
-import type { StandardOption } from '../models/StandardOption';
-import { useLoadingGlobal } from '../contexts/LoadingContext';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
-import { DateTimePickerSanjy } from '../components/DateTimePickerSanjy.tsx';
+import { DietPlanClient } from '../../clients/DietPlanClient.ts';
+import { MealRecordClient } from '../../clients/MealRecordClient.ts';
+import type { DietPlan } from '../../models/DietPlan.ts';
+import type { MealRecordCreate } from '../../models/MealRecord.ts';
+import type { MealType } from '../../models/MealType.ts';
+import type { StandardOption } from '../../models/StandardOption.ts';
+import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
+import { DateTimePickerSanjy } from '../../components/DateTimePickerSanjy.tsx';
 
 export function NewMealRecordPage() {
   const navigate = useNavigate();

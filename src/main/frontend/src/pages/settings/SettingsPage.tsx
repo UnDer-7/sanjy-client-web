@@ -1,251 +1,33 @@
 import {
   Alert,
+  Badge,
+  Button,
   Container,
-  Title,
+  Group,
+  type MantineColorScheme,
+  Modal,
+  Paper,
+  ScrollArea,
   Select,
   SimpleGrid,
   Skeleton,
   Stack,
   Text,
+  Title,
   useMantineColorScheme,
-  type MantineColorScheme,
-  Button,
-  Group,
-  Modal,
-  Table,
-  Badge,
-  ScrollArea,
-  Code,
-  Collapse,
-  Paper,
 } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
-import {
-  IconAlertCircle,
-  IconDownload,
-  IconTrash,
-  IconEye,
-  IconChevronDown,
-  IconChevronUp,
-} from '@tabler/icons-react';
-import { TIMEZONES } from '../timezones';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
-import type { TimeFormat } from '../models/CustomTypes.ts';
-import {
-  MAX_ERROR_ENTRIES,
-  clearErrorLogs,
-  getStoredErrorLogs,
-} from '../services/ErrorLogService.ts';
-import { DateTimeService } from '../services/DateTimeService.ts';
-import { ErrorType, type ErrorLogEntry } from '../models/ErrorLog.ts';
-import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
-import type { BackendProjectInfo, Project } from '../models/BackendProjectInfo.ts';
-import { toZonedTime } from 'date-fns-tz';
-import { useState, useMemo, useEffect } from 'react';
-
-function getErrorTypeBadgeColor(type: ErrorType): string {
-  switch (type) {
-    case ErrorType.JS_ERROR:
-      return 'red';
-    case ErrorType.API_ERROR:
-      return 'orange';
-    case ErrorType.UNHANDLED_REJECTION:
-      return 'grape';
-    case ErrorType.REACT_ERROR:
-      return 'pink';
-    default:
-      return 'gray';
-  }
-}
-
-function formatTimestampForUser(
-  timestamp: string,
-  timezone: string,
-  timeFormat: TimeFormat
-): string {
-  const utcDate = new Date(timestamp);
-  const zonedDate = toZonedTime(utcDate, timezone);
-  return DateTimeService.formatDateTimeForDisplay(zonedDate, timeFormat, true);
-}
-
-interface ErrorLogTableProps {
-  logs: ErrorLogEntry[];
-  timezone: string;
-  timeFormat: TimeFormat;
-}
-
-function ErrorLogTable({ logs, timezone, timeFormat }: Readonly<ErrorLogTableProps>) {
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-
-  const toggleRow = (index: number) => {
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  };
-
-  if (logs.length === 0) {
-    return (
-      <Text c="dimmed" ta="center" py="xl">
-        No error logs found.
-      </Text>
-    );
-  }
-
-  const rows = logs.map((log, index) => {
-    const isExpanded = expandedRows.has(index);
-    return (
-      <Table.Tr key={log.timestamp + `_${index}`}>
-        <Table.Td>
-          <Badge color={getErrorTypeBadgeColor(log.type)} size="sm" variant="light">
-            {log.type.replace('_', ' ')}
-          </Badge>
-        </Table.Td>
-        <Table.Td style={{ whiteSpace: 'nowrap' }}>
-          {formatTimestampForUser(log.timestamp, timezone, timeFormat)}
-        </Table.Td>
-        <Table.Td>{log.pageUrl}</Table.Td>
-        <Table.Td style={{ maxWidth: '300px' }}>
-          <Text size="sm" truncate="end" title={log.message}>
-            {log.message}
-          </Text>
-        </Table.Td>
-        <Table.Td>
-          <Button
-            variant="subtle"
-            size="xs"
-            onClick={() => toggleRow(index)}
-            rightSection={isExpanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />}
-          >
-            {isExpanded ? 'Hide' : 'Details'}
-          </Button>
-          <Collapse in={isExpanded}>
-            <Paper p="xs" mt="xs" withBorder>
-              <Code
-                block
-                style={{
-                  maxHeight: '200px',
-                  overflow: 'auto',
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-all',
-                }}
-              >
-                {log.detail || 'No details available'}
-              </Code>
-            </Paper>
-          </Collapse>
-        </Table.Td>
-      </Table.Tr>
-    );
-  });
-
-  return (
-    <Table.ScrollContainer minWidth={800}>
-      <Table striped highlightOnHover>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Type</Table.Th>
-            <Table.Th>Timestamp</Table.Th>
-            <Table.Th>Page URL</Table.Th>
-            <Table.Th>Message</Table.Th>
-            <Table.Th>Details</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
-  );
-}
-
-interface ErrorLogsMobileListProps {
-  logs: ErrorLogEntry[];
-  timezone: string;
-  timeFormat: TimeFormat;
-}
-
-// ToDo: Melhorar codigo depois
-
-function ErrorLogsMobileList({ logs, timezone, timeFormat }: Readonly<ErrorLogsMobileListProps>) {
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-
-  const toggleRow = (index: number) => {
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  };
-
-  if (logs.length === 0) {
-    return (
-      <Text c="dimmed" ta="center" py="xl">
-        No error logs found.
-      </Text>
-    );
-  }
-
-  return (
-    <Stack gap="sm">
-      {logs.map((log, index) => {
-        const isExpanded = expandedRows.has(index);
-        return (
-          <Paper key={log.timestamp + `_${index}`} p="sm" withBorder>
-            <Group justify="space-between" mb="xs">
-              <Badge color={getErrorTypeBadgeColor(log.type)} size="sm" variant="light">
-                {log.type.replace('_', ' ')}
-              </Badge>
-              <Text size="xs" c="dimmed">
-                {formatTimestampForUser(log.timestamp, timezone, timeFormat)}
-              </Text>
-            </Group>
-            <Text size="sm" fw={500} mb="xs">
-              {log.message}
-            </Text>
-            <Text size="xs" c="dimmed" mb="xs">
-              {log.pageUrl}
-            </Text>
-            <Button
-              variant="subtle"
-              size="xs"
-              fullWidth
-              onClick={() => toggleRow(index)}
-              rightSection={
-                isExpanded ? <IconChevronUp size={14} /> : <IconChevronDown size={14} />
-              }
-            >
-              {isExpanded ? 'Hide Details' : 'Show Details'}
-            </Button>
-            <Collapse in={isExpanded}>
-              <Paper p="xs" mt="xs" withBorder>
-                <Code
-                  block
-                  style={{
-                    maxHeight: '200px',
-                    overflow: 'auto',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-all',
-                  }}
-                >
-                  {log.detail || 'No details available'}
-                </Code>
-              </Paper>
-            </Collapse>
-          </Paper>
-        );
-      })}
-    </Stack>
-  );
-}
+import { IconAlertCircle, IconDownload, IconEye, IconTrash } from '@tabler/icons-react';
+import { TIMEZONES } from '../../timezones.ts';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
+import type { TimeFormat } from '../../models/CustomTypes.ts';
+import { ErrorLogService, MAX_ERROR_ENTRIES } from '../../services/ErrorLogService.ts';
+import { MaintenanceClient } from '../../clients/MaintenanceClient.ts';
+import type { BackendProjectInfo, Project } from '../../models/BackendProjectInfo.ts';
+import { useEffect, useMemo, useState } from 'react';
+import { ErrorLogsComponent } from './ErrorLogsComponent.tsx';
+import { useIsMobile } from '../../hooks/useIsMobile.ts';
 
 interface ProjectInfoCardProps {
   title: string;
@@ -300,7 +82,7 @@ export function SettingsPage() {
   } = useCustomLocalStorage();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const [logsModalOpened, { open: openLogsModal, close: closeLogsModal }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   const [projectInfo, setProjectInfo] = useState<BackendProjectInfo | null>(null);
   const [projectInfoLoading, setProjectInfoLoading] = useState(true);
   const [projectInfoError, setProjectInfoError] = useState(false);
@@ -347,14 +129,14 @@ export function SettingsPage() {
       labels: { confirm: 'Yes, clear logs', cancel: 'Cancel' },
       confirmProps: { color: 'red' },
       onConfirm: () => {
-        clearErrorLogs();
+        ErrorLogService.clearErrorLogs();
         errorLogs.setValue([]);
       },
     });
   };
 
   const handleDownloadLogs = () => {
-    const logs = getStoredErrorLogs();
+    const logs = ErrorLogService.getStoredErrorLogs();
     const jsonContent = JSON.stringify(logs, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -508,19 +290,11 @@ export function SettingsPage() {
         size="xl"
         scrollAreaComponent={ScrollArea.Autosize}
       >
-        {isMobile ? (
-          <ErrorLogsMobileList
-            logs={sortedLogs}
-            timezone={userTimezone.value}
-            timeFormat={userTimeFormat.value}
-          />
-        ) : (
-          <ErrorLogTable
-            logs={sortedLogs}
-            timezone={userTimezone.value}
-            timeFormat={userTimeFormat.value}
-          />
-        )}
+        <ErrorLogsComponent
+          logs={sortedLogs}
+          timezone={userTimezone.value}
+          timeFormat={userTimeFormat.value}
+        />
       </Modal>
     </Container>
   );

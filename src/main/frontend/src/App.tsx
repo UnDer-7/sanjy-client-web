@@ -9,11 +9,11 @@ import { useDisclosure } from '@mantine/hooks';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { theme } from './theme';
 import { HeaderSanjy, NavigationMenu } from './components/HeaderSanjy.tsx';
-import { MealPage } from './pages/MealPage';
-import { NewMealRecordPage } from './pages/NewMealRecordPage';
-import { DietPlanPage } from './pages/DietPlanPage';
-import { NewDietPlanPage } from './pages/NewDietPlanPage';
-import { SettingsPage } from './pages/SettingsPage';
+import { MealPage } from './pages/meal/MealPage.tsx';
+import { NewMealRecordPage } from './pages/meal/NewMealRecordPage.tsx';
+import { DietPlanPage } from './pages/diet-plan/DietPlanPage.tsx';
+import { NewDietPlanPage } from './pages/diet-plan/NewDietPlanPage.tsx';
+import { SettingsPage } from './pages/settings/SettingsPage.tsx';
 import { LoadingProvider } from './contexts/LoadingContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 

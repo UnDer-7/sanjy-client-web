@@ -79,6 +79,7 @@
             **/SanjyClientWebApplication.java,
             **/GlobalExceptionHandlerConfig.java,
             src/main/frontend/**</sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>src/main/frontend/src/timezones.ts</sonar.cpd.exclusions>
         <!-- ################ -->
     </properties>
 

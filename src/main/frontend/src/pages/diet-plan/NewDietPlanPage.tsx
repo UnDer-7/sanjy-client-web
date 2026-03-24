@@ -24,14 +24,14 @@ import { useNavigate } from 'react-router';
 import { IconTrash, IconPlus, IconUpload, IconFileUpload } from '@tabler/icons-react';
 import { addMonths, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { DietPlanClient } from '../clients/DietPlanClient';
-import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
-import type { DietPlanCreate } from '../models/DietPlan';
-import type { MealTypeCreate } from '../models/MealType';
-import type { StandardOptionCreate } from '../models/StandardOption';
-import { DateTimeService } from '../services/DateTimeService';
-import { useLoadingGlobal } from '../contexts/LoadingContext';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
+import { DietPlanClient } from '../../clients/DietPlanClient.ts';
+import { MaintenanceClient } from '../../clients/MaintenanceClient.ts';
+import type { DietPlanCreate } from '../../models/DietPlan.ts';
+import type { MealTypeCreate } from '../../models/MealType.ts';
+import type { StandardOptionCreate } from '../../models/StandardOption.ts';
+import { DateTimeService } from '../../services/DateTimeService.ts';
+import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
 
 interface FormMealType {
