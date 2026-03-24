@@ -18,7 +18,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 import org.springframework.http.HttpStatus;
 
 public final class DtoBuilders {
@@ -45,7 +44,7 @@ public final class DtoBuilders {
                 .goal("Body fat reduction with muscle mass preservation")
                 .nutritionistNotes(
                         "Additional notes or observations from the nutritionist. Example: Patient has lactose intolerance. Avoid dairy products")
-                .mealTypes(Set.of(buildMealTypeResponseDto().build()))
+                .mealTypes(List.of(buildMealTypeResponseDto().build()))
                 .isActive(true)
                 .metadata(buildMetadataResponseDto().build());
     }

@@ -5,7 +5,7 @@ import type { BackendProjectInfo } from '../models/BackendProjectInfo.ts';
 const RESOURCE_URL = '/v1/maintenance';
 
 async function checkAiAvailability(): Promise<boolean> {
-  const response = await HttpClient.get<BooleanWrapperResponse>(`${RESOURCE_URL}/availability`);
+  const response = await HttpClient.get<BooleanWrapperResponse>(`${RESOURCE_URL}/ai/availability`);
   return response.data.value;
 }
 

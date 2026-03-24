@@ -6,6 +6,7 @@ import br.com.gorillaroxo.sanjy.client.web.test.builder.DtoBuilders;
 import br.com.gorillaroxo.sanjy.client.web.test.mockwebserver.MockWebServerDispatcher;
 import br.com.gorillaroxo.sanjy.client.web.util.JsonUtil;
 import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
+import java.util.List;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import mockwebserver3.MockResponse;
@@ -118,6 +119,22 @@ public class DietPlanRestClientMock {
         public void success(final String xCorrelationId) {
             final var responseDto = DtoBuilders.buildDietPlanResponseDto().build();
             generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+        }
+
+        public DietPlanResponseDto successWithOrderedMealTypes(final String xCorrelationId) {
+            final var mealType1 = DtoBuilders.buildMealTypeResponseDto()
+                    .id(1L)
+                    .name("Breakfast")
+                    .build();
+            final var mealType2 =
+                    DtoBuilders.buildMealTypeResponseDto().id(2L).name("Lunch").build();
+            final var mealType3 =
+                    DtoBuilders.buildMealTypeResponseDto().id(3L).name("Dinner").build();
+            final var responseDto = DtoBuilders.buildDietPlanResponseDto()
+                    .mealTypes(List.of(mealType1, mealType2, mealType3))
+                    .build();
+            generic(HttpStatus.OK, xCorrelationId, jsonUtil.serialize(responseDto));
+            return responseDto;
         }
 
         public SanjyServerErrorResponseDto genericInternalServerError(final String xCorrelationId) {

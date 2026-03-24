@@ -4,8 +4,8 @@ import br.com.gorillaroxo.sanjy.client.web.util.RequestConstants;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -43,7 +43,7 @@ public record DietPlanResponseDto(
             """) String nutritionistNotes,
 
         @JsonPropertyDescription("List of meal types associated with this diet plan")
-        Set<MealTypeResponseDto> mealTypes,
+        List<MealTypeResponseDto> mealTypes,
 
         @JsonPropertyDescription("Indicates whether this diet plan is currently active. Example: true")
         Boolean isActive,
@@ -53,6 +53,6 @@ public record DietPlanResponseDto(
         MetadataResponseDto metadata) {
 
     public DietPlanResponseDto {
-        mealTypes = Objects.requireNonNullElse(mealTypes, Collections.emptySet());
+        mealTypes = Objects.requireNonNullElse(mealTypes, Collections.emptyList());
     }
 }
