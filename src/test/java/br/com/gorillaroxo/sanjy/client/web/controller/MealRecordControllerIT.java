@@ -1,7 +1,5 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordCreatedResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.client.sanjyserver.dto.response.MealRecordStatisticsResponseDto;
@@ -23,7 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Slf4j
+@SuppressWarnings({"java:S5961", "Integration tests may have many assertions per method"})
 class MealRecordControllerIT extends IntegrationTestController {
 
     private static final String RESOURCE_URL = "/api/v1/meal-record";

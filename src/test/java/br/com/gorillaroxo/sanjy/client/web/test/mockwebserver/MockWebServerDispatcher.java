@@ -48,7 +48,7 @@ public class MockWebServerDispatcher extends Dispatcher {
     @NotNull
     @Override
     public MockResponse dispatch(@NotNull RecordedRequest request) {
-        String path = request.getPath();
+        String path = request.getTarget();
         log.debug("MockWebServer received request: {} {}", request.getMethod(), path);
 
         if (path == null) {

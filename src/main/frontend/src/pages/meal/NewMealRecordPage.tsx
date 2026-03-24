@@ -17,15 +17,15 @@ import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import { toZonedTime } from 'date-fns-tz';
-import { DietPlanClient } from '../clients/DietPlanClient';
-import { MealRecordClient } from '../clients/MealRecordClient';
-import type { DietPlan } from '../models/DietPlan';
-import type { MealRecordCreate } from '../models/MealRecord';
-import type { MealType } from '../models/MealType';
-import type { StandardOption } from '../models/StandardOption';
-import { useLoadingGlobal } from '../contexts/LoadingContext';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
-import { DateTimePickerSanjy } from '../components/DateTimePickerSanjy.tsx';
+import { DietPlanClient } from '../../clients/DietPlanClient.ts';
+import { MealRecordClient } from '../../clients/MealRecordClient.ts';
+import type { DietPlan } from '../../models/DietPlan.ts';
+import type { MealRecordCreate } from '../../models/MealRecord.ts';
+import type { MealType } from '../../models/MealType.ts';
+import type { StandardOption } from '../../models/StandardOption.ts';
+import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
+import { DateTimePickerSanjy } from '../../components/DateTimePickerSanjy.tsx';
 
 export function NewMealRecordPage() {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ export function NewMealRecordPage() {
       notes: '',
     },
     validate: {
-      mealTypeId: (value) => (!value ? 'Meal type is required' : null),
+      mealTypeId: (value) => (value ? null : 'Meal type is required'),
       isFreeMeal: (value) => (value === '' ? 'Record type is required' : null),
       standardOptionId: (value, values) => {
         if (values.isFreeMeal === 'false' && !value) {
@@ -84,8 +84,8 @@ export function NewMealRecordPage() {
         }
         return null;
       },
-      unit: (value) => (!value.trim() ? 'Unit is required' : null),
-      consumedAt: (value) => (!value ? 'Consumed at date/time is required' : null),
+      unit: (value) => (value.trim() ? null : 'Unit is required'),
+      consumedAt: (value) => (value ? null : 'Consumed at date/time is required'),
     },
   });
 

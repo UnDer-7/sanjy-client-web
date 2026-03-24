@@ -1,15 +1,15 @@
 import axios, { AxiosError } from 'axios';
 import Env from '../Env';
-import { randomUUID } from '../services/UuidService.ts';
-import { notificationsSanjy } from '../services/NotificationsSanjy.ts';
+import { UuidService } from '../services/UuidService.ts';
+import { NotificationsSanjy } from '../services/NotificationsSanjy.ts';
 import type { ApiError } from '../models/ApiError.ts';
-import { logApiError } from '../services/ErrorLogService.ts';
+import { ErrorLogService } from '../services/ErrorLogService.ts';
 
 export const HttpClient = axios.create({
   baseURL: `${Env.API_BASE_URL}`,
   timeout: 30000,
   headers: {
-    'X-Correlation-ID': randomUUID(),
+    'X-Correlation-ID': UuidService.randomUUID(),
   },
 });
 
@@ -27,17 +27,17 @@ HttpClient.interceptors.response.use(
       statusText: error.response?.statusText,
       responseData: apiError,
     };
-    logApiError(errorMessage, errorDetail);
+    ErrorLogService.logApiError(errorMessage, errorDetail);
 
     if (apiError?.userCode && apiError?.userMessage) {
-      notificationsSanjy.error(
+      NotificationsSanjy.error(
         'Backend Communication Error',
         `Error code: ${apiError.userCode} | ${apiError.userMessage}`
       );
     } else if (error.message) {
-      notificationsSanjy.error('Request Error', error.message);
+      NotificationsSanjy.error('Request Error', error.message);
     } else {
-      notificationsSanjy.error(
+      NotificationsSanjy.error(
         'Unexpected Error',
         'An unexpected error occurred. Please try again.'
       );

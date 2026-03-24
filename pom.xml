@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.10</version>
+        <version>4.0.4</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
 
     <groupId>br.com.gorillaroxo</groupId>
     <artifactId>sanjy-client-web</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <packaging>jar</packaging>
     <name>sanjy-client-web</name>
     <description>Web client for the Sanjy diet and meal management application</description>
@@ -37,19 +37,36 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- Careful when upgrading springdoc-->
-        <!-- springdoc version 2.18.15 breaks GraalVm Native Image at runtime, throws given error: "Error creating bean with name 'swaggerWelcome': Instantiation of supplied bean failed"-->
-        <springdoc.version>2.8.14</springdoc.version>
+        <!-- ### Versions Control ### -->
+        <!-- Override Spring Boot 4.0.3 managed 0.11.4 to fix artifact resolution NPE with jarless/POM-type artifacts -->
+        <native-build-tools-plugin.version>0.11.5</native-build-tools-plugin.version>
+        <itext-core.version>9.5.0</itext-core.version>
+        <mock-web-server3.version>5.3.2</mock-web-server3.version>
+
         <mapstruct.version>1.6.3</mapstruct.version>
-        <lombok.version>1.18.42</lombok.version>
+        <projectlombok.version>1.18.44</projectlombok.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
-        <spring-ai.version>1.0.3</spring-ai.version>
+        <maven-artifact.version>3.9.14</maven-artifact.version>
+        <maven-sonar-plugin.version>5.5.0.6356</maven-sonar-plugin.version>
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-jacoco-plugin.version>0.8.14</maven-jacoco-plugin.version>
+        <maven-snyk-plugin.version>2.3.0</maven-snyk-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
-        <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
-        <spotless-palantirJavaFormat.version>2.82.0</spotless-palantirJavaFormat.version>
-        <checkstyle-maven-plugin.version>3.6.0</checkstyle-maven-plugin.version>
+        <springdoc.version>3.0.2</springdoc.version>
+        <spring-ai.version>2.0.0-M3</spring-ai.version>
 
-        <!-- SonarCloud Configuration -->
+        <checkstyle.version>13.3.0</checkstyle.version>
+        <checkstyle-sevntu-checks.version>1.44.1</checkstyle-sevntu-checks.version>
+
+        <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
+        <spotless-palantirJavaFormat.version>2.89.0</spotless-palantirJavaFormat.version>
+
+        <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
+        <!-- ################ -->
+
+        <!-- ### SonarCloud Configuration ### -->
         <sonar.projectKey>UnDer-7_sanjy-client-web</sonar.projectKey>
         <sonar.organization>under-7</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -62,6 +79,8 @@
             **/SanjyClientWebApplication.java,
             **/GlobalExceptionHandlerConfig.java,
             src/main/frontend/**</sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>src/main/frontend/src/timezones.ts</sonar.cpd.exclusions>
+        <!-- ################ -->
     </properties>
 
     <dependencyManagement>
@@ -83,30 +102,7 @@
             </dependency>
             <!-- ####################### -->
 
-            <!-- Swagger Version Alignment -->
-            <!-- Force consistent swagger-annotations version to fix NoSuchMethodError with springdoc-openapi -->
-            <!-- spring-ai-client-chat brings 2.2.30, but springdoc 2.8.14 needs 2.2.41 -->
-            <!-- Without this fix when accessing swagger in Native Image throws this exception: "Caused by: java.lang.NoSuchMethodError: io.swagger.v3.oas.annotations.media.Schema.$dynamicRef()"-->
-            <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-annotations-jakarta</artifactId>
-                <version>2.2.41</version>
-            </dependency>
-            <!-- ####################### -->
-
             <!-- Security Fixes -->
-            <!-- Override vulnerable commons-lang3 (SNYK-JAVA-ORGAPACHECOMMONS-10734078) -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.18.0</version>
-            </dependency>
-            <!-- Override vulnerable commons-fileupload (SNYK-JAVA-COMMONSFILEUPLOAD-10363252) -->
-            <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.6.0</version>
-            </dependency>
             <!-- ####################### -->
         </dependencies>
     </dependencyManagement>
@@ -116,16 +112,11 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>8.1</version>
+            <version>${logstash-logback-encoder.version}</version>
         </dependency>
         <!-- ####################### -->
 
         <!-- Misc -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -134,7 +125,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
+            <version>${projectlombok.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- ####################### -->
@@ -142,7 +133,7 @@
         <!-- WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
         <!-- ####################### -->
 
@@ -154,10 +145,38 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-anthropic</artifactId>
+            <exclusions>
+                <!-- rest-assured brings Groovy 5 which conflicts with GraalVM native image substitutions for org.codehaus.groovy.vmplugin.v7.IndyInterface -->
+                <exclusion>
+                    <groupId>io.rest-assured</groupId>
+                    <artifactId>json-path</artifactId>
+                </exclusion>
+                <!-- Replace OkHttp 4.x with 5.x: both use okhttp3.* package causing class duplication at runtime; AnthropicOkHttpClient is compatible with OkHttp 5.x -->
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+                <!-- swagger-annotations 2.2.31 (non-jakarta) conflicts with swagger-annotations-jakarta 2.2.38+ used by springdoc; $dynamicRef() method missing -->
+                <exclusion>
+                    <groupId>io.swagger.core.v3</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <!-- jackson-module-kotlin brings kotlin-reflect which triggers Kotlin reflection on Java records in GraalVM native image (NoSuchMethodError: getAccessor) -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>jackson-module-kotlin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-client-chat</artifactId>
+        </dependency>
+        <!-- OkHttp 5.x: replaces OkHttp 4.x excluded from spring-ai-anthropic; AnthropicOkHttpClient is compatible with OkHttp 5.x -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp-jvm</artifactId>
+            <version>${mock-web-server3.version}</version>
         </dependency>
         <!-- ####################### -->
 
@@ -180,7 +199,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
-            <version>3.9.12</version>
+            <version>${maven-artifact.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- ####################### -->
@@ -189,31 +208,40 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itext-core</artifactId>
-            <version>9.1.0</version>
+            <version>${itext-core.version}</version>
             <type>pom</type>
         </dependency>
         <!-- ####################### -->
 
         <!-- Test -->
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-validation-test</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver3-junit5</artifactId>
-            <version>5.0.0-alpha.14</version>
+            <version>${mock-web-server3.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- ####################### -->
     </dependencies>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>sanjy-client-web-${project.version}</finalName>
@@ -222,7 +250,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -230,7 +257,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
+                            <version>${projectlombok.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -240,7 +267,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>0.2.0</version>
+                            <version>${lombok-mapstruct-binding.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -257,7 +284,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -314,7 +341,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.14</version>
+                <version>${maven-jacoco-plugin.version}</version>
                 <configuration>
                     <excludes>
                         <!-- Exclude exception classes from coverage -->
@@ -346,33 +373,6 @@
             <!-- ================================================= -->
 
             <!-- ==================== Native Build (GraalVM) ==================== -->
-            <plugin>
-                <groupId>org.hibernate.orm.tooling</groupId>
-                <artifactId>hibernate-enhance-maven-plugin</artifactId>
-                <version>${hibernate.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.bytebuddy</groupId>
-                        <artifactId>byte-buddy</artifactId>
-                        <version>1.18.1</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>enhance</id>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                            <enableDirtyTracking>true</enableDirtyTracking>
-                            <enableAssociationManagement>true</enableAssociationManagement>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
@@ -440,6 +440,11 @@
                             <!-- defaults to false (optional, requires at least Palantir 2.39.0) -->
                         </palantirJavaFormat>
                         <removeUnusedImports/>
+                        <!-- SonarQube S8445: single-type imports before static imports -->
+                        <!-- Static on-demand (wildcard) imports grouped before single-static imports -->
+                        <importOrder>
+                            <order>,\#org.awaitility.Awaitility,\#</order>
+                        </importOrder>
                     </java>
 
                     <pom>
@@ -502,7 +507,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle-maven-plugin.version}</version>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
                     <configLocation>.checkstyle/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
@@ -515,12 +520,12 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>12.1.2</version>
+                        <version>${checkstyle.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>com.github.sevntu-checkstyle</groupId>
                         <artifactId>sevntu-checks</artifactId>
-                        <version>1.44.1</version>
+                        <version>${checkstyle-sevntu-checks.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -528,7 +533,7 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>5.3.0.6276</version>
+                <version>${maven-sonar-plugin.version}</version>
             </plugin>
             <!-- =============================================================== -->
 
@@ -536,7 +541,7 @@
             <plugin>
                 <groupId>io.snyk</groupId>
                 <artifactId>snyk-maven-plugin</artifactId>
-                <version>2.3.0</version>
+                <version>${maven-snyk-plugin.version}</version>
                 <inherited>false</inherited>
                 <configuration>
                     <apiToken>${env.SNYK_TOKEN}</apiToken>

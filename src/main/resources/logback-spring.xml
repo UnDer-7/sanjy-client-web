@@ -9,9 +9,9 @@
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
     <property name="UNSTRUCTURED_LOG_PATTERN_COLORED"
-              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %yellow(%clr([%t])) %highlight(%clr(${LOG_LEVEL_PATTERN:-%5p})) %magenta(%clr(%logger{1000})){cyan} %clr(:){faint} %m %X%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS z}) %yellow(%clr([%t])) %highlight(%clr(${LOG_LEVEL_PATTERN:-%5p})) %magenta(%clr(%logger{1000})){cyan} %clr(:){faint} %m %X%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
     <property name="UNSTRUCTURED_LOG_PATTERN_NO_COLOR"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] ${LOG_LEVEL_PATTERN:-%5p} %logger{1000} : %m %X%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS z} [%t] ${LOG_LEVEL_PATTERN:-%5p} %logger{1000} : %m %X%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
 
     <!-- ####################### -->
     <!-- ####### CONSOLE ####### -->

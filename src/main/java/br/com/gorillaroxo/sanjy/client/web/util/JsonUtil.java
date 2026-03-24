@@ -2,14 +2,14 @@ package br.com.gorillaroxo.sanjy.client.web.util;
 
 import br.com.gorillaroxo.sanjy.client.web.exception.DeserializationException;
 import br.com.gorillaroxo.sanjy.client.web.exception.SerializationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.argument.StructuredArguments;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Component
@@ -23,7 +23,7 @@ public class JsonUtil {
      *
      * <p>(convert object -> string)
      *
-     * <p>If {@link JsonProcessingException} happens, an {@link SerializationException} is thrown
+     * <p>If {@link JacksonException} happens, an {@link SerializationException} is thrown
      *
      * <p>If you want to return null when serialization fails, then use {@link JsonUtil#serializeSafely(Object)}
      */
@@ -32,7 +32,7 @@ public class JsonUtil {
 
         try {
             return objectMapper.writeValueAsString(object);
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             failSerializationLogging(e, object);
             throw new SerializationException(e);
         }
@@ -43,7 +43,7 @@ public class JsonUtil {
      *
      * <p>(convert object -> string)
      *
-     * <p>If {@link JsonProcessingException} happens, an empty Optional ({@link Optional#empty()}) is return
+     * <p>If {@link JacksonException} happens, an empty Optional ({@link Optional#empty()}) is return
      *
      * <p>If you want to throw an exception when serialization fails, then use {@link JsonUtil#serialize(Object)}
      */
@@ -52,7 +52,7 @@ public class JsonUtil {
 
         try {
             return Optional.of(objectMapper.writeValueAsString(object));
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             failSerializationLogging(e, object);
             return Optional.empty();
         }
@@ -63,7 +63,7 @@ public class JsonUtil {
      *
      * <p>(convert string -> object)
      *
-     * <p>If {@link JsonProcessingException} happens, an {@link DeserializationException} is thrown
+     * <p>If {@link JacksonException} happens, an {@link DeserializationException} is thrown
      *
      * <p>If you want to return null when deserialization fails, then use {@link JsonUtil#deserializeSafely(String,
      * Class)}
@@ -74,7 +74,7 @@ public class JsonUtil {
 
         try {
             return objectMapper.readValue(json, clazz);
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             failDeserializationLogging(e, json, clazz);
             throw new DeserializationException(e);
         }
@@ -85,7 +85,7 @@ public class JsonUtil {
      *
      * <p>(convert string -> object)
      *
-     * <p>If {@link JsonProcessingException} happens, an empty Optional ({@link Optional#empty()}) is return
+     * <p>If {@link JacksonException} happens, an empty Optional ({@link Optional#empty()}) is return
      *
      * <p>If you want to throw a exception when deserialization fails, then use {@link JsonUtil#deserialize(String,
      * Class)}
@@ -96,7 +96,7 @@ public class JsonUtil {
 
         try {
             return Optional.of(objectMapper.readValue(json, clazz));
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             failDeserializationLogging(e, json, clazz);
             return Optional.empty();
         }

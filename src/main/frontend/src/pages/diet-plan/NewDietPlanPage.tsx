@@ -24,14 +24,14 @@ import { useNavigate } from 'react-router';
 import { IconTrash, IconPlus, IconUpload, IconFileUpload } from '@tabler/icons-react';
 import { addMonths, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { DietPlanClient } from '../clients/DietPlanClient';
-import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
-import type { DietPlanCreate } from '../models/DietPlan';
-import type { MealTypeCreate } from '../models/MealType';
-import type { StandardOptionCreate } from '../models/StandardOption';
-import { DateTimeService } from '../services/DateTimeService';
-import { useLoadingGlobal } from '../contexts/LoadingContext';
-import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage';
+import { DietPlanClient } from '../../clients/DietPlanClient.ts';
+import { MaintenanceClient } from '../../clients/MaintenanceClient.ts';
+import type { DietPlanCreate } from '../../models/DietPlan.ts';
+import type { MealTypeCreate } from '../../models/MealType.ts';
+import type { StandardOptionCreate } from '../../models/StandardOption.ts';
+import { DateTimeService } from '../../services/DateTimeService.ts';
+import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
+import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
 
 interface FormMealType {
@@ -94,8 +94,8 @@ export function NewDietPlanPage() {
       mealTypes: [],
     },
     validate: {
-      name: (value) => (!value ? 'Name is required' : null),
-      startDate: (value) => (!value ? 'Start date is required' : null),
+      name: (value) => (value ? null : 'Name is required'),
+      startDate: (value) => (value ? null : 'Start date is required'),
       endDate: (value, values) => {
         if (!value) return 'End date is required';
         if (values.startDate && value <= values.startDate) {
@@ -104,10 +104,10 @@ export function NewDietPlanPage() {
         return null;
       },
       mealTypes: {
-        name: (value) => (!value ? 'Meal type name is required' : null),
-        scheduledTime: (value) => (!value ? 'Scheduled time is required' : null),
+        name: (value) => (value ? null : 'Meal type name is required'),
+        scheduledTime: (value) => (value ? null : 'Scheduled time is required'),
         standardOptions: {
-          description: (value) => (!value ? 'Option description is required' : null),
+          description: (value) => (value ? null : 'Option description is required'),
         },
       },
     },
@@ -401,7 +401,7 @@ export function NewDietPlanPage() {
               )}
 
               {form.values.mealTypes.map((mealType, mealTypeIndex) => (
-                <Paper key={mealTypeIndex} p="md" withBorder>
+                <Paper key={mealType.name + `_${mealTypeIndex}`} p="md" withBorder>
                   <Stack gap="sm">
                     <Group justify="space-between" align="center">
                       <Text fw={600}>Meal Type {mealTypeIndex + 1}</Text>
@@ -449,7 +449,7 @@ export function NewDietPlanPage() {
                       )}
 
                     {mealType.standardOptions.map((_option, optionIndex) => (
-                      <Box key={optionIndex}>
+                      <Box key={_option + `_${optionIndex}`}>
                         <Group align="flex-start">
                           <Text fw={500} pt="xs">
                             {optionIndex + 1}.
