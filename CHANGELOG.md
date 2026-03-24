@@ -15,6 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.1] - 2026-03-23
+
+### Changed
+
+- Upgraded Spring Boot from 3.5.x to 4.0.4, including all necessary API and configuration adaptations
+- Upgraded Spring AI from 1.0.3 to 2.0.0-M3
+- Upgraded all dependencies to their latest versions (Lombok, MapStruct, iText, OkHttp, Spotless, Checkstyle, and others)
+- Migrated OkHttp from 4.x to 5.x to maintain compatibility with the Anthropic AI client under Spring Boot 4
+- Reorganized frontend pages into feature-based folders (`diet-plan/`, `meal/`, `settings/`)
+- Extracted `ErrorLogsComponent` into its own file within the settings folder
+
+### Fixed
+
+- Removed security vulnerability overrides for `commons-lang3` and `commons-fileupload` that became unnecessary with Spring Boot 4
+- Added SonarCloud CPD exclusion for `timezones.ts` to suppress false-positive duplicate code warnings
+
+---
+
 ## [0.1.0] - 2026-02-06
 
 First release. Full project restructure into a Single Page Application architecture ([#3](https://github.com/UnDer-7/sanjy-client-web/pull/3)).
