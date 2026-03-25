@@ -44,6 +44,8 @@ sanjy-client-web:
       temperature: ''
       stop-sequences: ''
       top-p: ''
+  frontend-runtime-configuration:
+    logout-url: 'https://google.com'
 
 spring:
   main:

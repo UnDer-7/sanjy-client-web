@@ -28,7 +28,8 @@ public record SanjyClientWebConfigProp(
         @NotNull @Valid LoggingProp logging,
         @NotNull @Valid UploadProp upload,
         @NotNull @Valid AiProp ai,
-        @Valid CorsProp cors) {
+        @Valid CorsProp cors,
+        @NotNull @Valid FrontendRuntimeConfigurationProp frontendRuntimeConfiguration) {
 
     public record AiProp(
             @NotNull @Valid AiGenericConfigProp openAI,
@@ -113,4 +114,10 @@ public record SanjyClientWebConfigProp(
     public record UploadProp(@NotNull Integer maxFileSizeInMb) {}
 
     public record CorsProp(String allowedOrigins) {}
+
+    public record FrontendRuntimeConfigurationProp(@URL String logoutUrl) {
+        public FrontendRuntimeConfigurationProp {
+            if (logoutUrl != null && logoutUrl.isBlank()) logoutUrl = null;
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapperControllerResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.FrontendRuntimeConfigurationControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.service.AiAvailabilityService;
+import br.com.gorillaroxo.sanjy.client.web.service.FrontendRuntimeConfigurationService;
 import br.com.gorillaroxo.sanjy.client.web.service.MaintenanceProjectInfoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class MaintenanceController {
 
     private final AiAvailabilityService aiAvailabilityService;
     private final MaintenanceProjectInfoService maintenanceProjectInfoService;
+    private final FrontendRuntimeConfigurationService frontendRuntimeConfigurationService;
 
     @GetMapping(value = "/ai/availability", produces = MediaType.APPLICATION_JSON_VALUE)
     public BooleanWrapperControllerResponseDto isAvailable() {
@@ -33,5 +36,10 @@ public class MaintenanceController {
     @GetMapping(value = "/project-info", produces = MediaType.APPLICATION_JSON_VALUE)
     public ProjectInfoMaintenanceControllerResponseDto projectInfo() {
         return maintenanceProjectInfoService.execute();
+    }
+
+    @GetMapping(value = "/frontend-runtime-configuration", produces = MediaType.APPLICATION_JSON_VALUE)
+    public FrontendRuntimeConfigurationControllerResponseDto frontendRuntimeConfiguration() {
+        return frontendRuntimeConfigurationService.execute();
     }
 }
