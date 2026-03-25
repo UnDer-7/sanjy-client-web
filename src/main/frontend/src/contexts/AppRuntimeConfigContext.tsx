@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
-import type { FrontendRuntimeConfiguration } from '../models/FrontendRuntimeConfiguration.ts';
+import type {
+  FrontendRuntimeConfiguration,
+  RuntimeConfigEntry,
+} from '../models/FrontendRuntimeConfiguration.ts';
 
 export interface RuntimeConfiguration {
-  logoutUrl: string | null;
+  logoutUrl: RuntimeConfigEntry;
 }
 
 interface AppRuntimeConfigContextType {
@@ -12,7 +15,7 @@ interface AppRuntimeConfigContextType {
 }
 
 const DEFAULT_RUNTIME_CONFIGURATION: RuntimeConfiguration = {
-  logoutUrl: null,
+  logoutUrl: { env: 'SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL', value: null },
 };
 
 const AppRuntimeConfigContext = createContext<AppRuntimeConfigContextType | undefined>(undefined);
@@ -25,7 +28,9 @@ export function AppRuntimeConfigProvider({ children }: Readonly<{ children: Reac
   useEffect(() => {
     MaintenanceClient.frontendRuntimeConfiguration()
       .then((data: FrontendRuntimeConfiguration) => {
-        setRuntimeConfiguration({ logoutUrl: data.logoutUrl });
+        setRuntimeConfiguration({
+          logoutUrl: data.logoutUrl,
+        });
       })
       .catch(() => {
         // Error notification is handled by the Axios interceptor in AxiosConfig.ts.
@@ -36,9 +41,7 @@ export function AppRuntimeConfigProvider({ children }: Readonly<{ children: Reac
   const value = useMemo(() => ({ runtimeConfiguration }), [runtimeConfiguration]);
 
   return (
-    <AppRuntimeConfigContext.Provider value={value}>
-      {children}
-    </AppRuntimeConfigContext.Provider>
+    <AppRuntimeConfigContext.Provider value={value}>{children}</AppRuntimeConfigContext.Provider>
   );
 }
 

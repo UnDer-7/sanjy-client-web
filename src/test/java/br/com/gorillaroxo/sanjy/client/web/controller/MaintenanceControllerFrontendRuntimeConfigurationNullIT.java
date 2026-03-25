@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@TestPropertySource(properties = "sanjy-client-web.frontend-runtime-configuration.logout-url=")
+@TestPropertySource(properties = "sanjy-client-web.frontend-runtime-configuration.logout-url.value=")
 class MaintenanceControllerFrontendRuntimeConfigurationNullIT extends IntegrationTestController {
 
     static final String RESOURCE_URL = "/api/v1/maintenance";
@@ -22,7 +22,8 @@ class MaintenanceControllerFrontendRuntimeConfigurationNullIT extends Integratio
     @DisplayName("GET /api/v1/maintenance/frontend-runtime-configuration")
     class FrontendRuntimeConfiguration {
 
-        private static final String FRONTEND_RUNTIME_CONFIGURATION_URL = RESOURCE_URL + "/frontend-runtime-configuration";
+        private static final String FRONTEND_RUNTIME_CONFIGURATION_URL =
+                RESOURCE_URL + "/frontend-runtime-configuration";
 
         @Test
         @DisplayName("Should return null logoutUrl when not configured")
@@ -38,7 +39,10 @@ class MaintenanceControllerFrontendRuntimeConfigurationNullIT extends Integratio
                     .isOk()
                     .expectBody(FrontendRuntimeConfigurationControllerResponseDto.class)
                     .value(actual -> {
-                        assertThat(actual.logoutUrl()).isNull();
+                        assertThat(actual.logoutUrl()).isNotNull();
+                        assertThat(actual.logoutUrl().value()).isNull();
+                        assertThat(actual.logoutUrl().env())
+                                .isEqualTo("SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL");
                     });
         }
     }

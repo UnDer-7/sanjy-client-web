@@ -30,28 +30,28 @@ function App() {
             <AppRuntimeConfigProvider>
               <BrowserRouter>
                 <AppShell
-                header={{ height: 60 }}
-                navbar={{
-                  width: 250,
-                  breakpoint: 'sm',
-                  collapsed: { desktop: true, mobile: !opened },
-                }}
-                padding="md"
-              >
-                <HeaderSanjy opened={opened} toggle={toggle} />
-                <NavigationMenu onNavigate={close} />
+                  header={{ height: 60 }}
+                  navbar={{
+                    width: 250,
+                    breakpoint: 'sm',
+                    collapsed: { desktop: true, mobile: !opened },
+                  }}
+                  padding="md"
+                >
+                  <HeaderSanjy opened={opened} toggle={toggle} />
+                  <NavigationMenu onNavigate={close} />
 
-                <AppShell.Main>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/meal" replace />} />
-                    <Route path="/meal" element={<MealPage />} />
-                    <Route path="/meal/new" element={<NewMealRecordPage />} />
-                    <Route path="/diet-plan" element={<DietPlanPage />} />
-                    <Route path="/diet-plan/new" element={<NewDietPlanPage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                  </Routes>
-                </AppShell.Main>
-              </AppShell>
+                  <AppShell.Main>
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/meal" replace />} />
+                      <Route path="/meal" element={<MealPage />} />
+                      <Route path="/meal/new" element={<NewMealRecordPage />} />
+                      <Route path="/diet-plan" element={<DietPlanPage />} />
+                      <Route path="/diet-plan/new" element={<NewDietPlanPage />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                    </Routes>
+                  </AppShell.Main>
+                </AppShell>
               </BrowserRouter>
             </AppRuntimeConfigProvider>
           </LoadingProvider>

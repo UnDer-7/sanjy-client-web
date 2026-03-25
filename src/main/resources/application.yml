@@ -46,7 +46,9 @@ sanjy-client-web:
       stop-sequences: ${SANJY_CLIENT_WEB_AI_MAX_STOP_SEQUENCES}
       top-p: ${SANJY_CLIENT_WEB_AI_MAX_STOP_TOP_P}
   frontend-runtime-configuration:
-    logout-url: ${SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL:}
+    logout-url:
+      value: ${SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL:}
+      env-name: SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL
 
 spring:
   servlet:

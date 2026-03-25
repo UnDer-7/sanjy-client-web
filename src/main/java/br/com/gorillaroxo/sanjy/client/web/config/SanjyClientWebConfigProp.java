@@ -115,9 +115,13 @@ public record SanjyClientWebConfigProp(
 
     public record CorsProp(String allowedOrigins) {}
 
-    public record FrontendRuntimeConfigurationProp(@URL String logoutUrl) {
-        public FrontendRuntimeConfigurationProp {
-            if (logoutUrl != null && logoutUrl.isBlank()) logoutUrl = null;
+    public record FrontendRuntimeConfigurationProp(
+            @NotNull @Valid RuntimeConfigEntryProp logoutUrl) {}
+
+    public record RuntimeConfigEntryProp(
+            @URL String value, @NotBlank String envName) {
+        public RuntimeConfigEntryProp {
+            if (value != null && value.isBlank()) value = null;
         }
     }
 }

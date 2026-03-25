@@ -45,7 +45,9 @@ sanjy-client-web:
       stop-sequences: ''
       top-p: ''
   frontend-runtime-configuration:
-    logout-url: 'https://google.com'
+    logout-url:
+      value: 'https://google.com'
+      env-name: SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL
 
 spring:
   main:

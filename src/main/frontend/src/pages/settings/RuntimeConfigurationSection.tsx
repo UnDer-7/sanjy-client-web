@@ -4,62 +4,68 @@ import { useAppRuntimeConfig } from '../../contexts/AppRuntimeConfigContext.tsx'
 import type { RuntimeConfiguration } from '../../contexts/AppRuntimeConfigContext.tsx';
 
 interface RuntimeConfigEntry {
+  key: keyof RuntimeConfiguration;
   name: string;
   description: string;
-  envVar: string;
-  getValue: (config: RuntimeConfiguration) => string | null;
 }
 
 const RUNTIME_CONFIG_ENTRIES: RuntimeConfigEntry[] = [
   {
+    key: 'logoutUrl',
     name: 'Logout URL',
     description:
       'URL the application redirects to when the user clicks Logout. ' +
       'Configured by the identity provider (e.g. Cloudflare Access). ' +
       'When absent, the Logout button is not displayed.',
-    envVar: 'SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL',
-    getValue: (config) => config.logoutUrl,
   },
 ];
 
 interface RuntimeConfigRowProps {
-  entry: RuntimeConfigEntry;
+  name: string;
+  description: string;
+  env: string;
   value: string | null;
 }
 
-function RuntimeConfigRow({ entry, value }: Readonly<RuntimeConfigRowProps>) {
+function RuntimeConfigRow({ name, description, env, value }: Readonly<RuntimeConfigRowProps>) {
   return (
     <Paper withBorder p="md" radius="md">
       <Group justify="space-between" align="flex-start" wrap="wrap">
         <Text fw={600} size="sm">
-          {entry.name}
+          {name}
         </Text>
         <Group gap="xs" align="center">
-          {value !== null ? (
-            <Text size="sm" fw={500} style={{ wordBreak: 'break-all' }}>
-              {value}
-            </Text>
-          ) : (
+          {value === null ? (
             <Text size="sm" c="dimmed" fs="italic">
               Not configured
             </Text>
+          ) : (
+            <Text size="sm" fw={500} style={{ wordBreak: 'break-all' }}>
+              {value}
+            </Text>
           )}
           <Tooltip
-            label={entry.envVar}
+            label={env}
             position="top"
             multiline
             w={320}
             styles={{ tooltip: { wordBreak: 'break-all' } }}
             events={{ hover: true, focus: false, touch: true }}
           >
-            <ActionIcon variant="subtle" size="sm" color="gray" aria-label="Show environment variable" tabIndex={-1}>
+            <ActionIcon
+              variant="subtle"
+              size="sm"
+              color="gray"
+              aria-label="Show environment variable"
+              tabIndex={-1}
+            >
               <IconInfoCircle size={14} />
             </ActionIcon>
           </Tooltip>
         </Group>
       </Group>
       <Text c="dimmed" size="sm" mt="xs">
-        {entry.description}
+        {description}
       </Text>
     </Paper>
   );
@@ -82,13 +88,18 @@ export function RuntimeConfigurationSection() {
         and cannot be changed at runtime.
       </Text>
       <Stack gap="sm">
-        {RUNTIME_CONFIG_ENTRIES.map((entry) => (
-          <RuntimeConfigRow
-            key={entry.envVar}
-            entry={entry}
-            value={entry.getValue(runtimeConfiguration)}
-          />
-        ))}
+        {RUNTIME_CONFIG_ENTRIES.map((entry) => {
+          const configEntry = runtimeConfiguration[entry.key];
+          return (
+            <RuntimeConfigRow
+              key={entry.key}
+              name={entry.name}
+              description={entry.description}
+              env={configEntry.env}
+              value={configEntry.value}
+            />
+          );
+        })}
       </Stack>
     </div>
   );

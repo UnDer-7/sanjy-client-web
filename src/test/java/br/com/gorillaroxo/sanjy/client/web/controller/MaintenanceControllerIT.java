@@ -173,7 +173,8 @@ class MaintenanceControllerIT extends IntegrationTestController {
     @DisplayName("GET /api/v1/maintenance/frontend-runtime-configuration")
     class FrontendRuntimeConfiguration {
 
-        private static final String FRONTEND_RUNTIME_CONFIGURATION_URL = RESOURCE_URL + "/frontend-runtime-configuration";
+        private static final String FRONTEND_RUNTIME_CONFIGURATION_URL =
+                RESOURCE_URL + "/frontend-runtime-configuration";
 
         @Test
         @DisplayName("Should return logoutUrl when configured")
@@ -189,7 +190,10 @@ class MaintenanceControllerIT extends IntegrationTestController {
                     .isOk()
                     .expectBody(FrontendRuntimeConfigurationControllerResponseDto.class)
                     .value(actual -> {
-                        assertThat(actual.logoutUrl()).isEqualTo("https://google.com");
+                        assertThat(actual.logoutUrl()).isNotNull();
+                        assertThat(actual.logoutUrl().value()).isEqualTo("https://google.com");
+                        assertThat(actual.logoutUrl().env())
+                                .isEqualTo("SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL");
                     });
         }
     }
