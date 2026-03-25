@@ -2,6 +2,7 @@ package br.com.gorillaroxo.sanjy.client.web.controller;
 
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.BooleanWrapperControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ErrorResponseDto;
+import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.FrontendRuntimeConfigurationControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.controller.dto.response.ProjectInfoMaintenanceControllerResponseDto;
 import br.com.gorillaroxo.sanjy.client.web.test.IntegrationTestController;
 import br.com.gorillaroxo.sanjy.client.web.util.ExceptionCode;
@@ -164,6 +165,31 @@ class MaintenanceControllerIT extends IntegrationTestController {
                                 .isNotEmpty()
                                 .containsIgnoringCase(RequestConstants.Headers.X_CORRELATION_ID);
                         assertThat(actualErrorResponse.timestamp()).isNotNull();
+                    });
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/v1/maintenance/frontend-runtime-configuration")
+    class FrontendRuntimeConfiguration {
+
+        private static final String FRONTEND_RUNTIME_CONFIGURATION_URL = RESOURCE_URL + "/frontend-runtime-configuration";
+
+        @Test
+        @DisplayName("Should return logoutUrl when configured")
+        void should_return_logout_url_when_configured() {
+            final var uuid = UUID.randomUUID().toString();
+
+            webTestClient
+                    .get()
+                    .uri(FRONTEND_RUNTIME_CONFIGURATION_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(FrontendRuntimeConfigurationControllerResponseDto.class)
+                    .value(actual -> {
+                        assertThat(actual.logoutUrl()).isEqualTo("https://google.com");
                     });
         }
     }
