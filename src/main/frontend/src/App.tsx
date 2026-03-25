@@ -15,6 +15,7 @@ import { DietPlanPage } from './pages/diet-plan/DietPlanPage.tsx';
 import { NewDietPlanPage } from './pages/diet-plan/NewDietPlanPage.tsx';
 import { SettingsPage } from './pages/settings/SettingsPage.tsx';
 import { LoadingProvider } from './contexts/LoadingContext';
+import { AppRuntimeConfigProvider } from './contexts/AppRuntimeConfigContext.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
         <ModalsProvider>
           <Notifications position="top-right" />
           <LoadingProvider>
-            <BrowserRouter>
-              <AppShell
+            <AppRuntimeConfigProvider>
+              <BrowserRouter>
+                <AppShell
                 header={{ height: 60 }}
                 navbar={{
                   width: 250,
@@ -50,7 +52,8 @@ function App() {
                   </Routes>
                 </AppShell.Main>
               </AppShell>
-            </BrowserRouter>
+              </BrowserRouter>
+            </AppRuntimeConfigProvider>
           </LoadingProvider>
         </ModalsProvider>
       </MantineProvider>

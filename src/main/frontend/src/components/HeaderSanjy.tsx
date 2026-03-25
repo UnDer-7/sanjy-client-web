@@ -1,9 +1,10 @@
-import { AppShell, Burger, Group, Title, NavLink, Anchor, Text } from '@mantine/core';
+import { AppShell, Burger, Button, Group, Title, NavLink, Anchor, Text } from '@mantine/core';
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import { toZonedTime } from 'date-fns-tz';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
 import { DateTimeService } from '../services/DateTimeService';
+import { useGetLogoutUrl } from '../hooks/useGetLogoutUrl.ts';
 
 interface HeaderProps {
   opened: boolean;
@@ -43,6 +44,24 @@ function CurrentDateTime() {
   );
 }
 
+function LogoutButton({ onBeforeNavigate }: Readonly<{ onBeforeNavigate?: () => void }>) {
+  const logoutUrl = useGetLogoutUrl();
+  if (!logoutUrl) return null;
+  return (
+    <Button
+      variant="subtle"
+      size="compact-sm"
+      color="red"
+      onClick={() => {
+        onBeforeNavigate?.();
+        window.location.href = logoutUrl;
+      }}
+    >
+      Logout
+    </Button>
+  );
+}
+
 export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
   const location = useLocation();
 
@@ -72,6 +91,7 @@ export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
             </Anchor>
           ))}
           <CurrentDateTime />
+          <LogoutButton />
         </Group>
       </Group>
     </AppShell.Header>
@@ -98,6 +118,7 @@ export function NavigationMenu({ onNavigate }: Readonly<NavigationMenuProps>) {
           onClick={onNavigate}
         />
       ))}
+      <LogoutButton onBeforeNavigate={onNavigate} />
     </AppShell.Navbar>
   );
 }
