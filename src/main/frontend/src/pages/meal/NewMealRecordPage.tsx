@@ -14,7 +14,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
 import { toZonedTime } from 'date-fns-tz';
 import { DietPlanClient } from '../../clients/DietPlanClient.ts';
@@ -29,7 +29,13 @@ import { DateTimePickerSanjy } from '../../components/DateTimePickerSanjy.tsx';
 
 export function NewMealRecordPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
+
+  const navigateToMeal = () => {
+    const fromSearch = (location.state as { fromSearch?: string } | null)?.fromSearch;
+    navigate(fromSearch ? `/meal?${fromSearch}` : '/meal');
+  };
   const {
     settings: { userTimezone, userTimeFormat },
   } = useCustomLocalStorage();
@@ -156,7 +162,7 @@ export function NewMealRecordPage() {
       }
 
       await MealRecordClient.create(request);
-      navigate('/meal');
+      navigateToMeal();
     } catch (error) {
       console.error('Failed to create meal record:', error);
     } finally {
@@ -207,7 +213,7 @@ export function NewMealRecordPage() {
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Title order={1}>New Meal Record</Title>
-              <Button variant="subtle" onClick={() => navigate('/meal')}>
+              <Button variant="subtle" onClick={() => navigateToMeal()}>
                 Cancel
               </Button>
             </Group>
@@ -312,7 +318,7 @@ export function NewMealRecordPage() {
 
                   {/* Submit Buttons */}
                   <Group justify="flex-end" mt="md">
-                    <Button variant="subtle" onClick={() => navigate('/meal')}>
+                    <Button variant="subtle" onClick={() => navigateToMeal()}>
                       Cancel
                     </Button>
                     <Button type="submit" disabled={!isMealTypeSelected || !isFreeMealSelected}>

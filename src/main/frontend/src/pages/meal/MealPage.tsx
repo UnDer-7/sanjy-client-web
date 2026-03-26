@@ -241,7 +241,7 @@ export function MealPage() {
     <Container size="xl" py="xl">
       <Group justify="space-between" align="center" mb="xl">
         <Title order={1}>Meal Records</Title>
-        <Button onClick={() => navigate('/meal/new')}>+ New Meal Record</Button>
+        <Button onClick={() => navigate('/meal/new', { state: { fromSearch: searchParams.toString() } })}>+ New Meal Record</Button>
       </Group>
 
       {/* Summary Statistics */}
