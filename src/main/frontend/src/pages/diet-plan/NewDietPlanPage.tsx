@@ -35,6 +35,7 @@ import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
 
 interface FormMealType {
+  id: string;
   name: string;
   scheduledTime: string;
   observation: string;
@@ -42,6 +43,7 @@ interface FormMealType {
 }
 
 interface FormStandardOption {
+  id: string;
   description: string;
 }
 
@@ -120,6 +122,7 @@ export function NewDietPlanPage() {
 
   const addMealType = () => {
     form.insertListItem('mealTypes', {
+      id: crypto.randomUUID(),
       name: '',
       scheduledTime: '',
       observation: '',
@@ -133,6 +136,7 @@ export function NewDietPlanPage() {
 
   const addStandardOption = (mealTypeIndex: number) => {
     form.insertListItem(`mealTypes.${mealTypeIndex}.standardOptions`, {
+      id: crypto.randomUUID(),
       description: '',
     });
   };
@@ -224,11 +228,13 @@ export function NewDietPlanPage() {
 
     if (plan.mealTypes && plan.mealTypes.length > 0) {
       const formMealTypes: FormMealType[] = plan.mealTypes.map((mealType) => ({
+        id: crypto.randomUUID(),
         name: mealType.name || '',
         scheduledTime: mealType.scheduledTime || '',
         observation: mealType.observation || '',
         standardOptions:
           mealType.standardOptions?.map((option) => ({
+            id: crypto.randomUUID(),
             description: option.description || '',
           })) || [],
       }));
@@ -401,7 +407,7 @@ export function NewDietPlanPage() {
               )}
 
               {form.values.mealTypes.map((mealType, mealTypeIndex) => (
-                <Paper key={mealType.name + `_${mealTypeIndex}`} p="md" withBorder>
+                <Paper key={mealType.id} p="md" withBorder>
                   <Stack gap="sm">
                     <Group justify="space-between" align="center">
                       <Text fw={600}>Meal Type {mealTypeIndex + 1}</Text>
@@ -449,7 +455,7 @@ export function NewDietPlanPage() {
                       )}
 
                     {mealType.standardOptions.map((_option, optionIndex) => (
-                      <Box key={_option + `_${optionIndex}`}>
+                      <Box key={_option.id}>
                         <Group align="flex-start">
                           <Text fw={500} pt="xs">
                             {optionIndex + 1}.
