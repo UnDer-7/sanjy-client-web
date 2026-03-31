@@ -32,8 +32,8 @@ import { DateTimeService } from '../../services/DateTimeService.ts';
 import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
 import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
-import {DatePickerSanjy} from "../../components/DatePickerSanjy.tsx";
-import {TimePickerSanjy} from "../../components/TimePickerSanjy.tsx";
+import { DatePickerSanjy } from '../../components/DatePickerSanjy.tsx';
+import { TimePickerSanjy } from '../../components/TimePickerSanjy.tsx';
 
 interface FormMealType {
   id: string;

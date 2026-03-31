@@ -196,6 +196,27 @@ class MaintenanceControllerIT extends IntegrationTestController {
                                 .isEqualTo("SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL");
                     });
         }
+
+        @Test
+        @DisplayName("Should return homePath when configured")
+        void should_return_home_path_when_configured() {
+            final var uuid = UUID.randomUUID().toString();
+
+            webTestClient
+                    .get()
+                    .uri(FRONTEND_RUNTIME_CONFIGURATION_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(FrontendRuntimeConfigurationControllerResponseDto.class)
+                    .value(actual -> {
+                        assertThat(actual.appTitleRedirectPath()).isNotNull();
+                        assertThat(actual.appTitleRedirectPath().value()).isEqualTo("/meal");
+                        assertThat(actual.appTitleRedirectPath().env())
+                                .isEqualTo("SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_APP_TITLE_REDIRECT_PATH");
+                    });
+        }
     }
 
     @Nested

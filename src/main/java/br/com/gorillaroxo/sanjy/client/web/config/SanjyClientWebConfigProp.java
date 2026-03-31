@@ -116,7 +116,8 @@ public record SanjyClientWebConfigProp(
     public record CorsProp(String allowedOrigins) {}
 
     public record FrontendRuntimeConfigurationProp(
-            @NotNull @Valid RuntimeConfigEntryProp logoutUrl) {}
+            @NotNull @Valid RuntimeConfigEntryProp logoutUrl,
+            @NotNull @Valid RuntimeConfigPathEntryProp appTitleRedirectPath) {}
 
     public record RuntimeConfigEntryProp(
             @URL String value, @NotBlank String envName) {
@@ -124,4 +125,13 @@ public record SanjyClientWebConfigProp(
             if (value != null && value.isBlank()) value = null;
         }
     }
+
+    public record RuntimeConfigPathEntryProp(
+            @NotBlank
+            @jakarta.validation.constraints.Pattern(
+                    regexp = "^(/|/meal(/\\*\\*)?|/diet-plan(/\\*\\*)?|/settings(/\\*\\*)?)$",
+                    message = "must be one of: /, /meal, /meal/**, /diet-plan, /diet-plan/**, /settings, /settings/**")
+            String value,
+
+            @NotBlank String envName) {}
 }

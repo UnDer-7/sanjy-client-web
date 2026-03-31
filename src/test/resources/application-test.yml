@@ -48,6 +48,9 @@ sanjy-client-web:
     logout-url:
       value: 'https://google.com'
       env-name: SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL
+    app-title-redirect-path:
+      value: '/meal'
+      env-name: SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_APP_TITLE_REDIRECT_PATH
 
 spring:
   main:

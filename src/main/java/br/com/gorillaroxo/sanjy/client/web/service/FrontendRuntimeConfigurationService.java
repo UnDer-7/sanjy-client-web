@@ -12,10 +12,14 @@ public class FrontendRuntimeConfigurationService {
     private final SanjyClientWebConfigProp prop;
 
     public FrontendRuntimeConfigurationControllerResponseDto execute() {
-        final var logoutUrlProp = prop.frontendRuntimeConfiguration().logoutUrl();
+        final var frontendConfig = prop.frontendRuntimeConfiguration();
+        final var logoutUrlProp = frontendConfig.logoutUrl();
+        final var appTitleRedirectPathProp = frontendConfig.appTitleRedirectPath();
         return FrontendRuntimeConfigurationControllerResponseDto.builder()
                 .logoutUrl(new FrontendRuntimeConfigurationControllerResponseDto.RuntimeConfigEntryDto(
                         logoutUrlProp.envName(), logoutUrlProp.value()))
+                .appTitleRedirectPath(new FrontendRuntimeConfigurationControllerResponseDto.RuntimeConfigEntryDto(
+                        appTitleRedirectPathProp.envName(), appTitleRedirectPathProp.value()))
                 .build();
     }
 }

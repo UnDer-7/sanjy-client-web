@@ -5,6 +5,7 @@ import { toZonedTime } from 'date-fns-tz';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
 import { DateTimeService } from '../services/DateTimeService';
 import { useGetLogoutUrl } from '../hooks/useGetLogoutUrl.ts';
+import { useGetAppTitleRedirectPath } from '../hooks/useGetAppTitleRedirectPath.ts';
 
 interface HeaderProps {
   opened: boolean;
@@ -64,13 +65,14 @@ function LogoutButton({ onBeforeNavigate }: Readonly<{ onBeforeNavigate?: () => 
 
 export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
   const location = useLocation();
+  const appTitleRedirectPath = useGetAppTitleRedirectPath();
 
   return (
     <AppShell.Header>
       <Group h="100%" px="md" justify="space-between">
         <Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Anchor component={Link} to="/" underline="never" c="inherit">
+          <Anchor component={Link} to={appTitleRedirectPath} underline="never" c="inherit">
             <Title order={3} size="h3">
               🍽️ SanJy
             </Title>

@@ -1,27 +1,24 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { MaintenanceClient } from '../clients/MaintenanceClient.ts';
-import type {
-  FrontendRuntimeConfiguration,
-  RuntimeConfigEntry,
-} from '../models/FrontendRuntimeConfiguration.ts';
-
-export interface RuntimeConfiguration {
-  logoutUrl: RuntimeConfigEntry;
-}
+import type { FrontendRuntimeConfiguration } from '../models/FrontendRuntimeConfiguration.ts';
 
 interface AppRuntimeConfigContextType {
-  runtimeConfiguration: RuntimeConfiguration;
+  runtimeConfiguration: FrontendRuntimeConfiguration;
 }
 
-const DEFAULT_RUNTIME_CONFIGURATION: RuntimeConfiguration = {
+const DEFAULT_RUNTIME_CONFIGURATION: FrontendRuntimeConfiguration = {
   logoutUrl: { env: 'SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_LOGOUT_URL', value: null },
+  appTitleRedirectPath: {
+    env: 'SANJY_CLIENT_WEB_FRONTEND_RUNTIME_CONFIGURATION_APP_TITLE_REDIRECT_PATH',
+    value: '/meal',
+  },
 };
 
 const AppRuntimeConfigContext = createContext<AppRuntimeConfigContextType | undefined>(undefined);
 
 export function AppRuntimeConfigProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const [runtimeConfiguration, setRuntimeConfiguration] = useState<RuntimeConfiguration>(
+  const [runtimeConfiguration, setRuntimeConfiguration] = useState<FrontendRuntimeConfiguration>(
     DEFAULT_RUNTIME_CONFIGURATION
   );
 
@@ -30,6 +27,8 @@ export function AppRuntimeConfigProvider({ children }: Readonly<{ children: Reac
       .then((data: FrontendRuntimeConfiguration) => {
         setRuntimeConfiguration({
           logoutUrl: data.logoutUrl,
+          appTitleRedirectPath:
+            data.appTitleRedirectPath ?? DEFAULT_RUNTIME_CONFIGURATION.appTitleRedirectPath,
         });
       })
       .catch(() => {
