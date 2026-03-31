@@ -286,7 +286,6 @@ export function MealPage() {
                 placeholder="Select date and time"
                 value={consumedAtAfter}
                 onChange={(value) => setConsumedAtAfter(value as Date | null)}
-                clearable
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
@@ -295,7 +294,6 @@ export function MealPage() {
                 placeholder="Select date and time"
                 value={consumedAtBefore}
                 onChange={(value) => setConsumedAtBefore(value as Date | null)}
-                clearable
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>

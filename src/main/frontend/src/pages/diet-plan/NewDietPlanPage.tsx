@@ -17,7 +17,6 @@ import {
   Tooltip,
   List,
 } from '@mantine/core';
-import { DateInput, TimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router';
@@ -33,6 +32,8 @@ import { DateTimeService } from '../../services/DateTimeService.ts';
 import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
 import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
+import {DatePickerSanjy} from "../../components/DatePickerSanjy.tsx";
+import {TimePickerSanjy} from "../../components/TimePickerSanjy.tsx";
 
 interface FormMealType {
   id: string;
@@ -52,7 +53,6 @@ export function NewDietPlanPage() {
   const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
   const {
     settings: {
-      userTimeFormat: { value: timeFormat },
       userTimezone: { value: timezone },
     },
   } = useCustomLocalStorage();
@@ -332,13 +332,13 @@ export function NewDietPlanPage() {
               />
 
               <Group grow>
-                <DateInput
+                <DatePickerSanjy
                   label="Start Date"
                   placeholder="Select start date"
                   required
                   {...form.getInputProps('startDate')}
                 />
-                <DateInput
+                <DatePickerSanjy
                   label="End Date"
                   placeholder="Select end date"
                   required
@@ -427,11 +427,8 @@ export function NewDietPlanPage() {
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.name`)}
                       />
-                      <TimePicker
+                      <TimePickerSanjy
                         label="Scheduled Time"
-                        format={timeFormat}
-                        clearable
-                        withDropdown
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.scheduledTime`)}
                       />
