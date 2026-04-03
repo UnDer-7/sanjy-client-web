@@ -91,7 +91,7 @@ public class JacksonConfig {
         public ZonedDateTime deserialize(final JsonParser parser, final DeserializationContext context)
                 throws JacksonException {
 
-            String text = parser.getText();
+            String text = parser.getString();
 
             if (text == null || text.isBlank()) {
                 return null;

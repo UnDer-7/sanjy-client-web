@@ -55,7 +55,7 @@ function LogoutButton({ onBeforeNavigate }: Readonly<{ onBeforeNavigate?: () => 
       color="red"
       onClick={() => {
         onBeforeNavigate?.();
-        window.location.href = logoutUrl;
+        globalThis.location.href = logoutUrl;
       }}
     >
       Logout

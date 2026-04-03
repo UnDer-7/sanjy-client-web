@@ -3,9 +3,9 @@ package br.com.gorillaroxo.sanjy.client.web.config.ai;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.lang.Nullable;
 
 /**
  * Provider for the optional ChatModel. This class wraps the ChatModel which may be null if no AI provider is

@@ -48,7 +48,7 @@ public final class MockWebServerManager {
         instance.setDispatcher(new DelegatingDispatcher(dispatcher));
     }
 
-    public static void shutdown() throws IOException {
+    public static void shutdown() {
         instance.close();
     }
 
