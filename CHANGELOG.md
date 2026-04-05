@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-04-04
+
+### Added
+
+- Settings page with a Runtime Configuration section displaying active environment values
+- Backend endpoint (`/api/maintenance/frontend-runtime-configuration`) exposing runtime config to the frontend
+- `DateTimePickerSanjy`, `DatePickerSanjy`, and `TimePickerSanjy` components that automatically apply the user's preferred date/time format from local storage
+- `APP_TITLE_REDIRECT_PATH` — configurable redirect path when clicking the application title in the header
+
+### Fixed
+
+- Logout not working correctly
+- Meal type options displayed out of order in the frontend form
+- Clear/reset action missing or broken on several form buttons
+- Default landing page now configurable at runtime via environment variable (defaults to diet-plan)
+- Custom meal record search filter being reset when navigating to "New Record" and returning to the search page
+
+---
+
 ## [0.1.1] - 2026-03-23
 
 ### Changed
