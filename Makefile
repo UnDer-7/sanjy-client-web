@@ -51,6 +51,10 @@ dev/run:
 	echo '>>> Starting Spring Boot application...' && \
 	./mvnw -B -ntp spring-boot:run
 
+## dev/pipe: Run most pipeline checks locally (fmt/check → lint → snyk/test → sonar → test → test/native). Recommended before pushing to CI — covers the majority of validations, though some checks only run in the pipeline
+.PHONE: dev/pipe
+dev/pipe: fmt/check lint snyk/test sonar test test/native
+
 
 
 

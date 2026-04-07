@@ -122,7 +122,9 @@ public record SanjyClientWebConfigProp(
     public record RuntimeConfigEntryProp(
             @URL String value, @NotBlank String envName) {
         public RuntimeConfigEntryProp {
-            if (value != null && value.isBlank()) value = null;
+            if (value != null && value.isBlank()) {
+                value = null;
+            }
         }
     }
 
