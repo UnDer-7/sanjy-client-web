@@ -231,8 +231,19 @@ version/set:
 ## ----- Geral -----
 ## snyk/test: Scan all dependencies for vulnerabilities (backend + frontend, requires SNYK_TOKEN env var)
 .PHONY: snyk/test
-snyk/test: snyk/test/backend snyk/test/frontend
-	@echo ">>> Full Snyk scan completed!"
+snyk/test:
+	@backend_exit=0; frontend_exit=0; \
+	$(MAKE) snyk/test/backend || backend_exit=$$?; \
+	$(MAKE) snyk/test/frontend || frontend_exit=$$?; \
+	echo ""; \
+	echo "=========================================================================="; \
+	echo " SNYK SCAN SUMMARY"; \
+	echo "=========================================================================="; \
+	if [ $$backend_exit -eq 0 ]; then echo " Backend:  PASSED"; else echo " Backend:  FAILED (exit $$backend_exit)"; fi; \
+	if [ $$frontend_exit -eq 0 ]; then echo " Frontend: PASSED"; else echo " Frontend: FAILED (exit $$frontend_exit)"; fi; \
+	echo "=========================================================================="; \
+	echo ""; \
+	exit $$((backend_exit | frontend_exit))
 
 ## snyk/monitor: Upload all project snapshots to Snyk (backend + frontend, requires SNYK_TOKEN env var)
 .PHONY: snyk/monitor

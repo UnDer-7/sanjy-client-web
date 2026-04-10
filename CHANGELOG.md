@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.2.0] - 2026-04-05
+## [0.2.0] - 2026-04-09
 
 ### Added
 
@@ -31,6 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clear/reset action missing or broken on several form buttons
 - Default landing page now configurable at runtime via environment variable (defaults to diet-plan)
 - Custom meal record search filter being reset when navigating to "New Record" and returning to the search page
+
+### Security
+
+#### Dependency Vulnerability Fixes
+
+- Overridden transitive dependency versions to address high and medium severity vulnerabilities flagged by Snyk
 
 ---
 
