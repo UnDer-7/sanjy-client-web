@@ -2,11 +2,11 @@ package br.com.gorillaroxo.sanjy.client.web.config.ai;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
 
 /**
  * Configuration for the Diet Plan Converter ChatClient. Creates an Optional ChatClient that will be empty if no AI

@@ -10,5 +10,5 @@ export function DateTimePickerSanjy(props: Readonly<DateTimePickerProps>) {
   const dateFormat = DateTimeFormatPatternService.getDateFormat().dayjs;
   const timeFormat = DateTimeFormatPatternService.getTimeFormat(userTimeFormat);
 
-  return <DateTimePicker {...props} valueFormat={`${dateFormat} ${timeFormat}`} />;
+  return <DateTimePicker clearable {...props} valueFormat={`${dateFormat} ${timeFormat}`} />;
 }

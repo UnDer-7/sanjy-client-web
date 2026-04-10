@@ -27,6 +27,7 @@ import { MaintenanceClient } from '../../clients/MaintenanceClient.ts';
 import type { BackendProjectInfo, Project } from '../../models/BackendProjectInfo.ts';
 import { useEffect, useMemo, useState } from 'react';
 import { ErrorLogsComponent } from './ErrorLogsComponent.tsx';
+import { RuntimeConfigurationSection } from './RuntimeConfigurationSection.tsx';
 import { useIsMobile } from '../../hooks/useIsMobile.ts';
 
 interface ProjectInfoCardProps {
@@ -280,6 +281,8 @@ export function SettingsPage() {
             </SimpleGrid>
           )}
         </div>
+
+        <RuntimeConfigurationSection />
       </Stack>
 
       <Modal

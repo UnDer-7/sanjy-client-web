@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public class DietPlanConversionFailureException extends BusinessException {
 
     private static final ExceptionCode CODE = ExceptionCode.DIET_PLAN_CONVERSION_FAILURE;
-    private static final HttpStatus STATUS = HttpStatus.UNPROCESSABLE_ENTITY;
+    private static final HttpStatus STATUS = HttpStatus.UNPROCESSABLE_CONTENT;
 
     public DietPlanConversionFailureException(final String customMessage, final Throwable originalCause) {
         super(CODE, STATUS, customMessage, originalCause);

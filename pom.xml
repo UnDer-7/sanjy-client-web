@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.4</version>
+        <version>4.0.5</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
 
     <groupId>br.com.gorillaroxo</groupId>
     <artifactId>sanjy-client-web</artifactId>
-    <version>0.1.1</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
     <name>sanjy-client-web</name>
     <description>Web client for the Sanjy diet and meal management application</description>
@@ -55,7 +55,7 @@
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
         <springdoc.version>3.0.2</springdoc.version>
-        <spring-ai.version>2.0.0-M3</spring-ai.version>
+        <spring-ai.version>2.0.0-M4</spring-ai.version>
 
         <checkstyle.version>13.3.0</checkstyle.version>
         <checkstyle-sevntu-checks.version>1.44.1</checkstyle-sevntu-checks.version>
@@ -103,6 +103,42 @@
             <!-- ####################### -->
 
             <!-- Security Fixes -->
+            <!-- SNYK-JAVA-IOMODELCONTEXTPROTOCOLSDK-15857186: Permissive Cross-domain Policy (mcp-core < 1.1.1) -->
+            <!-- https://security.snyk.io/vuln/SNYK-JAVA-IOMODELCONTEXTPROTOCOLSDK-15857186 -->
+            <!-- Remove when spring-ai.version ships with mcp-sdk >= 1.1.1 -->
+            <dependency>
+                <groupId>io.modelcontextprotocol.sdk</groupId>
+                <artifactId>mcp-core</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>io.modelcontextprotocol.sdk</groupId>
+                <artifactId>mcp-json-jackson3</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+
+            <!-- SNYK-JAVA-ORGCODEHAUSPLEXUS-15766699: Directory Traversal (plexus-utils < 4.0.3) -->
+            <!-- https://security.snyk.io/vuln/SNYK-JAVA-ORGCODEHAUSPLEXUS-15766699 -->
+            <!-- Remove when maven-artifact.version ships with plexus-utils >= 4.0.3 -->
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>4.0.3</version>
+            </dependency>
+
+            <!-- SNYK-JAVA-TOOLSJACKSONCORE-15907550: Allocation of Resources Without Limits (jackson-core < 3.1.1) -->
+            <!-- https://security.snyk.io/vuln/SNYK-JAVA-TOOLSJACKSONCORE-15907550 -->
+            <!-- Remove when logstash-logback-encoder.version ships with jackson-core >= 3.1.1 -->
+            <dependency>
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>3.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>3.1.1</version>
+            </dependency>
             <!-- ####################### -->
         </dependencies>
     </dependencyManagement>

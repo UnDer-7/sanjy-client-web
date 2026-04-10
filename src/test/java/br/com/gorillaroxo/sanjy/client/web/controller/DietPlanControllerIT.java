@@ -342,6 +342,33 @@ class DietPlanControllerIT extends IntegrationTestController {
         }
 
         @Test
+        @DisplayName("Should return meal types preserving the order received from sanjy-server")
+        void should_return_meal_types_in_the_same_order_as_received() {
+            final var uuid = UUID.randomUUID().toString();
+
+            final DietPlanResponseDto expectedDietPlan =
+                    dietPlanRestClientMock.activeDietPlan().successWithOrderedMealTypes(uuid);
+            final List<Long> expectedOrder = expectedDietPlan.mealTypes().stream()
+                    .map(MealTypeResponseDto::id)
+                    .toList();
+
+            webTestClient
+                    .get()
+                    .uri(RESOURCE_URL)
+                    .header(RequestConstants.Headers.X_CORRELATION_ID, uuid)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody(DietPlanControllerResponseDto.class)
+                    .value(actualDietPlan -> {
+                        final List<Long> actualOrder = actualDietPlan.mealTypes().stream()
+                                .map(MealTypeControllerResponseDto::id)
+                                .toList();
+                        assertThat(actualOrder).containsExactlyElementsOf(expectedOrder);
+                    });
+        }
+
+        @Test
         @DisplayName("Should return 400 when X-Correlation-ID header is missing")
         void should_return_bad_request_when_correlation_id_header_is_missing() {
             webTestClient

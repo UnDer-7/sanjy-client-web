@@ -28,7 +28,8 @@ public record SanjyClientWebConfigProp(
         @NotNull @Valid LoggingProp logging,
         @NotNull @Valid UploadProp upload,
         @NotNull @Valid AiProp ai,
-        @Valid CorsProp cors) {
+        @Valid CorsProp cors,
+        @NotNull @Valid FrontendRuntimeConfigurationProp frontendRuntimeConfiguration) {
 
     public record AiProp(
             @NotNull @Valid AiGenericConfigProp openAI,
@@ -113,4 +114,26 @@ public record SanjyClientWebConfigProp(
     public record UploadProp(@NotNull Integer maxFileSizeInMb) {}
 
     public record CorsProp(String allowedOrigins) {}
+
+    public record FrontendRuntimeConfigurationProp(
+            @NotNull @Valid RuntimeConfigEntryProp logoutUrl,
+            @NotNull @Valid RuntimeConfigPathEntryProp appTitleRedirectPath) {}
+
+    public record RuntimeConfigEntryProp(
+            @URL String value, @NotBlank String envName) {
+        public RuntimeConfigEntryProp {
+            if (value != null && value.isBlank()) {
+                value = null;
+            }
+        }
+    }
+
+    public record RuntimeConfigPathEntryProp(
+            @NotBlank
+            @jakarta.validation.constraints.Pattern(
+                    regexp = "^(/|/meal(/\\*\\*)?|/diet-plan(/\\*\\*)?|/settings(/\\*\\*)?)$",
+                    message = "must be one of: /, /meal, /meal/**, /diet-plan, /diet-plan/**, /settings, /settings/**")
+            String value,
+
+            @NotBlank String envName) {}
 }

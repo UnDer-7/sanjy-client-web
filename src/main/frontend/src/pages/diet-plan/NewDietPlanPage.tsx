@@ -17,7 +17,6 @@ import {
   Tooltip,
   List,
 } from '@mantine/core';
-import { DateInput, TimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useNavigate } from 'react-router';
@@ -33,8 +32,11 @@ import { DateTimeService } from '../../services/DateTimeService.ts';
 import { useLoadingGlobal } from '../../contexts/LoadingContext.tsx';
 import { useCustomLocalStorage } from '../../hooks/useCustomLocalStorage.ts';
 import { toZonedTime } from 'date-fns-tz';
+import { DatePickerSanjy } from '../../components/DatePickerSanjy.tsx';
+import { TimePickerSanjy } from '../../components/TimePickerSanjy.tsx';
 
 interface FormMealType {
+  id: string;
   name: string;
   scheduledTime: string;
   observation: string;
@@ -42,6 +44,7 @@ interface FormMealType {
 }
 
 interface FormStandardOption {
+  id: string;
   description: string;
 }
 
@@ -50,7 +53,6 @@ export function NewDietPlanPage() {
   const { showLoadingGlobal, hideLoadingGlobal } = useLoadingGlobal();
   const {
     settings: {
-      userTimeFormat: { value: timeFormat },
       userTimezone: { value: timezone },
     },
   } = useCustomLocalStorage();
@@ -120,6 +122,7 @@ export function NewDietPlanPage() {
 
   const addMealType = () => {
     form.insertListItem('mealTypes', {
+      id: crypto.randomUUID(),
       name: '',
       scheduledTime: '',
       observation: '',
@@ -133,6 +136,7 @@ export function NewDietPlanPage() {
 
   const addStandardOption = (mealTypeIndex: number) => {
     form.insertListItem(`mealTypes.${mealTypeIndex}.standardOptions`, {
+      id: crypto.randomUUID(),
       description: '',
     });
   };
@@ -224,11 +228,13 @@ export function NewDietPlanPage() {
 
     if (plan.mealTypes && plan.mealTypes.length > 0) {
       const formMealTypes: FormMealType[] = plan.mealTypes.map((mealType) => ({
+        id: crypto.randomUUID(),
         name: mealType.name || '',
         scheduledTime: mealType.scheduledTime || '',
         observation: mealType.observation || '',
         standardOptions:
           mealType.standardOptions?.map((option) => ({
+            id: crypto.randomUUID(),
             description: option.description || '',
           })) || [],
       }));
@@ -326,13 +332,13 @@ export function NewDietPlanPage() {
               />
 
               <Group grow>
-                <DateInput
+                <DatePickerSanjy
                   label="Start Date"
                   placeholder="Select start date"
                   required
                   {...form.getInputProps('startDate')}
                 />
-                <DateInput
+                <DatePickerSanjy
                   label="End Date"
                   placeholder="Select end date"
                   required
@@ -401,7 +407,7 @@ export function NewDietPlanPage() {
               )}
 
               {form.values.mealTypes.map((mealType, mealTypeIndex) => (
-                <Paper key={mealType.name + `_${mealTypeIndex}`} p="md" withBorder>
+                <Paper key={mealType.id} p="md" withBorder>
                   <Stack gap="sm">
                     <Group justify="space-between" align="center">
                       <Text fw={600}>Meal Type {mealTypeIndex + 1}</Text>
@@ -421,11 +427,8 @@ export function NewDietPlanPage() {
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.name`)}
                       />
-                      <TimePicker
+                      <TimePickerSanjy
                         label="Scheduled Time"
-                        format={timeFormat}
-                        clearable
-                        withDropdown
                         required
                         {...form.getInputProps(`mealTypes.${mealTypeIndex}.scheduledTime`)}
                       />
@@ -449,7 +452,7 @@ export function NewDietPlanPage() {
                       )}
 
                     {mealType.standardOptions.map((_option, optionIndex) => (
-                      <Box key={_option + `_${optionIndex}`}>
+                      <Box key={_option.id}>
                         <Group align="flex-start">
                           <Text fw={500} pt="xs">
                             {optionIndex + 1}.

@@ -1,9 +1,11 @@
-import { AppShell, Burger, Group, Title, NavLink, Anchor, Text } from '@mantine/core';
+import { AppShell, Burger, Button, Group, Title, NavLink, Anchor, Text } from '@mantine/core';
 import { Link, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 import { toZonedTime } from 'date-fns-tz';
 import { useCustomLocalStorage } from '../hooks/useCustomLocalStorage.ts';
 import { DateTimeService } from '../services/DateTimeService';
+import { useGetLogoutUrl } from '../hooks/useGetLogoutUrl.ts';
+import { useGetAppTitleRedirectPath } from '../hooks/useGetAppTitleRedirectPath.ts';
 
 interface HeaderProps {
   opened: boolean;
@@ -43,15 +45,34 @@ function CurrentDateTime() {
   );
 }
 
+function LogoutButton({ onBeforeNavigate }: Readonly<{ onBeforeNavigate?: () => void }>) {
+  const logoutUrl = useGetLogoutUrl();
+  if (!logoutUrl) return null;
+  return (
+    <Button
+      variant="subtle"
+      size="compact-sm"
+      color="red"
+      onClick={() => {
+        onBeforeNavigate?.();
+        globalThis.location.href = logoutUrl;
+      }}
+    >
+      Logout
+    </Button>
+  );
+}
+
 export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
   const location = useLocation();
+  const appTitleRedirectPath = useGetAppTitleRedirectPath();
 
   return (
     <AppShell.Header>
       <Group h="100%" px="md" justify="space-between">
         <Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Anchor component={Link} to="/" underline="never" c="inherit">
+          <Anchor component={Link} to={appTitleRedirectPath} underline="never" c="inherit">
             <Title order={3} size="h3">
               🍽️ SanJy
             </Title>
@@ -72,6 +93,7 @@ export function HeaderSanjy({ opened, toggle }: Readonly<HeaderProps>) {
             </Anchor>
           ))}
           <CurrentDateTime />
+          <LogoutButton />
         </Group>
       </Group>
     </AppShell.Header>
@@ -98,6 +120,7 @@ export function NavigationMenu({ onNavigate }: Readonly<NavigationMenuProps>) {
           onClick={onNavigate}
         />
       ))}
+      <LogoutButton onBeforeNavigate={onNavigate} />
     </AppShell.Navbar>
   );
 }

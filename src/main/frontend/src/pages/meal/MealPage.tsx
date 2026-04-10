@@ -241,7 +241,11 @@ export function MealPage() {
     <Container size="xl" py="xl">
       <Group justify="space-between" align="center" mb="xl">
         <Title order={1}>Meal Records</Title>
-        <Button onClick={() => navigate('/meal/new')}>+ New Meal Record</Button>
+        <Button
+          onClick={() => navigate('/meal/new', { state: { fromSearch: searchParams.toString() } })}
+        >
+          + New Meal Record
+        </Button>
       </Group>
 
       {/* Summary Statistics */}
@@ -286,7 +290,6 @@ export function MealPage() {
                 placeholder="Select date and time"
                 value={consumedAtAfter}
                 onChange={(value) => setConsumedAtAfter(value as Date | null)}
-                clearable
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
@@ -295,7 +298,6 @@ export function MealPage() {
                 placeholder="Select date and time"
                 value={consumedAtBefore}
                 onChange={(value) => setConsumedAtBefore(value as Date | null)}
-                clearable
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
