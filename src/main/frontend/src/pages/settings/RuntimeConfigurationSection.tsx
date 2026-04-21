@@ -1,10 +1,10 @@
 import { ActionIcon, Group, Paper, Stack, Text, Title, Tooltip } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useAppRuntimeConfig } from '../../contexts/AppRuntimeConfigContext.tsx';
-import type { RuntimeConfiguration } from '../../contexts/AppRuntimeConfigContext.tsx';
+import type { FrontendRuntimeConfiguration } from '../../models/FrontendRuntimeConfiguration.ts';
 
 interface RuntimeConfigEntry {
-  key: keyof RuntimeConfiguration;
+  key: keyof FrontendRuntimeConfiguration;
   name: string;
   description: string;
 }

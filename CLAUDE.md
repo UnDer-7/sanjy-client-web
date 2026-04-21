@@ -16,21 +16,23 @@ Sanjy Client Web is a modern full-stack application for diet and meal tracking. 
 
 1. **English Only**: ALL code, comments, commit messages, variable names, class names, method names, and documentation MUST be written in English. Never use Portuguese or any other language in the codebase.
 
-2. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS fetch and consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns. This is MANDATORY before writing any Mantine component code.
+2. **Never Commit — Leave Changes Staged**: NEVER run `git add`, `git commit`, or `git push`. After making changes, leave them in the working tree or staged area. The user commits manually. This rule has no exceptions.
 
-3. **Browser Validation**: You have access to Google Chrome for debugging the application. Use it to validate your implementation by checking:
+3. **Mantine Documentation Consultation**: When creating or editing React components in the frontend, ALWAYS fetch and consult the Mantine documentation at https://mantine.dev/llms.txt to ensure correct usage of components, hooks, and patterns. This is MANDATORY before writing any Mantine component code.
+
+4. **Browser Validation**: You have access to Google Chrome for debugging the application. Use it to validate your implementation by checking:
 
    - Visual rendering of components
    - Console errors and warnings
    - Network requests and responses
    - Application behavior and user interactions
-4. **Dependency Installation**: You MAY install new libraries in `package.json` if necessary for implementing features. Use `npm install <package>` in the frontend directory.
-5. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
+5. **Dependency Installation**: You MAY install new libraries in `package.json` if necessary for implementing features. Use `npm install <package>` in the frontend directory.
+6. **Mandatory Build Validation**: After implementing ANY code changes, you MUST:
    - Run `mvn clean install` from the project root
    - If the build fails, analyze errors, fix them, and run `mvn clean install` again
    - Repeat until the build succeeds with `BUILD SUCCESS`
    - Only consider the task complete when the build passes successfully
-6. **Use Custom DateTimePickerSanjy Component**: When adding date-time pickers in the frontend, ALWAYS use the `DateTimePickerSanjy` component from `src/components/DateTimePickerSanjy.tsx`. NEVER use the Mantine `DateTimePicker` directly. The custom component automatically applies the user's preferred date and time format settings from local storage.
+7. **Use Custom DateTimePickerSanjy Component**: When adding date-time pickers in the frontend, ALWAYS use the `DateTimePickerSanjy` component from `src/components/DateTimePickerSanjy.tsx`. NEVER use the Mantine `DateTimePicker` directly. The custom component automatically applies the user's preferred date and time format settings from local storage.
 
 ## Architecture
 

@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2026-04-21
+
+### Changed
+
+- Replaced Axios with a native `fetch` wrapper (`HttpClient.ts`) — removed the `axios` dependency and migrated all API clients
+
+### Security
+
+- Overridden `spring-framework.version` to `7.0.7` to fix HTTP Request Smuggling in `spring-webmvc` and `spring-webflux` (SNYK-JAVA-ORGSPRINGFRAMEWORK-16109603, SNYK-JAVA-ORGSPRINGFRAMEWORK-16109604)
+
+### Fixed
+
+#### Frontend not served in GraalVM native image
+
+- Fixed TypeScript import error in `RuntimeConfigurationSection.tsx` that caused `tsc -b` to fail silently, preventing `vite build` from running and leaving the `static/` directory empty
+- Fixed Makefile `build/frontend` and all Docker/JVM build targets using `;` after the main command, which masked failures by always exiting 0 — migrated all affected targets to use `&&`
+
+---
+
 ## [0.2.0] - 2026-04-09
 
 ### Added
