@@ -32,7 +32,7 @@ export function AppRuntimeConfigProvider({ children }: Readonly<{ children: Reac
         });
       })
       .catch(() => {
-        // Error notification is handled by the Axios interceptor in AxiosConfig.ts.
+        // Error notification is handled by the HttpClient global error handler in HttpClient.ts.
         // Keep the safe default: { logoutUrl: null }.
       });
   }, []);

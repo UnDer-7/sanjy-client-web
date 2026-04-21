@@ -15,7 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.2.1] - 2026-04-17
+## [0.2.1] - 2026-04-21
+
+### Changed
+
+- Replaced Axios with a native `fetch` wrapper (`HttpClient.ts`) — removed the `axios` dependency and migrated all API clients
+
+### Security
+
+- Overridden `spring-framework.version` to `7.0.7` to fix HTTP Request Smuggling in `spring-webmvc` and `spring-webflux` (SNYK-JAVA-ORGSPRINGFRAMEWORK-16109603, SNYK-JAVA-ORGSPRINGFRAMEWORK-16109604)
 
 ### Fixed
 
